@@ -84,6 +84,9 @@ const useToDo = (isTodoPage: boolean = false) => {
         try {
             setLoading(true);
             setError(null);
+            if (data.tasks?.[0]?.name === "") {
+                delete data.tasks;
+            }
             await sendApiRequest(`/todo`, HTTPMethodTypes.POST, { ...data, userId: user?._id });
         } catch (error) {
             console.log(error);

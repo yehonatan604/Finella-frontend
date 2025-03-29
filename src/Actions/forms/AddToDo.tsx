@@ -94,7 +94,7 @@ const AddToDo = () => {
           <FormControlLabel
             control={
               <Checkbox
-                defaultChecked={withTasks}
+                checked={withTasks}
                 color="primary"
                 onChange={(e) => {
                   setWithTasks(e.target.checked);
