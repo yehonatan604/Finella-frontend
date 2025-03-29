@@ -17,7 +17,6 @@ import { TToDo } from "../types/TToDo";
 import { ChangeEvent, useEffect, useState } from "react";
 import { capitalizeFirstLetter } from "../../Core/helpers/stringHelpers";
 import DialogXButton from "../components/DialogXButton";
-import { TTask } from "../types/TTask";
 
 type ToDoDetailsDialogProps = {
   isOpen: boolean;
@@ -33,8 +32,8 @@ const ToDoDetailsDialog = ({
   onSubmit,
 }: ToDoDetailsDialogProps) => {
   const [data, setData] = useState<TToDo>(toDo);
-  const [taskHovered, setTaskHovered] = useState<TTask | null>(null);
   const [withTasks, setWithTasks] = useState(true);
+  const [editingTaskIndex, setEditingTaskIndex] = useState<number | null>(null);
 
   const handlChanges = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -70,7 +69,7 @@ const ToDoDetailsDialog = ({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          p: "0 .5rem",
+          p: ".5rem",
         }}
       >
         <TextField
@@ -92,6 +91,7 @@ const ToDoDetailsDialog = ({
             "&:hover": {
               backgroundColor: "primary.dark",
               color: "white",
+              borderColor: "transparent",
             },
             "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
               borderColor: "transparent",
@@ -222,20 +222,17 @@ const ToDoDetailsDialog = ({
                 />
                 <Box
                   onClick={() => {
-                    setTaskHovered(task);
+                    setEditingTaskIndex(index);
                   }}
-                  onBlur={() => {
-                    setTaskHovered(null);
-                  }}
+                  onBlur={() => {}}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === "Escape") {
                       e.preventDefault();
-                      setTaskHovered(null);
                     }
                   }}
                 >
                   <Typography fontWeight="bold">
-                    {taskHovered !== task ? (
+                    {editingTaskIndex !== index ? (
                       task.taskStatus === "COMPLETE" ? (
                         <s>{task.name}</s>
                       ) : (
@@ -248,6 +245,8 @@ const ToDoDetailsDialog = ({
                         value={capitalizeFirstLetter(task.name)}
                         label="Task Name"
                         size="small"
+                        autoFocus
+                        onBlur={() => setEditingTaskIndex(null)}
                         sx={{
                           "& .MuiInputBase-root": {
                             color: "#000",
