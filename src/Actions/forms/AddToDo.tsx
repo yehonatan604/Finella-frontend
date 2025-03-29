@@ -1,0 +1,230 @@
+import {
+  Box,
+  Button,
+  TextField,
+  Container,
+  Paper,
+  Typography,
+  Divider,
+  Checkbox,
+  FormControlLabel,
+} from "@mui/material";
+import Page from "../../UI/components/Page";
+import useToDo from "../hooks/useToDo";
+import { useState } from "react";
+import { TTask } from "../types/TTask";
+
+const AddToDo = () => {
+  const { register, errors, handleSubmit, onSubmit } = useToDo();
+  const [withTasks, setWithTasks] = useState(true);
+  const [tasks, setTasks] = useState<TTask[]>([
+    {
+      name: "",
+      priority: 1,
+      taskStatus: "PENDING",
+    },
+  ]);
+
+  return (
+    <Page title="Add a To Do">
+      <Container
+        maxWidth="md"
+        component={Paper}
+        sx={{
+          borderRadius: 3,
+          p: 4,
+        }}
+      >
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <TextField
+              label="Name"
+              {...register("name")}
+              fullWidth
+              sx={{ mb: 2 }}
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+            />
+
+            <TextField
+              label="Start Date"
+              {...register("startDate")}
+              type="date"
+              fullWidth
+              sx={{ mb: 2 }}
+              color={errors.startDate ? "error" : "primary"}
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+            />
+
+            <TextField
+              label="End Date"
+              {...register("endDate")}
+              type="date"
+              fullWidth
+              sx={{ mb: 2 }}
+              color={errors.endDate ? "error" : "primary"}
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+            />
+          </Box>
+
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <TextField
+              label="Description"
+              {...register("description")}
+              fullWidth
+              multiline
+              rows={2}
+              sx={{ mb: 2 }}
+              slotProps={{ inputLabel: { shrink: true } }}
+            />
+          </Box>
+
+          <Divider sx={{ my: 2 }} />
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                defaultChecked={withTasks}
+                color="primary"
+                onChange={(e) => {
+                  setWithTasks(e.target.checked);
+                }}
+              />
+            }
+            label="Is Task Required?"
+            sx={{ mb: 2, textAlign: "left" }}
+          />
+
+          {withTasks && tasks.length > 0 && (
+            <>
+              <Typography variant="h6" sx={{ mb: 2, textAlign: "left" }}>
+                Tasks:
+              </Typography>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                {tasks.map((task, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: 1,
+                      width: "100%",
+                    }}
+                  >
+                    <TextField
+                      label="Task Name"
+                      {...register(`tasks.${index}.name`)}
+                      required={withTasks}
+                      sx={{ mb: 2, width: "25%" }}
+                      slotProps={{ inputLabel: { shrink: true } }}
+                      size="small"
+                      defaultValue={task.name}
+                    />
+                    <TextField
+                      label="Task Priority"
+                      {...register(`tasks.${index}.priority`)}
+                      type="number"
+                      sx={{ mb: 2, width: "25%" }}
+                      slotProps={{ inputLabel: { shrink: true } }}
+                      size="small"
+                      defaultValue={task.priority}
+                    />
+                    <TextField
+                      label="Task Notes"
+                      {...register(`tasks.${index}.notes`)}
+                      size="small"
+                      sx={{ mb: 2, width: "25%" }}
+                      slotProps={{ inputLabel: { shrink: true } }}
+                      defaultValue={task.notes}
+                    />
+                    {tasks.length > 1 && (
+                      <Button
+                        variant="contained"
+                        color="error"
+                        onClick={() => {
+                          setTasks((prev) => prev.filter((_, i) => i !== index));
+                        }}
+                        sx={{ mb: 2 }}
+                      >
+                        -
+                      </Button>
+                    )}
+                    {index === tasks.length - 1 && (
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                          setTasks((prev) => [
+                            ...prev,
+                            {
+                              name: "",
+                              description: "",
+                              priority: 1,
+                              taskStatus: "PENDING",
+                            },
+                          ]);
+                        }}
+                        sx={{ mb: 2 }}
+                      >
+                        +
+                      </Button>
+                    )}
+                  </Box>
+                ))}
+              </Box>
+            </>
+          )}
+
+          <Divider sx={{ my: 2 }} />
+
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <TextField
+              label="Notes"
+              {...register("notes")}
+              fullWidth
+              multiline
+              rows={3}
+              sx={{ mb: 2 }}
+              slotProps={{ inputLabel: { shrink: true } }}
+            />
+          </Box>
+
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{ fontSize: "1.2rem", py: 1 }}
+            >
+              Add
+            </Button>
+
+            <Button
+              type="reset"
+              variant="contained"
+              color="error"
+              fullWidth
+              sx={{ fontSize: "1.2rem", py: 1 }}
+            >
+              Reset
+            </Button>
+          </Box>
+        </form>
+      </Container>
+    </Page>
+  );
+};
+
+export default AddToDo;

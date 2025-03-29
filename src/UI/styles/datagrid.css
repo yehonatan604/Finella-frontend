@@ -1,0 +1,13 @@
+.even {
+  background-color: rgb(255, 255, 255);
+}
+
+.odd {
+  background-color: rgb(250, 250, 250);
+}
+
+.total {
+  background-color: rgba(199, 246, 194, 0.3);
+  font-weight: 600;
+  font-size: 1.2em;
+}

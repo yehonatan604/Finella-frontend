@@ -1,0 +1,1 @@
+export type TTaskStastus = "PENDING" | "COMPLETE" | "CANCELED" | "FAILED";
