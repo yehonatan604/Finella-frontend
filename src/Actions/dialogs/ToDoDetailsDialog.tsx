@@ -17,6 +17,7 @@ import { TToDo } from "../types/TToDo";
 import { ChangeEvent, useEffect, useState } from "react";
 import { capitalizeFirstLetter } from "../../Core/helpers/stringHelpers";
 import DialogXButton from "../components/DialogXButton";
+import StyledTitleInput from "../components/styled/StyledTitleInput";
 
 type ToDoDetailsDialogProps = {
   isOpen: boolean;
@@ -72,37 +73,11 @@ const ToDoDetailsDialog = ({
           p: ".5rem",
         }}
       >
-        <TextField
+        <StyledTitleInput
           type="text"
           name="name"
           value={capitalizeFirstLetter(data.name)}
-          sx={{
-            width: 705,
-            "& .MuiInputBase-root": {
-              color: "#fff",
-              fontSize: "1.3rem",
-            },
-            "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: "transparent",
-            },
-            "&:hover .MuiOutlinedInput-notchedOutline": {
-              borderColor: "transparent",
-            },
-            "&:hover": {
-              backgroundColor: "primary.dark",
-              color: "white",
-              borderColor: "transparent",
-            },
-            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderColor: "transparent",
-            },
-            "& .MuiInputBase-input": {
-              color: "#fff",
-            },
-            "& .MuiInputLabel-root.Mui-focused": {
-              color: "#fff",
-            },
-          }}
+          sx={{ width: 705 }}
           onChange={handlChanges}
         />
         <DialogXButton onClose={onClose} />
