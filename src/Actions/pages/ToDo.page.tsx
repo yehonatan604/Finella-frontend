@@ -19,6 +19,7 @@ const ToDoPage = () => {
     setMonths,
     setPickedStatus,
     onUpdate,
+    processRowOnCellUpdate: normalizeRowOnCellUpdate,
   } = useToDo(true);
 
   const [isToDoDetailsDialogOpen, setIsToDoDetailsDialogOpen] = useState(false);
@@ -65,9 +66,16 @@ const ToDoPage = () => {
               },
             }}
             pageSizeOptions={[5, 10, 25]}
-            onRowSelectionModelChange={(ids) => {
-              setSelectedToDo(fetchedToDos?.find((toDo) => toDo._id === ids[0]) ?? null);
+            disableRowSelectionOnClick
+            onRowDoubleClick={(params) => {
+              setSelectedToDo(
+                fetchedToDos?.find((toDo) => toDo._id === params.id) ?? null
+              );
               setIsToDoDetailsDialogOpen(true);
+            }}
+            processRowUpdate={(row) => {
+              normalizeRowOnCellUpdate(row);
+              return row;
             }}
           />
         </Box>
