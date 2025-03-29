@@ -47,12 +47,16 @@ const ToDoDetailsDialog = ({
 
   useEffect(() => {
     const completedTasks = data.tasks?.filter((task) => task.taskStatus === "COMPLETE");
-    if (completedTasks?.length === data.tasks?.length) {
-      setData({ ...data, toDoStatus: "COMPLETE" });
-    } else {
-      setData({ ...data, toDoStatus: "PENDING" });
+    const totalTasks = data.tasks?.length ?? 0;
+    const completedCount = completedTasks?.length ?? 0;
+
+    if (totalTasks > 0) {
+      setData((prev) => ({
+        ...prev,
+        toDoStatus: completedCount === totalTasks ? "COMPLETE" : "PENDING",
+      }));
     }
-  }, [data]);
+  }, [data.tasks]);
 
   return (
     <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="md" sx={{ left: "15vw" }}>
@@ -64,14 +68,13 @@ const ToDoDetailsDialog = ({
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          p: "0 .5rem",
         }}
       >
         <TextField
           type="text"
           name="name"
           value={capitalizeFirstLetter(data.name)}
-          multiline
-          rows={1}
           sx={{
             width: 705,
             "& .MuiInputBase-root": {

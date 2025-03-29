@@ -4,7 +4,6 @@ import {
   TextField,
   Container,
   Paper,
-  Typography,
   Divider,
   Checkbox,
   FormControlLabel,
@@ -102,15 +101,12 @@ const AddToDo = () => {
                 }}
               />
             }
-            label="Is Task Required?"
+            label="With Tasks"
             sx={{ mb: 2, textAlign: "left" }}
           />
 
           {withTasks && tasks.length > 0 && (
             <>
-              <Typography variant="h6" sx={{ mb: 2, textAlign: "left" }}>
-                Tasks:
-              </Typography>
               <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                 {tasks.map((task, index) => (
                   <Box
