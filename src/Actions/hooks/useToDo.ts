@@ -152,17 +152,18 @@ const useToDo = (isTodoPage: boolean = false) => {
     startDate: string;
     endDate: string;
   }) => {
+    const fetchedRow = fetchedToDos.find((toDo) => toDo._id === row.id);
     const finalRow = {
       _id: row.id,
       name: row.name,
-      description: fetchedToDos.find((toDo) => toDo._id === row.id)?.description ?? "",
+      description: fetchedRow?.description ?? "",
       startDate: new Date(row.startDate.split("/").reverse().join("-")),
       endDate: new Date(row.endDate.split("/").reverse().join("-")),
-      tasks: fetchedToDos.find((toDo) => toDo._id === row.id)?.tasks,
+      tasks: fetchedRow?.tasks,
       toDoStatus:
-        fetchedToDos.find((toDo) => toDo._id === row.id)?.toDoStatus ?? "PENDING",
-      userId: fetchedToDos.find((toDo) => toDo._id === row.id)?.userId ?? "",
-      notes: fetchedToDos.find((toDo) => toDo._id === row.id)?.notes ?? "",
+        fetchedRow?.toDoStatus ?? "PENDING",
+      userId: fetchedRow?.userId ?? "",
+      notes: fetchedRow?.notes ?? "",
     };
     onUpdate(finalRow as unknown as TToDo);
   };
