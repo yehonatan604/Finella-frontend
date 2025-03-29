@@ -68,7 +68,7 @@ const useToDo = (isTodoPage: boolean = false) => {
         headerName: "Tasks",
         flex: 1,
         headerClassName: "super-app-theme--header",
-        editable: true,
+        editable: false,
       },
     ],
     []
