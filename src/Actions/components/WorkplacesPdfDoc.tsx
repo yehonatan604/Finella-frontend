@@ -1,5 +1,5 @@
 import { Document, Page, Text, View, StyleSheet, Font } from "@react-pdf/renderer";
-import hebrewFont from "../../assets/fonts/Heebo/static/Heebo-SemiBold.ttf";
+import hebrewFont from "../../Assets/fonts/Heebo/static/Heebo-SemiBold.ttf";
 type PdfDocProps = {
   rows: Record<string, unknown>[];
 };

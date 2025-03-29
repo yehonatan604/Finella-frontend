@@ -1,5 +1,6 @@
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 import { blue } from "@mui/material/colors";
+import logoImg from "../../Assets/images/logo.png";
 
 export const TopNavigation = () => {
   return (
@@ -12,11 +13,24 @@ export const TopNavigation = () => {
           <Typography
             component={Button}
             color="inherit"
-            variant="h6"
+            variant="h5"
             sx={{ textTransform: "capitalize", color: "white", fontWeight: "bold" }}
           >
             Personal Manager
           </Typography>
+        </Box>
+        <Box
+          sx={{
+            position: "absolute",
+            right: "2rem",
+            top: ".8rem",
+          }}
+        >
+          <img
+            src={logoImg}
+            alt="Logo"
+            style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+          />
         </Box>
       </Toolbar>
     </AppBar>
