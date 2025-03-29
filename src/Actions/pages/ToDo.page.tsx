@@ -4,10 +4,10 @@ import Page from "../../UI/components/Page";
 import SalariesPdfDoc from "../components/SalariesPdfDoc";
 import ActionFilters from "../components/ActionFilters";
 import ActionButtons from "../components/ActionButtons";
-import useToDo from "../hooks/useToDo";
 import ToDoDetailsDialog from "../dialogs/ToDoDetailsDialog";
 import { useState } from "react";
 import { TToDo } from "../types/TToDo";
+import useToDo from "../hooks/useToDo";
 
 const ToDoPage = () => {
   const {
@@ -19,7 +19,6 @@ const ToDoPage = () => {
     setMonths,
     setPickedStatus,
     onUpdate,
-    processRowOnCellUpdate: normalizeRowOnCellUpdate,
   } = useToDo(true);
 
   const [isToDoDetailsDialogOpen, setIsToDoDetailsDialogOpen] = useState(false);
@@ -73,9 +72,8 @@ const ToDoPage = () => {
               );
               setIsToDoDetailsDialogOpen(true);
             }}
-            processRowUpdate={(row) => {
-              normalizeRowOnCellUpdate(row);
-              return row;
+            onCellEditStart={(_, event) => {
+              event.defaultMuiPrevented = true;
             }}
           />
         </Box>

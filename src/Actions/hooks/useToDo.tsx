@@ -6,6 +6,7 @@ import { sendApiRequest } from "../../Core/helpers/sendApiRequest";
 import { addToDoFormDefault } from "../forms/initialData/addToDoFormDefault";
 import { TToDo } from "../types/TToDo";
 import { toastify } from "../../UI/utilities/toast";
+import { TextField } from "@mui/material";
 
 const useToDo = (isTodoPage: boolean = false) => {
   const { user } = useAuth();
@@ -26,6 +27,59 @@ const useToDo = (isTodoPage: boolean = false) => {
     defaultValues: addToDoFormDefault,
   });
 
+  const onUpdate = useCallback(
+    async (data: TToDo) => {
+      try {
+        setLoading(true);
+        setError(null);
+        await sendApiRequest(`/todo`, HTTPMethodTypes.PUT, {
+          ...data,
+          userId: user?._id,
+        });
+        setFetchedTodos((prev) =>
+          prev.map((todo) => (todo._id === data._id ? data : todo))
+        );
+        toastify.success("ToDo updated successfully");
+      } catch (error) {
+        console.log(error);
+
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError(error as string);
+        }
+      } finally {
+        setLoading(false);
+      }
+    },
+    [user?._id]
+  );
+
+  const processRowOnCellUpdate = useMemo(
+    () =>
+      (row: {
+        id: string | undefined;
+        name: string;
+        startDate: string;
+        endDate: string;
+      }) => {
+        const fetchedRow = fetchedToDos.find((toDo) => toDo._id === row.id);
+        const finalRow = {
+          _id: row.id,
+          name: row.name,
+          description: fetchedRow?.description ?? "",
+          startDate: new Date(row.startDate.split("/").reverse().join("-")),
+          endDate: new Date(row.endDate.split("/").reverse().join("-")),
+          tasks: fetchedRow?.tasks,
+          toDoStatus: fetchedRow?.toDoStatus ?? "PENDING",
+          userId: fetchedRow?.userId ?? "",
+          notes: fetchedRow?.notes ?? "",
+        };
+        onUpdate(finalRow as unknown as TToDo);
+      },
+    [fetchedToDos, onUpdate]
+  );
+
   const columns = useMemo(
     () => [
       {
@@ -34,6 +88,35 @@ const useToDo = (isTodoPage: boolean = false) => {
         flex: 1,
         headerClassName: "super-app-theme--header",
         editable: true,
+        renderCell: (params: {
+          value: string;
+          hasFocus: boolean;
+          row: Record<string, string>;
+        }) => {
+          if (params.hasFocus) {
+            return (
+              <TextField
+                defaultValue={params.value}
+                variant="outlined"
+                size="small"
+                sx={{ pt: 0.5 }}
+                onBlur={(event) => {
+                  const value = event.target.value;
+                  const row = params.row;
+                  const updatedRow = { ...row, name: value };
+                  processRowOnCellUpdate(updatedRow as never);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === " " || event.code === "Space") {
+                    event.stopPropagation();
+                  }
+                }}
+              />
+            );
+          } else {
+            return <span>{params.value}</span>;
+          }
+        },
       },
       {
         field: "description",
@@ -71,7 +154,7 @@ const useToDo = (isTodoPage: boolean = false) => {
         editable: false,
       },
     ],
-    []
+    [processRowOnCellUpdate]
   );
 
   const formatDate = (value?: string | Date) => {
@@ -115,28 +198,6 @@ const useToDo = (isTodoPage: boolean = false) => {
     }
   };
 
-  const onUpdate = async (data: TToDo) => {
-    try {
-      setLoading(true);
-      setError(null);
-      await sendApiRequest(`/todo`, HTTPMethodTypes.PUT, { ...data, userId: user?._id });
-      setFetchedTodos((prev) =>
-        prev.map((todo) => (todo._id === data._id ? data : todo))
-      );
-      toastify.success("ToDo updated successfully");
-    } catch (error) {
-      console.log(error);
-
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError(error as string);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const getToDos = useCallback(async (query: string) => {
     try {
       const response = await sendApiRequest("/todo/by" + query, HTTPMethodTypes.GET);
@@ -145,28 +206,6 @@ const useToDo = (isTodoPage: boolean = false) => {
       console.log(error);
     }
   }, []);
-
-  const processRowOnCellUpdate = (row: {
-    id: string | undefined;
-    name: string;
-    startDate: string;
-    endDate: string;
-  }) => {
-    const fetchedRow = fetchedToDos.find((toDo) => toDo._id === row.id);
-    const finalRow = {
-      _id: row.id,
-      name: row.name,
-      description: fetchedRow?.description ?? "",
-      startDate: new Date(row.startDate.split("/").reverse().join("-")),
-      endDate: new Date(row.endDate.split("/").reverse().join("-")),
-      tasks: fetchedRow?.tasks,
-      toDoStatus:
-        fetchedRow?.toDoStatus ?? "PENDING",
-      userId: fetchedRow?.userId ?? "",
-      notes: fetchedRow?.notes ?? "",
-    };
-    onUpdate(finalRow as unknown as TToDo);
-  };
 
   useEffect(() => {
     if (!isTodoPage) return;
