@@ -8,6 +8,7 @@ import ToDoDetailsDialog from "../dialogs/ToDoDetailsDialog";
 import { useState } from "react";
 import { TToDo } from "../types/TToDo";
 import useToDo from "../hooks/useToDo";
+import AddButton from "../components/AddButton";
 
 const ToDoPage = () => {
   const {
@@ -53,11 +54,7 @@ const ToDoPage = () => {
             columns={columns as GridColDef[]}
             sx={{ width: "60vw" }}
             getRowClassName={(params) =>
-              params.id === "total"
-                ? "total"
-                : params.indexRelativeToCurrentPage % 2 === 0
-                ? "even"
-                : "odd"
+              params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
             }
             initialState={{
               pagination: {
@@ -79,13 +76,9 @@ const ToDoPage = () => {
         </Box>
       </Page>
 
-      <ActionButtons
-        actionName="To Do"
-        fileName="ToDo"
-        rows={rows}
-        addUrl="/actions/add-todo"
-        Doc={SalariesPdfDoc}
-      />
+      <ActionButtons fileName="ToDo" rows={rows} Doc={SalariesPdfDoc} />
+
+      <AddButton addUrl="/actions/add-todo" />
 
       {isToDoDetailsDialogOpen && selectedToDo && (
         <ToDoDetailsDialog

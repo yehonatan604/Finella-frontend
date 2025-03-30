@@ -4,6 +4,7 @@ import Page from "../../UI/components/Page";
 import useWorkplaces from "../hooks/useWorkplace";
 import WorkplacesPdfDoc from "../components/WorkplacesPdfDoc";
 import ActionButtons from "../components/ActionButtons";
+import AddButton from "../components/AddButton";
 
 const WorkplacesPage = () => {
   const { columns, rows } = useWorkplaces();
@@ -47,13 +48,9 @@ const WorkplacesPage = () => {
           />
         </Box>
       </Page>
-      <ActionButtons
-        actionName="Workplace"
-        fileName="workplaces"
-        rows={rows}
-        addUrl="/actions/add-workplace"
-        Doc={WorkplacesPdfDoc}
-      />
+      <ActionButtons fileName="workplaces" rows={rows} Doc={WorkplacesPdfDoc} />
+
+      <AddButton addUrl="/actions/add-workplace" />
     </>
   );
 };

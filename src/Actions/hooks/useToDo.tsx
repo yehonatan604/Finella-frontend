@@ -82,9 +82,6 @@ const useToDo = (isTodoPage: boolean = false) => {
           toDoStatus: row.toDoStatus,
         };
 
-        console.log("checkFetchedRow", checkFetchedRow);
-        console.log("checkRow", checkRow);
-
         const isEqual = Object.keys(checkFetchedRow).every(
           (key) =>
             checkFetchedRow[key as keyof typeof checkFetchedRow] ===

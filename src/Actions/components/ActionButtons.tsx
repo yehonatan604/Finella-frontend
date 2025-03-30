@@ -2,31 +2,17 @@ import { Button } from "@mui/material";
 import { Box } from "@mui/system";
 import { exportDataToExcel } from "../helpers/exportDataToExcel";
 import { exportDataToPDF } from "../helpers/exportDataToPDF";
-import { useNavigate } from "react-router-dom";
 
 type DocProps = {
-  actionName: string;
   fileName: string;
   rows: Record<string, unknown>[];
-  addUrl: string;
   Doc: React.FC<{ rows: Record<string, unknown>[] }>;
 };
 
 const ActionButtons = (props: DocProps) => {
-  const { actionName, fileName, rows, Doc, addUrl } = props;
-  const nav = useNavigate();
+  const { fileName, rows, Doc } = props;
   return (
     <Box sx={{ display: "flex", flexDirection: "row" }}>
-      <Button
-        variant="contained"
-        color="success"
-        sx={{ mt: 2, ml: 2 }}
-        onClick={() => {
-          nav(`${addUrl}`);
-        }}
-      >
-        Add a {actionName}
-      </Button>
       <Button
         variant="contained"
         color="primary"

@@ -3,4 +3,8 @@ const capitalizeFirstLetter = (str: string): string => {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export { capitalizeFirstLetter }
+const fixPriceString = (price: string): string => {
+    return price.toString().split("").filter((char) => char !== "-").join("");
+}
+
+export { capitalizeFirstLetter, fixPriceString }

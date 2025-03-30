@@ -5,10 +5,25 @@ import BalanceEnetriesPdfDoc from "../components/BalanceEnetriesPdfDoc";
 import useBalanceEntry from "../hooks/useBalanceEntry";
 import ActionButtons from "../components/ActionButtons";
 import ActionFilters from "../components/ActionFilters";
+import { useState } from "react";
+import { TBalanceEntry } from "../types/TBalanceEntry";
+import BalanceEntryDetailsDialog from "../dialogs/BAlanceEntryDetailsDialog";
+import AddButton from "../components/AddButton";
 
 const BalanceEntriesPage = () => {
-  const { columns, rows, setFromYear, setToYear, setMonths, setPickedType } =
-    useBalanceEntry(true);
+  const {
+    columns,
+    rows,
+    setFromYear,
+    setToYear,
+    setMonths,
+    setPickedType,
+    fetchedBalanceEntries,
+    onUpdate,
+  } = useBalanceEntry(true);
+
+  const [selectedBEntry, setSelectedBEntry] = useState<TBalanceEntry | null>(null);
+  const [isBEntryDetailsDialogOpen, setIsBEntryDetailsDialogOpen] = useState(false);
 
   return (
     <>
@@ -50,19 +65,33 @@ const BalanceEntriesPage = () => {
               },
             }}
             pageSizeOptions={[5, 10, 25]}
-            onRowSelectionModelChange={(ids) => {
-              console.log(ids);
+            onRowDoubleClick={(params) => {
+              setSelectedBEntry(
+                fetchedBalanceEntries?.find((bEntry) => bEntry._id === params.id) ?? null
+              );
+              setIsBEntryDetailsDialogOpen(true);
+            }}
+            onCellEditStart={(_, event) => {
+              event.defaultMuiPrevented = true;
             }}
           />
         </Box>
       </Page>
-      <ActionButtons
-        actionName="Balance Entry"
-        fileName="BalanceEntries"
-        rows={rows}
-        addUrl="/actions/add-balance-entry"
-        Doc={BalanceEnetriesPdfDoc}
-      />
+      <ActionButtons fileName="BalanceEntries" rows={rows} Doc={BalanceEnetriesPdfDoc} />
+
+      {isBEntryDetailsDialogOpen && selectedBEntry && (
+        <BalanceEntryDetailsDialog
+          isOpen={isBEntryDetailsDialogOpen}
+          onClose={() => setIsBEntryDetailsDialogOpen(false)}
+          bEntry={selectedBEntry}
+          onSubmit={(data) => {
+            onUpdate(data);
+            setSelectedBEntry(null);
+          }}
+        />
+      )}
+
+      <AddButton addUrl="/actions/add-balance-entry" />
     </>
   );
 };

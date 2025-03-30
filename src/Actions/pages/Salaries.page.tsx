@@ -5,6 +5,7 @@ import Page from "../../UI/components/Page";
 import SalariesPdfDoc from "../components/SalariesPdfDoc";
 import ActionFilters from "../components/ActionFilters";
 import ActionButtons from "../components/ActionButtons";
+import AddButton from "../components/AddButton";
 
 const SalariesPage = () => {
   const {
@@ -63,13 +64,9 @@ const SalariesPage = () => {
           />
         </Box>
       </Page>
-      <ActionButtons
-        actionName="Salary"
-        fileName="Salaries"
-        rows={rows}
-        addUrl="/actions/add-salary"
-        Doc={SalariesPdfDoc}
-      />
+      <ActionButtons fileName="Salaries" rows={rows} Doc={SalariesPdfDoc} />
+
+      <AddButton addUrl="/actions/add-salary" />
     </>
   );
 };

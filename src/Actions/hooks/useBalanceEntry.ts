@@ -5,6 +5,11 @@ import useAuth from "../../Auth/hooks/useAuth";
 import { TBalanceEntry } from "../types/TBalanceEntry";
 import { sendApiRequest } from "../../Core/helpers/sendApiRequest";
 import { addBalanceEntryFormDefault } from "../forms/initialData/addBalanceEntryFormDefault copy";
+import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
+import { createDataGridInputCell } from "../components/createDataGridInputCell";
+import { toastify } from "../../UI/utilities/toast";
+import { formatDate } from "../../Core/helpers/dateHelpers";
+import { fixPriceString } from "../../Core/helpers/stringHelpers";
 
 const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
     const { user } = useAuth();
@@ -25,6 +30,105 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
         defaultValues: addBalanceEntryFormDefault,
     });
 
+    const onUpdate = useCallback(
+        async (data: TBalanceEntry) => {
+            try {
+                setLoading(true);
+                setError(null);
+
+                const fixedPrice = data.price.toString().includes("-")
+                    ? fixPriceString(data.price + "")
+                    : data.price;
+
+                await sendApiRequest(`/balance-entry`, HTTPMethodTypes.PUT, {
+                    ...data,
+                    userId: user?._id,
+                    price: fixedPrice,
+                    notes: " ",
+                });
+
+                setFetchedBalanceEntries((prev) =>
+                    prev.map((bEntry) => {
+                        const fixedPrice = bEntry.price.toString().includes("-")
+                            ? fixPriceString(bEntry.price + "")
+                            : bEntry.price;
+
+                        const fixedBEntry = {
+                            ...bEntry,
+                            price: +fixedPrice,
+                        };
+
+                        return (bEntry._id === data._id ? fixedBEntry : bEntry)
+                    })
+                );
+                toastify.success("Balance Entry updated successfully");
+            } catch (error) {
+                console.log(error);
+                toastify.error("Error updating Balance Entry");
+
+                if (error instanceof Error) {
+                    setError(error.message);
+                } else {
+                    setError(error as string);
+                }
+            } finally {
+                setLoading(false);
+            }
+        },
+        [user?._id]
+    );
+
+    const onCellUpdate = useMemo(
+        () =>
+            (
+                row: TBalanceEntry & {
+                    id: string | undefined;
+                }
+            ) => {
+                const fetchedRow = fetchedBalanceEntries.find((bEntry) => bEntry._id === row.id);
+
+                const checkFetchedRow = {
+                    name: fetchedRow?.name,
+                    date: formatDate(fetchedRow?.date),
+                    type: fetchedRow?.type,
+                    price: fetchedRow?.price,
+                    withVat: fetchedRow?.withVat,
+                    notes: fetchedRow?.notes,
+                };
+
+                const checkRow = {
+                    name: row.name,
+                    date: row.date,
+                    type: row.type,
+                    price: row.price,
+                    withVat: row.withVat,
+                    notes: row.notes,
+                };
+
+                const isEqual = Object.keys(checkFetchedRow).every(
+                    (key) =>
+                        checkFetchedRow[key as keyof typeof checkFetchedRow] ===
+                        checkRow[key as keyof typeof checkRow]
+                );
+                if (isEqual) return;
+
+                const finalRow = {
+                    _id: row.id,
+                    userId: fetchedRow?.userId,
+                    name: row.name ?? fetchedRow?.name ?? "",
+                    date: new Date(
+                        (row.date ?? fetchedRow?.date ?? "").split("/").reverse().join("-")
+                    ),
+                    type: row.type ?? fetchedRow?.type ?? "income",
+                    price: Number(row.price ?? fetchedRow?.price ?? 0),
+                    withVat: row.withVat ?? fetchedRow?.withVat ?? false,
+                    notes: row.notes ?? fetchedRow?.notes ?? "",
+                };
+                onUpdate(finalRow as unknown as TBalanceEntry);
+            },
+        [fetchedBalanceEntries, onUpdate]
+    );
+
     const columns = useMemo(
         () => [
             {
@@ -37,6 +141,11 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
                     if (param1.id === "total" || param2.id === "total") return;
                     return v1.localeCompare(v2);
                 },
+                editable: true,
+                renderCell: (params: TDataGridInputCellParams) => {
+                    if (params.row.id === "total") return params.value;
+                    return createDataGridInputCell(params, onCellUpdate, "name");
+                },
             },
             {
                 field: "date",
@@ -47,6 +156,11 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
                 sortComparator: (v1: string, v2: string, param1: { id: string; }, param2: { id: string; }) => {
                     if (param1.id === "total" || param2.id === "total") return;
                     return v1.localeCompare(v2);
+                },
+                editable: true,
+                renderCell: (params: TDataGridInputCellParams) => {
+                    if (params.row.id === "total") return params.value;
+                    return createDataGridInputCell(params, onCellUpdate, "date", "date");
                 },
             },
             {
@@ -59,6 +173,11 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
                     if (param1.id === "total" || param2.id === "total") return;
                     return v1.localeCompare(v2);
                 },
+                editable: true,
+                renderCell: (params: TDataGridInputCellParams) => {
+                    if (params.row.id === "total") return params.value;
+                    return createDataGridInputCell(params, onCellUpdate, "type", "select", ["income", "expense"]);
+                },
             },
             {
                 field: "price",
@@ -70,9 +189,14 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
                     if (param1.id === "total" || param2.id === "total") return;
                     return v1 - v2;
                 },
+                editable: true,
+                renderCell: (params: TDataGridInputCellParams) => {
+                    if (params.row.id === "total") return params.value;
+                    return createDataGridInputCell(params, onCellUpdate, "price", "number");
+                },
             },
         ],
-        []
+        [onCellUpdate]
     );
 
     const rows = useMemo(() => {
@@ -80,7 +204,7 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
             fetchedBalanceEntries.map((bEntry) => ({
                 id: bEntry._id,
                 name: bEntry.name,
-                date: bEntry.date.split("T")[0].split("-").reverse().join("/"),
+                date: formatDate(bEntry.date),
                 type: bEntry.type,
                 price: bEntry.type === "income" ? bEntry.price : `-${bEntry.price}`,
             })) || [];
@@ -159,6 +283,7 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
         register,
         handleSubmit,
         onSubmit,
+        onUpdate,
         error,
         errors,
         loading,
@@ -172,6 +297,7 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
         setMonths,
         pickedType,
         setPickedType,
+        fetchedBalanceEntries,
     };
 }
 
