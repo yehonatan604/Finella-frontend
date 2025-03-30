@@ -39,7 +39,7 @@ const LoginPage = () => {
         maxWidth="xs"
         sx={{
           backdropFilter: "blur(10px)",
-          backgroundColor: "rgba(0, 0, 0, 0.6)",
+          backgroundColor: "background.paper",
           borderRadius: 3,
           p: 4,
           textAlign: "center",
@@ -50,7 +50,7 @@ const LoginPage = () => {
           Login
         </Typography>
         <Typography variant="body1" sx={{ opacity: 0.8, mb: 2 }}>
-          Enter your credentials and continue your adventure.
+          Please enter your credentials.
         </Typography>
 
         <form onSubmit={handleSubmit(onSubmit)}>

@@ -13,7 +13,7 @@ const HomePage = () => {
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center",
-        color: "white",
+        color: "parimary.main",
         p: 4,
       }}
     >
