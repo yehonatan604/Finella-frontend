@@ -6,7 +6,9 @@ import { sendApiRequest } from "../../Core/helpers/sendApiRequest";
 import { addToDoFormDefault } from "../forms/initialData/addToDoFormDefault";
 import { TToDo } from "../types/TToDo";
 import { toastify } from "../../UI/utilities/toast";
-import { TextField } from "@mui/material";
+import { createDataGridInputCell } from "../components/createDataGridInputCell";
+import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
+import { formatDate } from "../../Core/helpers/dateHelpers";
 
 const useToDo = (isTodoPage: boolean = false) => {
   const { user } = useAuth();
@@ -55,25 +57,55 @@ const useToDo = (isTodoPage: boolean = false) => {
     [user?._id]
   );
 
-  const processRowOnCellUpdate = useMemo(
+  const onCellUpdate = useMemo(
     () =>
-      (row: {
-        id: string | undefined;
-        name: string;
-        startDate: string;
-        endDate: string;
-      }) => {
+      (
+        row: TToDo & {
+          id: string | undefined;
+        }
+      ) => {
         const fetchedRow = fetchedToDos.find((toDo) => toDo._id === row.id);
+
+        const checkFetchedRow = {
+          name: fetchedRow?.name,
+          description: fetchedRow?.description,
+          startDate: formatDate(fetchedRow?.startDate),
+          endDate: formatDate(fetchedRow?.endDate),
+          toDoStatus: fetchedRow?.toDoStatus,
+        };
+
+        const checkRow = {
+          name: row.name,
+          description: row.description,
+          startDate: row.startDate,
+          endDate: row.endDate,
+          toDoStatus: row.toDoStatus,
+        };
+
+        console.log("checkFetchedRow", checkFetchedRow);
+        console.log("checkRow", checkRow);
+
+        const isEqual = Object.keys(checkFetchedRow).every(
+          (key) =>
+            checkFetchedRow[key as keyof typeof checkFetchedRow] ===
+            checkRow[key as keyof typeof checkRow]
+        );
+        if (isEqual) return;
+
         const finalRow = {
           _id: row.id,
-          name: row.name,
-          description: fetchedRow?.description ?? "",
-          startDate: new Date(row.startDate.split("/").reverse().join("-")),
-          endDate: new Date(row.endDate.split("/").reverse().join("-")),
+          userId: fetchedRow?.userId,
           tasks: fetchedRow?.tasks,
-          toDoStatus: fetchedRow?.toDoStatus ?? "PENDING",
-          userId: fetchedRow?.userId ?? "",
-          notes: fetchedRow?.notes ?? "",
+          name: row.name ?? fetchedRow?.name ?? "",
+          description: row?.description ?? fetchedRow?.description ?? "",
+          startDate: new Date(
+            (row.startDate ?? fetchedRow?.startDate ?? "").split("/").reverse().join("-")
+          ),
+          endDate: new Date(
+            (row.endDate ?? fetchedRow?.endDate ?? "").split("/").reverse().join("-")
+          ),
+          toDoStatus: row.toDoStatus ?? fetchedRow?.toDoStatus ?? "PENDING",
+          notes: row.notes ?? fetchedRow?.notes ?? "",
         };
         onUpdate(finalRow as unknown as TToDo);
       },
@@ -88,34 +120,8 @@ const useToDo = (isTodoPage: boolean = false) => {
         flex: 1,
         headerClassName: "super-app-theme--header",
         editable: true,
-        renderCell: (params: {
-          value: string;
-          hasFocus: boolean;
-          row: Record<string, string>;
-        }) => {
-          if (params.hasFocus) {
-            return (
-              <TextField
-                defaultValue={params.value}
-                variant="outlined"
-                size="small"
-                sx={{ pt: 0.5 }}
-                onBlur={(event) => {
-                  const value = event.target.value;
-                  const row = params.row;
-                  const updatedRow = { ...row, name: value };
-                  processRowOnCellUpdate(updatedRow as never);
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === " " || event.code === "Space") {
-                    event.stopPropagation();
-                  }
-                }}
-              />
-            );
-          } else {
-            return <span>{params.value}</span>;
-          }
+        renderCell: (params: TDataGridInputCellParams) => {
+          return createDataGridInputCell(params, onCellUpdate, "name");
         },
       },
       {
@@ -124,6 +130,9 @@ const useToDo = (isTodoPage: boolean = false) => {
         flex: 1,
         headerClassName: "super-app-theme--header",
         editable: true,
+        renderCell: (params: TDataGridInputCellParams) => {
+          return createDataGridInputCell(params, onCellUpdate, "description");
+        },
       },
       {
         field: "startDate",
@@ -131,6 +140,9 @@ const useToDo = (isTodoPage: boolean = false) => {
         flex: 1,
         headerClassName: "super-app-theme--header",
         editable: true,
+        renderCell: (params: TDataGridInputCellParams) => {
+          return createDataGridInputCell(params, onCellUpdate, "startDate", "date");
+        },
       },
       {
         field: "endDate",
@@ -138,6 +150,9 @@ const useToDo = (isTodoPage: boolean = false) => {
         flex: 1,
         headerClassName: "super-app-theme--header",
         editable: true,
+        renderCell: (params: TDataGridInputCellParams) => {
+          return createDataGridInputCell(params, onCellUpdate, "endDate", "date");
+        },
       },
       {
         field: "toDoStatus",
@@ -145,6 +160,12 @@ const useToDo = (isTodoPage: boolean = false) => {
         flex: 1,
         headerClassName: "super-app-theme--header",
         editable: true,
+        renderCell: (params: TDataGridInputCellParams) => {
+          return createDataGridInputCell(params, onCellUpdate, "toDoStatus", "select", [
+            "PENDING",
+            "COMPLETED",
+          ]);
+        },
       },
       {
         field: "tasks",
@@ -154,14 +175,8 @@ const useToDo = (isTodoPage: boolean = false) => {
         editable: false,
       },
     ],
-    [processRowOnCellUpdate]
+    [onCellUpdate]
   );
-
-  const formatDate = (value?: string | Date) => {
-    if (!value) return "";
-    const date = typeof value === "string" ? new Date(value) : value;
-    return date.toISOString().split("T")[0].split("-").reverse().join("/");
-  };
 
   const rows = useMemo(() => {
     return (
@@ -254,7 +269,7 @@ const useToDo = (isTodoPage: boolean = false) => {
     pickedStatus,
     setPickedStatus,
     fetchedToDos,
-    processRowOnCellUpdate,
+    processRowOnCellUpdate: onCellUpdate,
   };
 };
 

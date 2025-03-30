@@ -110,7 +110,11 @@ const ToDoDetailsDialog = ({
               <TextField
                 type="date"
                 name="startDate"
-                value={data.startDate.split("T")[0]}
+                value={
+                  data.startDate
+                    ? new Date(data.startDate).toISOString().split("T")[0]
+                    : ""
+                }
                 size="small"
                 sx={{ minWidth: 130 }}
                 onChange={handlChanges}
@@ -121,7 +125,9 @@ const ToDoDetailsDialog = ({
               <TextField
                 type="date"
                 name="endDate"
-                value={data.endDate.split("T")[0]}
+                value={
+                  data.endDate ? new Date(data.endDate).toISOString().split("T")[0] : ""
+                }
                 size="small"
                 sx={{ minWidth: 130 }}
                 onChange={handlChanges}
