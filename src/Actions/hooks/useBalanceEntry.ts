@@ -6,10 +6,11 @@ import { TBalanceEntry } from "../types/TBalanceEntry";
 import { sendApiRequest } from "../../Core/helpers/sendApiRequest";
 import { addBalanceEntryFormDefault } from "../forms/initialData/addBalanceEntryFormDefault copy";
 import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
-import { createDataGridInputCell } from "../components/createDataGridInputCell";
+import { createDataGridInputCell } from "../helpers/createDataGridInputCell";
 import { toastify } from "../../UI/utilities/toast";
 import { formatDate } from "../../Core/helpers/dateHelpers";
 import { fixPriceString } from "../../Core/helpers/stringHelpers";
+import { createRowIcons } from "../helpers/createRowIcons";
 
 const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
     const { user } = useAuth();
@@ -20,6 +21,8 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
     const [toYear, setToYear] = useState(new Date().getFullYear());
     const [months, setMonths] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
     const [pickedType, setPickedType] = useState<string>("all");
+    const [selectedBEntry, setSelectedBEntry] = useState<TBalanceEntry | null>(null);
+    const [isBEntryDetailsDialogOpen, setIsBEntryDetailsDialogOpen] = useState(false);
 
     const {
         register,
@@ -126,6 +129,28 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
         [fetchedBalanceEntries, onUpdate]
     );
 
+    const onDelete = useCallback(
+        async (id: string) => {
+            try {
+                setLoading(true);
+                setError(null);
+                await sendApiRequest(`/balance-entry/${id}`, HTTPMethodTypes.DELETE, { userId: user?._id });
+                setFetchedBalanceEntries((prev) => prev.filter((bEntry) => bEntry._id !== id));
+                toastify.success("Balance Entry deleted successfully");
+            } catch (error) {
+                console.log(error);
+                toastify.error("Error deleting Balance Entry");
+
+                if (error instanceof Error) {
+                    setError(error.message);
+                } else {
+                    setError(error as string);
+                }
+            } finally {
+                setLoading(false);
+            }
+        }, [user?._id]);
+
     const columns = useMemo(
         () => [
             {
@@ -179,7 +204,7 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
             {
                 field: "price",
                 headerName: "Price",
-                flex: 1,
+                flex: .5,
                 headerClassName: "super-app-theme--header",
                 sortable: true,
                 sortComparator: (v1: number, v2: number, param1: { id: string; }, param2: { id: string; }) => {
@@ -192,8 +217,25 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
                     return createDataGridInputCell(params, onCellUpdate, "price", "number");
                 },
             },
+            {
+                field: "options",
+                headerName: "Options",
+                flex: .4,
+                headerClassName: "super-app-theme--header",
+                sortable: false,
+                editable: false,
+                renderCell: (params: TDataGridInputCellParams) => {
+                    if (params.row.id === "total") return;
+                    return createRowIcons(() => {
+                        setSelectedBEntry(fetchedBalanceEntries.find((bEntry) => bEntry._id === params.id) ?? null);
+                        setIsBEntryDetailsDialogOpen(true)
+                    }, () => {
+                        onDelete(params.id as string);
+                    });
+                },
+            }
         ],
-        [onCellUpdate]
+        [onCellUpdate, fetchedBalanceEntries, onDelete]
     );
 
     const rows = useMemo(() => {
@@ -297,6 +339,11 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
         pickedType,
         setPickedType,
         fetchedBalanceEntries,
+        setFetchedBalanceEntries,
+        selectedBEntry,
+        setSelectedBEntry,
+        isBEntryDetailsDialogOpen,
+        setIsBEntryDetailsDialogOpen,
     };
 }
 

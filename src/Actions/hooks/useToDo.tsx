@@ -6,7 +6,7 @@ import { sendApiRequest } from "../../Core/helpers/sendApiRequest";
 import { addToDoFormDefault } from "../forms/initialData/addToDoFormDefault";
 import { TToDo } from "../types/TToDo";
 import { toastify } from "../../UI/utilities/toast";
-import { createDataGridInputCell } from "../components/createDataGridInputCell";
+import { createDataGridInputCell } from "../helpers/createDataGridInputCell";
 import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
 import { formatDate } from "../../Core/helpers/dateHelpers";
 

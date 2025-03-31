@@ -9,7 +9,7 @@ import useWorkplaces from "./useWorkplace";
 import { sendApiRequest } from "../../Core/helpers/sendApiRequest";
 import { addSalaryFormDefault } from "../forms/initialData/addSalaryFormDefault";
 import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
-import { createDataGridInputCell } from "../components/createDataGridInputCell";
+import { createDataGridInputCell } from "../helpers/createDataGridInputCell";
 import { toastify } from "../../UI/utilities/toast";
 
 const useSalary = (isSalariesPage: boolean = false) => {

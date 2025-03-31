@@ -5,8 +5,6 @@ import BalanceEnetriesPdfDoc from "../components/BalanceEnetriesPdfDoc";
 import useBalanceEntry from "../hooks/useBalanceEntry";
 import ActionButtons from "../components/ActionButtons";
 import ActionFilters from "../components/ActionFilters";
-import { useState } from "react";
-import { TBalanceEntry } from "../types/TBalanceEntry";
 import BalanceEntryDetailsDialog from "../dialogs/BalanceEntryDetailsDialog";
 import AddButton from "../components/AddButton";
 
@@ -18,12 +16,12 @@ const BalanceEntriesPage = () => {
     setToYear,
     setMonths,
     setPickedType,
-    fetchedBalanceEntries,
     onUpdate,
+    setSelectedBEntry,
+    setIsBEntryDetailsDialogOpen,
+    isBEntryDetailsDialogOpen,
+    selectedBEntry,
   } = useBalanceEntry(true);
-
-  const [selectedBEntry, setSelectedBEntry] = useState<TBalanceEntry | null>(null);
-  const [isBEntryDetailsDialogOpen, setIsBEntryDetailsDialogOpen] = useState(false);
 
   return (
     <>
@@ -51,7 +49,16 @@ const BalanceEntriesPage = () => {
           <DataGrid
             rows={rows}
             columns={columns as GridColDef[]}
-            sx={{ width: "60vw" }}
+            sx={{
+              width: "60vw",
+              "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": {
+                outline: "none",
+              },
+              "& .MuiDataGrid-cell--editing": {
+                boxShadow: "none",
+                outline: "none",
+              },
+            }}
             getRowClassName={(params) =>
               params.id === "total"
                 ? "total"
@@ -65,15 +72,10 @@ const BalanceEntriesPage = () => {
               },
             }}
             pageSizeOptions={[5, 10, 25]}
-            onRowDoubleClick={(params) => {
-              setSelectedBEntry(
-                fetchedBalanceEntries?.find((bEntry) => bEntry._id === params.id) ?? null
-              );
-              setIsBEntryDetailsDialogOpen(true);
-            }}
             onCellEditStart={(_, event) => {
               event.defaultMuiPrevented = true;
             }}
+            isRowSelectable={() => false}
           />
         </Box>
       </Page>
