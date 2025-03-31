@@ -7,7 +7,7 @@ import ActionButtons from "../components/ActionButtons";
 import ActionFilters from "../components/ActionFilters";
 import { useState } from "react";
 import { TBalanceEntry } from "../types/TBalanceEntry";
-import BalanceEntryDetailsDialog from "../dialogs/BAlanceEntryDetailsDialog";
+import BalanceEntryDetailsDialog from "../dialogs/BalanceEntryDetailsDialog";
 import AddButton from "../components/AddButton";
 
 const BalanceEntriesPage = () => {

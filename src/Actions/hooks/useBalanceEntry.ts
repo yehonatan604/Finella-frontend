@@ -87,6 +87,10 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
             ) => {
                 const fetchedRow = fetchedBalanceEntries.find((bEntry) => bEntry._id === row.id);
 
+                console.log("fetchedRow", fetchedRow);
+                console.log("row", row);
+
+
                 const checkFetchedRow = {
                     name: fetchedRow?.name,
                     date: formatDate(fetchedRow?.date),
@@ -98,7 +102,7 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
 
                 const checkRow = {
                     name: row.name,
-                    date: row.date,
+                    date: formatDate(row.date),
                     type: row.type,
                     price: row.price,
                     withVat: row.withVat,

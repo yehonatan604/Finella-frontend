@@ -25,7 +25,7 @@ const ActionButtons = (props: DocProps) => {
       </Button>
       <Button
         variant="contained"
-        color="primary"
+        color="success"
         sx={{ mt: 2, ml: 2 }}
         onClick={async () => {
           const data = [...rows];
@@ -37,22 +37,11 @@ const ActionButtons = (props: DocProps) => {
       </Button>
       <Button
         variant="contained"
-        color="success"
+        color="secondary"
         sx={{ mt: 2, ml: 2 }}
         onClick={() => {}}
       >
         Create Report
-      </Button>
-      <Button
-        variant="contained"
-        color="warning"
-        sx={{ mt: 2, ml: 2 }}
-        onClick={() => {}}
-      >
-        Load Report
-      </Button>
-      <Button variant="contained" color="error" sx={{ mt: 2, ml: 2 }} onClick={() => {}}>
-        Reset
       </Button>
     </Box>
   );

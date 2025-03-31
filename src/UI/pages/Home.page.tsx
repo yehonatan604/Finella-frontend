@@ -15,6 +15,7 @@ const HomePage = () => {
         textAlign: "center",
         color: "parimary.main",
         p: 4,
+        marginRight: "15%",
       }}
     >
       <Container>

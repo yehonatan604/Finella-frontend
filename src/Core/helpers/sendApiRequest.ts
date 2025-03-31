@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { HTTPMethodTypes } from '../../Core/types/HTTPMethodTypes';
 const { VITE_BASE_API_URL: URL } = import.meta.env;
+
 axios.defaults.baseURL = URL;
 
 const sendApiRequest = async (url: string, method: HTTPMethodTypes, data?: unknown) => {

@@ -12,8 +12,8 @@ const App = () => {
       <BrowserRouter>
         <Layout>
           <AppRouter />
+          <ToastContainer />
         </Layout>
-        <ToastContainer />
       </BrowserRouter>
     </Provider>
   );
