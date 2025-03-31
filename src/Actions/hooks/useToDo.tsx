@@ -66,27 +66,29 @@ const useToDo = (isTodoPage: boolean = false) => {
       ) => {
         const fetchedRow = fetchedToDos.find((toDo) => toDo._id === row.id);
 
-        const checkFetchedRow = {
-          name: fetchedRow?.name,
-          description: fetchedRow?.description,
-          startDate: formatDate(fetchedRow?.startDate),
-          endDate: formatDate(fetchedRow?.endDate),
-          toDoStatus: fetchedRow?.toDoStatus,
-        };
+        const fields = [
+          "name",
+          "description",
+          "startDate",
+          "endDate",
+          "toDoStatus",
+        ] as const;
 
-        const checkRow = {
-          name: row.name,
-          description: row.description,
-          startDate: row.startDate,
-          endDate: row.endDate,
-          toDoStatus: row.toDoStatus,
-        };
+        const normalizeRow = (row: Partial<TToDo>) => ({
+          name: row?.name,
+          description: row?.description,
+          startDate: formatDate(row?.startDate),
+          endDate: formatDate(row?.endDate),
+          toDoStatus: row?.toDoStatus,
+        });
 
-        const isEqual = Object.keys(checkFetchedRow).every(
-          (key) =>
-            checkFetchedRow[key as keyof typeof checkFetchedRow] ===
-            checkRow[key as keyof typeof checkRow]
+        const checkFetchedRow = normalizeRow(fetchedRow as TToDo);
+        const checkRow = normalizeRow(row);
+
+        const isEqual = fields.every(
+          (field) => checkFetchedRow[field] === checkRow[field]
         );
+
         if (isEqual) return;
 
         const finalRow = {

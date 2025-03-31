@@ -40,11 +40,13 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
                     ? fixPriceString(data.price + "")
                     : data.price;
 
+                console.log(data.notes, "notes");
+
+
                 await sendApiRequest(`/balance-entry`, HTTPMethodTypes.PUT, {
                     ...data,
                     userId: user?._id,
                     price: fixedPrice,
-                    notes: " ",
                 });
 
                 setFetchedBalanceEntries((prev) =>
@@ -87,33 +89,24 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
             ) => {
                 const fetchedRow = fetchedBalanceEntries.find((bEntry) => bEntry._id === row.id);
 
-                console.log("fetchedRow", fetchedRow);
-                console.log("row", row);
+                const fields = ["name", "date", "type", "price", "withVat", "notes"] as const;
 
-
-                const checkFetchedRow = {
-                    name: fetchedRow?.name,
-                    date: formatDate(fetchedRow?.date),
-                    type: fetchedRow?.type,
-                    price: fetchedRow?.price,
-                    withVat: fetchedRow?.withVat,
-                    notes: fetchedRow?.notes,
+                const normalizeRow = (row: Partial<TBalanceEntry>) => {
+                    return {
+                        name: row?.name,
+                        date: row?.date?.includes("T") ? formatDate(row?.date) : row?.date,
+                        type: row?.type,
+                        price: row?.price,
+                        withVat: row?.withVat,
+                        notes: row?.notes ?? ""
+                    };
                 };
 
-                const checkRow = {
-                    name: row.name,
-                    date: formatDate(row.date),
-                    type: row.type,
-                    price: row.price,
-                    withVat: row.withVat,
-                    notes: row.notes,
-                };
+                const checkFetchedRow = normalizeRow(fetchedRow as TBalanceEntry);
+                const checkRow = normalizeRow(row);
 
-                const isEqual = Object.keys(checkFetchedRow).every(
-                    (key) =>
-                        checkFetchedRow[key as keyof typeof checkFetchedRow] ===
-                        checkRow[key as keyof typeof checkRow]
-                );
+                const isEqual = fields.every((field) => checkFetchedRow[field] === checkRow[field]);
+
                 if (isEqual) return;
 
                 const finalRow = {
@@ -125,7 +118,7 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
                     ),
                     type: row.type ?? fetchedRow?.type ?? "income",
                     price: Number(row.price ?? fetchedRow?.price ?? 0),
-                    withVat: row.withVat ?? fetchedRow?.withVat ?? false,
+                    withVat: row.withVat ?? fetchedRow?.withVat,
                     notes: row.notes ?? fetchedRow?.notes ?? "",
                 };
                 onUpdate(finalRow as unknown as TBalanceEntry);
@@ -211,6 +204,8 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
                 date: formatDate(bEntry.date),
                 type: bEntry.type,
                 price: bEntry.type === "income" ? bEntry.price : `-${bEntry.price}`,
+                withVat: bEntry.withVat,
+                notes: bEntry.notes,
             })) || [];
 
         const totalPrice = data.reduce(
