@@ -6,6 +6,9 @@ import SalariesPdfDoc from "../components/SalariesPdfDoc";
 import ActionFilters from "../components/ActionFilters";
 import ActionButtons from "../components/ActionButtons";
 import AddButton from "../components/AddButton";
+import { useState } from "react";
+import { TSalary } from "../types/TSalary";
+import SalaryDetailsDialog from "../dialogs/SalaryDetailsDialog";
 
 const SalariesPage = () => {
   const {
@@ -16,7 +19,12 @@ const SalariesPage = () => {
     setToYear,
     setMonths,
     setPickedWorkplaces,
+    fetchedSalaries,
+    onUpdate,
   } = useSalary(true);
+
+  const [selectedSalary, setSelectedSalary] = useState<TSalary | null>(null);
+  const [isSalaryDetailsDialogOpen, setIsSalaryDetailsDialogOpen] = useState(false);
 
   return (
     <>
@@ -58,13 +66,32 @@ const SalariesPage = () => {
               },
             }}
             pageSizeOptions={[5, 10, 25]}
-            onRowSelectionModelChange={(ids) => {
-              console.log(ids);
+            onRowDoubleClick={(params) => {
+              setSelectedSalary(
+                fetchedSalaries?.find((salary) => salary._id === params.id) ?? null
+              );
+              setIsSalaryDetailsDialogOpen(true);
+            }}
+            onCellEditStart={(_, event) => {
+              event.defaultMuiPrevented = true;
             }}
           />
         </Box>
       </Page>
       <ActionButtons fileName="Salaries" rows={rows} Doc={SalariesPdfDoc} />
+
+      {isSalaryDetailsDialogOpen && selectedSalary && (
+        <SalaryDetailsDialog
+          isOpen={isSalaryDetailsDialogOpen}
+          onClose={() => setIsSalaryDetailsDialogOpen(false)}
+          salary={selectedSalary}
+          onSubmit={(data) => {
+            onUpdate(data);
+            setSelectedSalary(null);
+          }}
+          workplaces={workplaces ?? []}
+        />
+      )}
 
       <AddButton addUrl="/actions/add-salary" />
     </>
