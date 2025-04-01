@@ -58,8 +58,25 @@ const useWorkplaces = () => {
             setLoading(true);
             setError("");
 
-            const res = await sendApiRequest(`/work-place`, HTTPMethodTypes.PUT, workplace);
+            const finalWorlpace = {
+                _id: (workplace as TWorkplace & { id: string })["id"],
+                name: workplace.name,
+                address: workplace.address,
+                pricePerHour: workplace.pricePerHour,
+                pricePerMonth: workplace.pricePerMonth,
+                startDate: workplace.startDate,
+                endDate: workplace.endDate,
+                phone: {
+                    main: (workplace as TWorkplace & { "main phone": string })["main phone"],
+                    secondary: (workplace as TWorkplace & { "secondary phone": string })["secondary phone"],
+                },
+                email: workplace.email,
+                withVat: workplace.withVat,
+            }
+
+            const res = await sendApiRequest(`/work-place`, HTTPMethodTypes.PUT, finalWorlpace);
             setWorkplaces(prev => prev?.map(w => w._id === res.data._id ? res.data : w) || []);
+            setSelectedWorkplace(null);
             toastify.success("Workplace updated successfully");
         }
         catch (e) {
@@ -82,16 +99,26 @@ const useWorkplaces = () => {
 
             const fields = [
                 "name",
+                "email",
                 "address",
                 "pricePerHour",
                 "pricePerMonth",
+                "startDate",
+                "endDate",
+                "main phone",
+                "secondary phone",
             ] as const;
 
             const normalizeRow = (row: Partial<TWorkplace>) => ({
                 name: row?.name,
+                email: row?.email,
                 address: fetchedRow?.address,
                 pricePerHour: row?.pricePerHour,
                 pricePerMonth: row?.pricePerMonth,
+                startDate: row?.startDate,
+                endDate: row?.endDate,
+                "main phone": row?.phone?.main,
+                "secondary phone": row?.phone?.secondary,
             });
 
             const checkFetchedRow = normalizeRow(fetchedRow as TWorkplace);

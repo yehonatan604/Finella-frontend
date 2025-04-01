@@ -10,6 +10,10 @@ export const workplaceRows = (workplaces: TWorkplace[]) => {
             address: `${workplace.address?.street} ${workplace.address?.houseNumber} ${workplace.address?.city} ${workplace.address?.country}`,
             pricePerHour: workplace.pricePerHour,
             pricePerMonth: workplace.pricePerMonth,
+            ["secondary phone"]: workplace.phone?.secondary,
+            startDate: workplace.startDate,
+            endDate: workplace.endDate,
+
         })) || []
     );
 };

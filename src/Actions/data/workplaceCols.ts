@@ -29,7 +29,7 @@ export const workplaceCols = (
             sortable: true,
             editable: true,
             renderCell: (params: TDataGridInputCellParams) => {
-                return createDataGridInputCell(params, onCellUpdate, "phone.main");
+                return createDataGridInputCell(params, onCellUpdate, "main phone");
             },
         },
         {
@@ -58,6 +58,9 @@ export const workplaceCols = (
             headerClassName: "super-app-theme--header",
             sortable: true,
             editable: true,
+            renderCell: (params: TDataGridInputCellParams) => {
+                return createDataGridInputCell(params, onCellUpdate, "pricePerHour", "number");
+            },
         },
         {
             field: "pricePerMonth",
@@ -66,6 +69,9 @@ export const workplaceCols = (
             headerClassName: "super-app-theme--header",
             sortable: true,
             editable: true,
+            renderCell: (params: TDataGridInputCellParams) => {
+                return createDataGridInputCell(params, onCellUpdate, "pricePerMonth", "number");
+            },
         },
         {
             field: "options",
