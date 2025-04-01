@@ -6,11 +6,11 @@ import { TBalanceEntry } from "../types/TBalanceEntry";
 import { sendApiRequest } from "../../Core/helpers/sendApiRequest";
 import { addBalanceEntryFormDefault } from "../forms/initialData/addBalanceEntryFormDefault copy";
 import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
-import { createDataGridInputCell } from "../helpers/createDataGridInputCell";
 import { toastify } from "../../UI/utilities/toast";
 import { formatDate } from "../../Core/helpers/dateHelpers";
 import { fixPriceString } from "../../Core/helpers/stringHelpers";
-import { createRowIcons } from "../helpers/createRowIcons";
+import { balanceEntryCols } from "../data/balanceEntryCols";
+import { balanceEntryRows } from "../data/balanceEntryRows";
 
 const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
     const { user } = useAuth();
@@ -159,127 +159,16 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
             }
         }, [user?._id]);
 
-    const columns = useMemo(
-        () => [
-            {
-                field: "name",
-                headerName: "Name",
-                flex: 1,
-                headerClassName: "super-app-theme--header",
-                sortable: true,
-                sortComparator: (v1: string, v2: string, param1: { id: string; }, param2: { id: string; }) => {
-                    if (param1.id === "total" || param2.id === "total") return;
-                    return v1.localeCompare(v2);
-                },
-                editable: true,
-                renderCell: (params: TDataGridInputCellParams) => {
-                    if (params.row.id === "total") return params.value;
-                    return createDataGridInputCell(params, onCellUpdate, "name");
-                },
-            },
-            {
-                field: "date",
-                headerName: "Date",
-                flex: 1,
-                headerClassName: "super-app-theme--header",
-                sortable: true,
-                sortComparator: (v1: string, v2: string, param1: { id: string; }, param2: { id: string; }) => {
-                    if (param1.id === "total" || param2.id === "total") return;
-                    return v1.localeCompare(v2);
-                },
-                editable: true,
-                renderCell: (params: TDataGridInputCellParams) => {
-                    if (params.row.id === "total") return params.value;
-                    return createDataGridInputCell(params, onCellUpdate, "date", "date");
-                },
-            },
-            {
-                field: "type",
-                headerName: "Type",
-                flex: 1,
-                headerClassName: "super-app-theme--header",
-                sortable: true,
-                sortComparator: (v1: string, v2: string, param1: { id: string; }, param2: { id: string; }) => {
-                    if (param1.id === "total" || param2.id === "total") return;
-                    return v1.localeCompare(v2);
-                },
-                editable: true,
-                renderCell: (params: TDataGridInputCellParams) => {
-                    if (params.row.id === "total") return params.value;
-                    return createDataGridInputCell(params, onCellUpdate, "type", "select", ["income", "expense"]);
-                },
-            },
-            {
-                field: "price",
-                headerName: "Price",
-                flex: .5,
-                headerClassName: "super-app-theme--header",
-                sortable: true,
-                sortComparator: (v1: number, v2: number, param1: { id: string; }, param2: { id: string; }) => {
-                    if (param1.id === "total" || param2.id === "total") return;
-                    return v1 - v2;
-                },
-                editable: true,
-                renderCell: (params: TDataGridInputCellParams) => {
-                    if (params.row.id === "total") return params.value;
-                    return createDataGridInputCell(params, onCellUpdate, "price", "number");
-                },
-            },
-            {
-                field: "options",
-                headerName: "Options",
-                flex: .4,
-                headerClassName: "super-app-theme--header",
-                sortable: false,
-                editable: false,
-                renderCell: (params: TDataGridInputCellParams) => {
-                    if (params.row.id === "total") return;
-                    return createRowIcons(() => {
-                        setSelectedBEntry(fetchedBalanceEntries.find((bEntry) => bEntry._id === params.id) ?? null);
-                        setIsBEntryDetailsDialogOpen(true)
-                    }, () => {
-                        onDelete(params.id as string);
-                    });
-                },
-            }
-        ],
-        [onCellUpdate, fetchedBalanceEntries, onDelete]
-    );
-
-    const rows = useMemo(() => {
-        const data =
-            fetchedBalanceEntries.map((bEntry) => ({
-                id: bEntry._id,
-                name: bEntry.name,
-                date: formatDate(bEntry.date),
-                type: bEntry.type,
-                price: bEntry.type === "income" ? bEntry.price : `-${bEntry.price}`,
-                withVat: bEntry.withVat,
-                notes: bEntry.notes,
-            })) || [];
-
-        const totalPrice = data.reduce(
-            (total, current) => total + Number(current.price),
-            0
-        );
-        return [
-            ...data,
-            {
-                id: "total",
-                name: "Total",
-                "price": `${totalPrice.toFixed(2)}`,
-            },
-        ];
-    }, [fetchedBalanceEntries]);
 
     const onSubmit = async (data: TBalanceEntry) => {
         try {
             setLoading(true);
             setError(null);
-            await sendApiRequest(`/balance-entry`, HTTPMethodTypes.POST, { ...data, userId: user?._id });
+            await sendApiRequest(`/balance-entry`, HTTPMethodTypes.POST, { ...data, userId: user?._id, notes: data.notes ?? "" });
+            toastify.success("Balance Entry added successfully");
         } catch (error) {
             console.log(error);
-
+            toastify.error("Error adding Balance Entry");
             if (error instanceof Error) {
                 setError(error.message);
             } else {
@@ -299,6 +188,22 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
             console.log(error);
         }
     }, []);
+
+    const columns = useMemo(
+        () => balanceEntryCols(
+            onCellUpdate,
+            (params: TDataGridInputCellParams) => {
+                setSelectedBEntry(fetchedBalanceEntries.find((bEntry) => bEntry._id === params.id) ?? null);
+                setIsBEntryDetailsDialogOpen(true)
+            },
+            (params: TDataGridInputCellParams) => {
+                onDelete(params.id as string);
+            }
+        ),
+        [fetchedBalanceEntries, onCellUpdate, onDelete]
+    );
+
+    const rows = useMemo(() => balanceEntryRows(fetchedBalanceEntries), [fetchedBalanceEntries]);
 
     useEffect(() => {
         if (!isBalanceEntryPage) return;

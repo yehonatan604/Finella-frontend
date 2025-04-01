@@ -8,9 +8,10 @@ import { TSalaryHours } from "../types/TSalaryHours";
 import useWorkplaces from "./useWorkplace";
 import { sendApiRequest } from "../../Core/helpers/sendApiRequest";
 import { addSalaryFormDefault } from "../forms/initialData/addSalaryFormDefault";
-import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
-import { createDataGridInputCell } from "../helpers/createDataGridInputCell";
 import { toastify } from "../../UI/utilities/toast";
+import { salaryCols } from "../data/salaryCols";
+import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
+import { salaryRows } from "../data/salaryRows";
 
 const useSalary = (isSalariesPage: boolean = false) => {
     const { user } = useAuth();
@@ -28,6 +29,8 @@ const useSalary = (isSalariesPage: boolean = false) => {
     );
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [selectedSalary, setSelectedSalary] = useState<TSalary | null>(null);
+    const [isSalaryDetailsDialogOpen, setIsSalaryDetailsDialogOpen] = useState(false);
 
     const calcTotalHours = useCallback((hours: TSalaryHours[]) => {
         return hours.reduce((acc, curr) => {
@@ -138,111 +141,51 @@ const useSalary = (isSalariesPage: boolean = false) => {
         [calcTotalHours, calcTotalSum, fetchedSalaries, onUpdate, user?._id, workplaces]
     );
 
-    const columns = useMemo(
-        () => [
-            {
-                field: "workplace",
-                headerName: "Workplace",
-                flex: 1,
-                headerClassName: "super-app-theme--header",
-                sortable: true,
-                sortComparator: (v1: string, v2: string, param1: { id: string; }, param2: { id: string; }) => {
-                    if (param1.id === "total" || param2.id === "total") return;
-                    return v1.localeCompare(v2);
-                },
-                editable: true,
-                renderCell: (params: TDataGridInputCellParams) => {
-                    if (params.row.id === "total") return params.value;
-                    return createDataGridInputCell(params, onCellUpdate, "workplace", "select", [
-                        ...(workplaces ?? []).map((workplace) => workplace.name)
-                    ]);
-                },
-            },
-            {
-                field: "year",
-                headerName: "Year",
-                flex: 1,
-                headerClassName: "super-app-theme--header",
-                sortable: true,
-                sortComparator: (v1: number, v2: number) => v1 - v2,
-                editable: true,
-                renderCell: (params: TDataGridInputCellParams) => {
-                    if (params.row.id === "total") return params.value;
-                    return createDataGridInputCell(params, onCellUpdate, "year", "number");
+    const onDelete = useCallback(
+        async (id: string) => {
+            try {
+                setLoading(true);
+                setError(null);
+
+                await sendApiRequest(`/salary/${id}`, HTTPMethodTypes.DELETE);
+
+                setFetchedSalaries((prev) => prev.filter((entry) => entry._id !== id));
+                toastify.success("Balance Entry deleted successfully");
+            } catch (error) {
+                console.log(error);
+                toastify.error("Error deleting Balance Entry");
+
+                if (error instanceof Error) {
+                    setError(error.message);
+                } else {
+                    setError(error as string);
                 }
-            },
-            {
-                field: "month",
-                headerName: "Month",
-                flex: 1,
-                headerClassName: "super-app-theme--header",
-                sortable: true,
-                sortComparator: (v1: number, v2: number) => v1 - v2,
-                editable: true,
-                renderCell: (params: TDataGridInputCellParams) => {
-                    if (params.row.id === "total") return params.value;
-                    return createDataGridInputCell(params, onCellUpdate, "month", "number");
-                }
-            },
-            {
-                field: "total hours",
-                headerName: "Total Hours",
-                flex: 1,
-                headerClassName: "super-app-theme--header",
-                sortable: true,
-                sortComparator: (v1: number, v2: number, param1: { id: string; }, param2: { id: string; }) => {
-                    if (param1.id === "total" || param2.id === "total") return;
-                    return v1 - v2;
-                },
-                editable: false,
-            },
-            {
-                field: "total sum",
-                headerName: "Total Sum",
-                flex: 1,
-                headerClassName: "super-app-theme--header",
-                sortable: true,
-                sortComparator: (v1: number, v2: number, param1, param2) => {
-                    if (param1.id === "total" || param2.id === "total") return;
-                    return v1 - v2;
-                },
-                editable: false,
-            },
-        ],
-        [onCellUpdate, workplaces]
+            } finally {
+                setLoading(false);
+            }
+        }, []
     );
 
-    const rows = useMemo(() => {
-        const data =
-            fetchedSalaries.map((salary) => ({
-                id: salary._id,
-                workplace:
-                    workplaces?.find((workplace) => workplace._id === salary.workPlaceId)?.name ||
-                    "",
-                year: salary.date.split("-")[1],
-                month: salary.date.split("-")[0],
-                "total hours": calcTotalHours(salary.hours) || "",
-                "total sum": calcTotalSum(salary) || "",
-            })) || [];
-
-        const totalHours = data.reduce(
-            (acc, curr) => acc + (Number(curr["total hours"]) || 0),
-            0
-        );
-        const totalSum = data.reduce(
-            (acc, curr) => acc + (Number(curr["total sum"]) || 0),
-            0
-        );
-        return [
-            ...data,
-            {
-                id: "total",
-                workplace: "Total",
-                "total hours": `${totalHours.toFixed(2)}`,
-                "total sum": `${totalSum.toFixed(2)}`,
+    const columns = useMemo(
+        () => salaryCols(
+            workplaces!,
+            onCellUpdate,
+            (params: TDataGridInputCellParams) => {
+                setSelectedSalary(
+                    fetchedSalaries.find((salary) => salary._id === params.row.id) || null
+                );
+                setIsSalaryDetailsDialogOpen(true);
             },
-        ];
-    }, [calcTotalHours, calcTotalSum, fetchedSalaries, workplaces]);
+            (params: TDataGridInputCellParams) => onDelete(params.row.id as string)
+        ), [fetchedSalaries, onCellUpdate, workplaces, onDelete]
+    );
+
+    const rows = useMemo(() => salaryRows(
+        fetchedSalaries,
+        workplaces!,
+        calcTotalHours,
+        calcTotalSum
+    ), [calcTotalHours, calcTotalSum, fetchedSalaries, workplaces]);
 
     const addNewSalaryHour = useCallback(() => {
         setSalaryHours((prev) => {
@@ -293,8 +236,8 @@ const useSalary = (isSalariesPage: boolean = false) => {
                 hours: salaryHours,
             };
 
-            const response = await sendApiRequest("/salary", HTTPMethodTypes.POST, finalData);
-            console.log(response.data);
+            await sendApiRequest("/salary", HTTPMethodTypes.POST, finalData);
+            toastify.success("Salary added successfully");
         } catch (error) {
             console.log(error);
         }
@@ -366,7 +309,11 @@ const useSalary = (isSalariesPage: boolean = false) => {
         error,
         loading,
         fetchedSalaries,
-        onUpdate
+        onUpdate,
+        selectedSalary,
+        setSelectedSalary,
+        isSalaryDetailsDialogOpen,
+        setIsSalaryDetailsDialogOpen,
     };
 };
 

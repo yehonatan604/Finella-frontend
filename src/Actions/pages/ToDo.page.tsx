@@ -4,8 +4,6 @@ import Page from "../../UI/components/Page";
 import SalariesPdfDoc from "../components/SalariesPdfDoc";
 import ActionFilters from "../components/ActionFilters";
 import ActionButtons from "../components/ActionButtons";
-import { useState } from "react";
-import { TToDo } from "../types/TToDo";
 import useToDo from "../hooks/useToDo";
 import AddButton from "../components/AddButton";
 import ToDoDetailsDialog from "../components/dialogs/ToDoDetailsDialog";
@@ -14,16 +12,16 @@ const ToDoPage = () => {
   const {
     columns,
     rows,
-    fetchedToDos,
     setFromYear,
     setToYear,
     setMonths,
     setPickedStatus,
     onUpdate,
+    isToDoDetailsDialogOpen,
+    setIsToDoDetailsDialogOpen,
+    setSelectedToDo,
+    selectedToDo,
   } = useToDo(true);
-
-  const [isToDoDetailsDialogOpen, setIsToDoDetailsDialogOpen] = useState(false);
-  const [selectedToDo, setSelectedToDo] = useState<TToDo | null>(null);
 
   return (
     <>
@@ -52,7 +50,16 @@ const ToDoPage = () => {
           <DataGrid
             rows={rows}
             columns={columns as GridColDef[]}
-            sx={{ width: "60vw" }}
+            sx={{
+              width: "60vw",
+              "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": {
+                outline: "none",
+              },
+              "& .MuiDataGrid-cell--editing": {
+                boxShadow: "none",
+                outline: "none",
+              },
+            }}
             getRowClassName={(params) =>
               params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
             }
@@ -63,15 +70,10 @@ const ToDoPage = () => {
             }}
             pageSizeOptions={[5, 10, 25]}
             disableRowSelectionOnClick
-            onRowDoubleClick={(params) => {
-              setSelectedToDo(
-                fetchedToDos?.find((toDo) => toDo._id === params.id) ?? null
-              );
-              setIsToDoDetailsDialogOpen(true);
-            }}
             onCellEditStart={(_, event) => {
               event.defaultMuiPrevented = true;
             }}
+            isRowSelectable={() => false}
           />
         </Box>
       </Page>

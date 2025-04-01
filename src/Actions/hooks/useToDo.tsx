@@ -6,9 +6,10 @@ import { sendApiRequest } from "../../Core/helpers/sendApiRequest";
 import { addToDoFormDefault } from "../forms/initialData/addToDoFormDefault";
 import { TToDo } from "../types/TToDo";
 import { toastify } from "../../UI/utilities/toast";
-import { createDataGridInputCell } from "../helpers/createDataGridInputCell";
 import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
 import { formatDate } from "../../Core/helpers/dateHelpers";
+import { todoCols } from "../data/todoCols";
+import { todoRows } from "../data/todoRows";
 
 const useToDo = (isTodoPage: boolean = false) => {
   const { user } = useAuth();
@@ -19,6 +20,8 @@ const useToDo = (isTodoPage: boolean = false) => {
   const [toYear, setToYear] = useState(new Date().getFullYear());
   const [months, setMonths] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
   const [pickedStatus, setPickedStatus] = useState<string>("all");
+  const [isToDoDetailsDialogOpen, setIsToDoDetailsDialogOpen] = useState(false);
+  const [selectedToDo, setSelectedToDo] = useState<TToDo | null>(null);
 
   const {
     register,
@@ -111,85 +114,47 @@ const useToDo = (isTodoPage: boolean = false) => {
     [fetchedToDos, onUpdate]
   );
 
-  const columns = useMemo(
-    () => [
-      {
-        field: "name",
-        headerName: "Name",
-        flex: 1,
-        headerClassName: "super-app-theme--header",
-        editable: true,
-        renderCell: (params: TDataGridInputCellParams) => {
-          return createDataGridInputCell(params, onCellUpdate, "name");
-        },
-      },
-      {
-        field: "description",
-        headerName: "Description",
-        flex: 1,
-        headerClassName: "super-app-theme--header",
-        editable: true,
-        renderCell: (params: TDataGridInputCellParams) => {
-          return createDataGridInputCell(params, onCellUpdate, "description");
-        },
-      },
-      {
-        field: "startDate",
-        headerName: "Start Date",
-        flex: 1,
-        headerClassName: "super-app-theme--header",
-        editable: true,
-        renderCell: (params: TDataGridInputCellParams) => {
-          return createDataGridInputCell(params, onCellUpdate, "startDate", "date");
-        },
-      },
-      {
-        field: "endDate",
-        headerName: "End Date",
-        flex: 1,
-        headerClassName: "super-app-theme--header",
-        editable: true,
-        renderCell: (params: TDataGridInputCellParams) => {
-          return createDataGridInputCell(params, onCellUpdate, "endDate", "date");
-        },
-      },
-      {
-        field: "toDoStatus",
-        headerName: "Status",
-        flex: 1,
-        headerClassName: "super-app-theme--header",
-        editable: true,
-        renderCell: (params: TDataGridInputCellParams) => {
-          return createDataGridInputCell(params, onCellUpdate, "toDoStatus", "select", [
-            "PENDING",
-            "COMPLETED",
-          ]);
-        },
-      },
-      {
-        field: "tasks",
-        headerName: "Tasks",
-        flex: 1,
-        headerClassName: "super-app-theme--header",
-        editable: false,
-      },
-    ],
-    [onCellUpdate]
+  const onDelete = useCallback(
+    async (id: string) => {
+      try {
+        setLoading(true);
+        setError(null);
+        await sendApiRequest(`/todo/${id}`, HTTPMethodTypes.DELETE, {
+          userId: user?._id,
+        });
+        setFetchedTodos((prev) => prev.filter((todo) => todo._id !== id));
+        toastify.success("ToDo deleted successfully");
+      } catch (error) {
+        console.log(error);
+
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError(error as string);
+        }
+      } finally {
+        setLoading(false);
+      }
+    },
+    [user?._id]
   );
 
-  const rows = useMemo(() => {
-    return (
-      fetchedToDos.map((todo) => ({
-        id: todo._id,
-        name: todo.name,
-        description: todo.description,
-        startDate: formatDate(todo.startDate),
-        endDate: formatDate(todo.endDate),
-        toDoStatus: todo.toDoStatus,
-        tasks: todo.tasks?.length,
-      })) || []
-    );
-  }, [fetchedToDos]);
+  const columns = useMemo(
+    () =>
+      todoCols(
+        onCellUpdate,
+        (params: TDataGridInputCellParams) => {
+          setSelectedToDo(fetchedToDos.find((todo) => todo._id === params.id) ?? null);
+          setIsToDoDetailsDialogOpen(true);
+        },
+        (params: TDataGridInputCellParams) => {
+          onDelete(params.id as string);
+        }
+      ),
+    [onCellUpdate, fetchedToDos, onDelete]
+  );
+
+  const rows = useMemo(() => todoRows(fetchedToDos), [fetchedToDos]);
 
   const onSubmit = async (data: TToDo) => {
     try {
@@ -269,6 +234,10 @@ const useToDo = (isTodoPage: boolean = false) => {
     setPickedStatus,
     fetchedToDos,
     processRowOnCellUpdate: onCellUpdate,
+    isToDoDetailsDialogOpen,
+    setIsToDoDetailsDialogOpen,
+    selectedToDo,
+    setSelectedToDo,
   };
 };
 

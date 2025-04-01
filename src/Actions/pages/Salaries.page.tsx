@@ -6,8 +6,6 @@ import SalariesPdfDoc from "../components/SalariesPdfDoc";
 import ActionFilters from "../components/ActionFilters";
 import ActionButtons from "../components/ActionButtons";
 import AddButton from "../components/AddButton";
-import { useState } from "react";
-import { TSalary } from "../types/TSalary";
 import SalaryDetailsDialog from "../components/dialogs/SalaryDetailsDialog";
 
 const SalariesPage = () => {
@@ -19,12 +17,12 @@ const SalariesPage = () => {
     setToYear,
     setMonths,
     setPickedWorkplaces,
-    fetchedSalaries,
     onUpdate,
+    isSalaryDetailsDialogOpen,
+    setIsSalaryDetailsDialogOpen,
+    setSelectedSalary,
+    selectedSalary,
   } = useSalary(true);
-
-  const [selectedSalary, setSelectedSalary] = useState<TSalary | null>(null);
-  const [isSalaryDetailsDialogOpen, setIsSalaryDetailsDialogOpen] = useState(false);
 
   return (
     <>
@@ -52,7 +50,16 @@ const SalariesPage = () => {
           <DataGrid
             rows={rows}
             columns={columns as GridColDef[]}
-            sx={{ width: "60vw" }}
+            sx={{
+              width: "60vw",
+              "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": {
+                outline: "none",
+              },
+              "& .MuiDataGrid-cell--editing": {
+                boxShadow: "none",
+                outline: "none",
+              },
+            }}
             getRowClassName={(params) =>
               params.id === "total"
                 ? "total"
@@ -66,15 +73,10 @@ const SalariesPage = () => {
               },
             }}
             pageSizeOptions={[5, 10, 25]}
-            onRowDoubleClick={(params) => {
-              setSelectedSalary(
-                fetchedSalaries?.find((salary) => salary._id === params.id) ?? null
-              );
-              setIsSalaryDetailsDialogOpen(true);
-            }}
             onCellEditStart={(_, event) => {
               event.defaultMuiPrevented = true;
             }}
+            isRowSelectable={() => false}
           />
         </Box>
       </Page>
