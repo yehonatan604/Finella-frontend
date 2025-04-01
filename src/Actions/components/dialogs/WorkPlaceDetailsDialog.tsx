@@ -1,0 +1,255 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  Divider,
+  Box,
+  DialogActions,
+  Button,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
+import { ChangeEvent, useState } from "react";
+import { capitalizeFirstLetter } from "../../../Core/helpers/stringHelpers";
+import CenterBox from "../../../UI/components/CenterBox";
+import DialogXButton from "../DialogXButton";
+import StyledTitleInput from "../styled/StyledTitleInput";
+import { TWorkplace } from "../../types/TWorkplace";
+
+type WorkplaceDetailsDialogProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  workplace: TWorkplace;
+  onSubmit: (workplace: TWorkplace) => void;
+};
+
+const WorkplaceDetailsDialog = ({
+  isOpen,
+  onClose,
+  workplace,
+  onSubmit,
+}: WorkplaceDetailsDialogProps) => {
+  const [data, setData] = useState<TWorkplace>(workplace);
+
+  const handlChanges = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setData({
+      ...data,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = () => {
+    onSubmit(data);
+    onClose();
+  };
+
+  return (
+    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="lg" sx={{ left: "15vw" }}>
+      <DialogTitle
+        sx={{
+          backgroundColor: "primary.main",
+          color: "#fff",
+          fontWeight: "bold",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          p: ".5rem",
+        }}
+      >
+        <StyledTitleInput
+          type="text"
+          name="name"
+          value={capitalizeFirstLetter(data.name)}
+          sx={{ width: 705 }}
+          onChange={handlChanges}
+        />
+        <DialogXButton onClose={onClose} />
+      </DialogTitle>
+      <DialogContent sx={{ p: 3, pb: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "start",
+            justifyContent: "center",
+            my: 2,
+            gap: 2,
+          }}
+        >
+          <CenterBox sx={{ flexDirection: "row", flexWrap: "wrap", gap: 2 }}>
+            <TextField
+              type="email"
+              name="email"
+              value={data.email}
+              label="Email"
+              size="small"
+              sx={{ width: 217 }}
+              onChange={handlChanges}
+            />
+
+            <TextField
+              type="date"
+              name="startDate"
+              label="Start Date"
+              value={
+                data.startDate ? new Date(data.startDate).toISOString().split("T")[0] : ""
+              }
+              size="small"
+              sx={{ width: 217 }}
+              onChange={handlChanges}
+            />
+
+            <TextField
+              type="date"
+              name="endDate"
+              value={
+                data.endDate ? new Date(data.endDate).toISOString().split("T")[0] : ""
+              }
+              label="End Date"
+              size="small"
+              sx={{ width: 217 }}
+              onChange={handlChanges}
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+            />
+            <TextField
+              type="phone"
+              name="phone.main"
+              value={data.phone?.main}
+              label="Main Phone"
+              size="small"
+              sx={{ width: 217 }}
+              onChange={handlChanges}
+            />
+            <TextField
+              type="phone"
+              name="phone.secondary"
+              value={data.phone?.secondary}
+              label="Secondary Phone"
+              size="small"
+              sx={{ width: 217 }}
+              onChange={handlChanges}
+            />
+          </CenterBox>
+          <Divider sx={{ width: "100%", my: 2 }} />
+
+          <CenterBox sx={{ flexDirection: "row", gap: 2, flexWrap: "wrap" }}>
+            <TextField
+              type="text"
+              name="street"
+              value={data.address?.street}
+              label="Street"
+              size="small"
+              sx={{ width: 217 }}
+              onChange={handlChanges}
+            />
+
+            <TextField
+              type="text"
+              name="streetNumber"
+              value={data.address?.houseNumber}
+              label="House Number"
+              size="small"
+              sx={{ width: 217 }}
+              onChange={handlChanges}
+            />
+
+            <TextField
+              type="text"
+              name="city"
+              value={data.address?.city}
+              label="City"
+              size="small"
+              sx={{ width: 217 }}
+              onChange={handlChanges}
+            />
+
+            <TextField
+              type="text"
+              name="country"
+              value={data.address?.country}
+              label="Country"
+              size="small"
+              sx={{ width: 217 }}
+              onChange={handlChanges}
+            />
+
+            <TextField
+              type="text"
+              name="zip"
+              value={data.address?.zip}
+              label="Zip Code"
+              size="small"
+              sx={{ width: 217 }}
+              onChange={handlChanges}
+            />
+          </CenterBox>
+
+          <Divider sx={{ width: "100%", my: 2 }} />
+
+          <CenterBox sx={{ flexDirection: "row", gap: 2 }}>
+            <TextField
+              type="number"
+              name="pricePerHour"
+              value={data.pricePerHour}
+              label="Price per Hour"
+              size="small"
+              sx={{ width: 217, color: "#fff" }}
+              onChange={handlChanges}
+            />
+            <TextField
+              type="number"
+              name="pricePerMonth"
+              value={data.pricePerMonth}
+              label="Price per Month"
+              size="small"
+              sx={{ width: 217, color: "#fff" }}
+              onChange={handlChanges}
+            />
+
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={data.withVat}
+                  color="primary"
+                  onChange={(e) => {
+                    setData({ ...data, withVat: e.target.checked });
+                  }}
+                />
+              }
+              label="With VAT"
+            />
+          </CenterBox>
+
+          <Divider sx={{ width: "100%", my: 2 }} />
+
+          <TextField
+            type="text"
+            name="notes"
+            value={data.notes}
+            label="Notes"
+            multiline
+            rows={4}
+            sx={{ width: "100%" }}
+            onChange={handlChanges}
+          />
+        </Box>
+      </DialogContent>
+      <DialogActions sx={{ p: 2, pt: 0 }}>
+        <Button variant="contained" color="success" onClick={handleSubmit}>
+          Save Changes
+        </Button>
+        <Button variant="contained" color="error" onClick={onClose}>
+          Close
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+export default WorkplaceDetailsDialog;

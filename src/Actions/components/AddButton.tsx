@@ -14,8 +14,8 @@ const AddButton = ({ addUrl }: { addUrl: string }) => {
       sx={{
         mt: 2,
         borderRadius: "100%",
-        width: "100px",
-        height: "100px",
+        width: "80px",
+        height: "80px",
         padding: 0.5,
         fontSize: "4rem",
         position: "fixed",

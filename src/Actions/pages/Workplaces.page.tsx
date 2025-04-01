@@ -1,13 +1,22 @@
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Box, Paper } from "@mui/material";
 import Page from "../../UI/components/Page";
 import useWorkplaces from "../hooks/useWorkplace";
 import WorkplacesPdfDoc from "../components/WorkplacesPdfDoc";
 import ActionButtons from "../components/ActionButtons";
 import AddButton from "../components/AddButton";
+import WorkplaceDetailsDialog from "../components/dialogs/WorkPlaceDetailsDialog";
 
 const WorkplacesPage = () => {
-  const { columns, rows } = useWorkplaces();
+  const {
+    columns,
+    rows,
+    isUpdateDialogOpen,
+    setIsUpdateDialogOpen,
+    selectedWorkplace,
+    setSelectedWorkplace,
+    onUpdate,
+  } = useWorkplaces();
 
   return (
     <>
@@ -27,14 +36,19 @@ const WorkplacesPage = () => {
         >
           <DataGrid
             rows={rows}
-            columns={columns}
-            sx={{ width: "60vw" }}
+            columns={columns as GridColDef[]}
+            sx={{
+              width: "60vw",
+              "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": {
+                outline: "none",
+              },
+              "& .MuiDataGrid-cell--editing": {
+                boxShadow: "none",
+                outline: "none",
+              },
+            }}
             getRowClassName={(params) =>
-              params.id === "total"
-                ? "total"
-                : params.indexRelativeToCurrentPage % 2 === 0
-                ? "even"
-                : "odd"
+              params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
             }
             initialState={{
               pagination: {
@@ -42,13 +56,27 @@ const WorkplacesPage = () => {
               },
             }}
             pageSizeOptions={[5, 10, 25]}
-            onRowSelectionModelChange={(ids) => {
-              console.log(ids);
+            disableRowSelectionOnClick
+            onCellEditStart={(_, event) => {
+              event.defaultMuiPrevented = true;
             }}
+            isRowSelectable={() => false}
           />
         </Box>
       </Page>
       <ActionButtons fileName="workplaces" rows={rows} Doc={WorkplacesPdfDoc} />
+
+      {isUpdateDialogOpen && selectedWorkplace && (
+        <WorkplaceDetailsDialog
+          isOpen={isUpdateDialogOpen}
+          onClose={() => setIsUpdateDialogOpen(false)}
+          workplace={selectedWorkplace}
+          onSubmit={(data) => {
+            onUpdate(data);
+            setSelectedWorkplace(null);
+          }}
+        />
+      )}
 
       <AddButton addUrl="/actions/add-workplace" />
     </>
