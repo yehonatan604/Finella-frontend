@@ -31,6 +31,77 @@ const useSalary = (isSalariesPage: boolean = false) => {
     const [error, setError] = useState<string | null>(null);
     const [selectedSalary, setSelectedSalary] = useState<TSalary | null>(null);
     const [isSalaryDetailsDialogOpen, setIsSalaryDetailsDialogOpen] = useState(false);
+    const [search, setSearch] = useState<string>("");
+
+    const addNewSalaryHour = useCallback(() => {
+        setSalaryHours((prev) => {
+            return [
+                ...prev,
+                {
+                    day: "",
+                    startTime: "",
+                    endTime: "",
+                    breakEnd: "",
+                    breakStart: "",
+                    notes: "",
+                },
+            ];
+        });
+    }, []);
+
+    const addSalaryFromExcel = useCallback((data: unknown) => {
+        setSalaryHours(
+            (data as THoursFromExcel[]).map((item: THoursFromExcel) => {
+                return {
+                    day: item["תאריך"].split("/")[0],
+                    startTime: item["שעת התחלה"],
+                    endTime: item["שעת סיום"],
+                    breakStart: "",
+                    breakEnd: "",
+                    notes: "",
+                };
+            })
+        );
+    }, []);
+
+    const {
+        handleSubmit,
+        register,
+        setValue,
+        formState: { errors },
+    } = useForm<TSalary>({
+        mode: "onChange",
+        defaultValues: addSalaryFormDefault(user?._id || ""),
+        //resolver: joiResolver(addWorkplaceSchema),
+    });
+
+    const onSubmit = async (data: Record<string, unknown>) => {
+        try {
+            const finalData = {
+                ...data,
+                hours: salaryHours,
+            };
+
+            await sendApiRequest("/salary", HTTPMethodTypes.POST, finalData);
+            toastify.success("Salary added successfully");
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const toggleUploadDialog = useCallback(() => {
+        setIsUploadDialogOpen((prev) => !prev);
+    }, []);
+
+    const getSalaries = useCallback(async (query: string) => {
+        try {
+            const response = await sendApiRequest("/salary/by" + query, HTTPMethodTypes.GET);
+            setFetchedSalaries(response.data);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }, []);
 
     const calcTotalHours = useCallback((hours: TSalaryHours[]) => {
         return hours.reduce((acc, curr) => {
@@ -187,75 +258,9 @@ const useSalary = (isSalariesPage: boolean = false) => {
         calcTotalSum
     ), [calcTotalHours, calcTotalSum, fetchedSalaries, workplaces]);
 
-    const addNewSalaryHour = useCallback(() => {
-        setSalaryHours((prev) => {
-            return [
-                ...prev,
-                {
-                    day: "",
-                    startTime: "",
-                    endTime: "",
-                    breakEnd: "",
-                    breakStart: "",
-                    notes: "",
-                },
-            ];
-        });
-    }, []);
-
-    const addSalaryFromExcel = useCallback((data: unknown) => {
-        setSalaryHours(
-            (data as THoursFromExcel[]).map((item: THoursFromExcel) => {
-                return {
-                    day: item["תאריך"].split("/")[0],
-                    startTime: item["שעת התחלה"],
-                    endTime: item["שעת סיום"],
-                    breakStart: "",
-                    breakEnd: "",
-                    notes: "",
-                };
-            })
-        );
-    }, []);
-
-    const {
-        handleSubmit,
-        register,
-        setValue,
-        formState: { errors },
-    } = useForm<TSalary>({
-        mode: "onChange",
-        defaultValues: addSalaryFormDefault(user?._id || ""),
-        //resolver: joiResolver(addWorkplaceSchema),
-    });
-
-    const onSubmit = async (data: Record<string, unknown>) => {
-        try {
-            const finalData = {
-                ...data,
-                hours: salaryHours,
-            };
-
-            await sendApiRequest("/salary", HTTPMethodTypes.POST, finalData);
-            toastify.success("Salary added successfully");
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    const toggleUploadDialog = useCallback(() => {
-        setIsUploadDialogOpen((prev) => !prev);
-    }, []);
-
-    const getSalaries = useCallback(async (query: string) => {
-        try {
-            const response = await sendApiRequest("/salary/by" + query, HTTPMethodTypes.GET);
-            setFetchedSalaries(response.data);
-        }
-        catch (error) {
-            console.log(error);
-        }
-    }, []);
+    const filteredRows = rows.filter((row) =>
+        JSON.stringify(row).toLowerCase().includes(search.toLowerCase())
+    );
 
     useEffect(() => {
         getAllWorkplaces();
@@ -314,6 +319,8 @@ const useSalary = (isSalariesPage: boolean = false) => {
         setSelectedSalary,
         isSalaryDetailsDialogOpen,
         setIsSalaryDetailsDialogOpen,
+        setSearch,
+        filteredRows,
     };
 };
 

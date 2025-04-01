@@ -14,6 +14,7 @@ const useWorkplaces = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
     const [selectedWorkplace, setSelectedWorkplace] = useState<TWorkplace | null>(null);
+    const [search, setSearch] = useState<string>("");
 
     const getAllWorkplaces = useCallback(async () => {
         try {
@@ -175,6 +176,10 @@ const useWorkplaces = () => {
 
     const rows = useMemo(() => workplaceRows(workplaces || []), [workplaces]);
 
+    const filteredRows = rows.filter((row) =>
+        JSON.stringify(row).toLowerCase().includes(search.toLowerCase())
+    );
+
     useEffect(() => {
         getAllWorkplaces();
     }, [getAllWorkplaces]);
@@ -191,7 +196,9 @@ const useWorkplaces = () => {
         setIsUpdateDialogOpen,
         selectedWorkplace,
         setSelectedWorkplace,
-        onUpdate
+        onUpdate,
+        setSearch,
+        filteredRows,
     }
 }
 

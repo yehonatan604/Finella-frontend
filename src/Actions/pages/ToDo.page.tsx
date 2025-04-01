@@ -21,12 +21,15 @@ const ToDoPage = () => {
     setIsToDoDetailsDialogOpen,
     setSelectedToDo,
     selectedToDo,
+    setSearch,
+    filteredRows,
   } = useToDo(true);
 
   return (
     <>
       <Page title="To Do's">
         <ActionFilters
+          setSearch={setSearch}
           setFromYear={setFromYear}
           setToYear={setToYear}
           setMonths={setMonths}
@@ -48,7 +51,7 @@ const ToDoPage = () => {
           }}
         >
           <DataGrid
-            rows={rows}
+            rows={filteredRows}
             columns={columns as GridColDef[]}
             sx={{
               width: "60vw",

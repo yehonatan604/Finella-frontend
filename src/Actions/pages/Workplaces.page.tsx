@@ -6,6 +6,7 @@ import WorkplacesPdfDoc from "../components/WorkplacesPdfDoc";
 import ActionButtons from "../components/ActionButtons";
 import AddButton from "../components/AddButton";
 import WorkplaceDetailsDialog from "../components/dialogs/WorkPlaceDetailsDialog";
+import ActionFilters from "../components/ActionFilters";
 
 const WorkplacesPage = () => {
   const {
@@ -16,11 +17,15 @@ const WorkplacesPage = () => {
     selectedWorkplace,
     setSelectedWorkplace,
     onUpdate,
+    setSearch,
+    filteredRows,
   } = useWorkplaces();
 
   return (
     <>
       <Page title="Workplaces">
+        <ActionFilters setSearch={setSearch} />
+
         <Box
           component={Paper}
           sx={{
@@ -35,7 +40,7 @@ const WorkplacesPage = () => {
           }}
         >
           <DataGrid
-            rows={rows}
+            rows={filteredRows}
             columns={columns as GridColDef[]}
             sx={{
               width: "60vw",

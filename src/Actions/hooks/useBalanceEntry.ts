@@ -23,6 +23,7 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
     const [pickedType, setPickedType] = useState<string>("all");
     const [selectedBEntry, setSelectedBEntry] = useState<TBalanceEntry | null>(null);
     const [isBEntryDetailsDialogOpen, setIsBEntryDetailsDialogOpen] = useState(false);
+    const [search, setSearch] = useState<string>("");
 
     const {
         register,
@@ -205,6 +206,10 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
 
     const rows = useMemo(() => balanceEntryRows(fetchedBalanceEntries), [fetchedBalanceEntries]);
 
+    const filteredRows = rows.filter((row) =>
+        JSON.stringify(row).toLowerCase().includes(search.toLowerCase())
+    );
+
     useEffect(() => {
         if (!isBalanceEntryPage) return;
         const fetchData = async () => {
@@ -257,6 +262,8 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
         setSelectedBEntry,
         isBEntryDetailsDialogOpen,
         setIsBEntryDetailsDialogOpen,
+        setSearch,
+        filteredRows
     };
 }
 

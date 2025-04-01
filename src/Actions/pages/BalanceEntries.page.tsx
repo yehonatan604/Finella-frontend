@@ -21,12 +21,15 @@ const BalanceEntriesPage = () => {
     setIsBEntryDetailsDialogOpen,
     isBEntryDetailsDialogOpen,
     selectedBEntry,
+    setSearch,
+    filteredRows,
   } = useBalanceEntry(true);
 
   return (
     <>
       <Page title="Balance Entries">
         <ActionFilters
+          setSearch={setSearch}
           setFromYear={setFromYear}
           setToYear={setToYear}
           setMonths={setMonths}
@@ -47,7 +50,7 @@ const BalanceEntriesPage = () => {
           }}
         >
           <DataGrid
-            rows={rows}
+            rows={filteredRows}
             columns={columns as GridColDef[]}
             sx={{
               width: "60vw",

@@ -1,8 +1,11 @@
 import { TextField, MenuItem } from "@mui/material";
 import { Box } from "@mui/system";
 import { TWorkplace } from "../types/TWorkplace";
+import SearchIcon from "@mui/icons-material/Search";
+import InputAdornment from "@mui/material/InputAdornment";
 
 type ActionFiltersProps = {
+  setSearch: (search: string) => void;
   setFromYear?: (year: number) => void;
   setToYear?: (year: number) => void;
   setMonths?: (months: number[]) => void;
@@ -17,6 +20,7 @@ type ActionFiltersProps = {
 
 const ActionFilters = (props: ActionFiltersProps) => {
   const {
+    setSearch,
     setFromYear,
     setToYear,
     setMonths,
@@ -30,18 +34,39 @@ const ActionFilters = (props: ActionFiltersProps) => {
   return (
     <Box
       sx={{
-        width: "60%",
+        width: "73%",
         display: "flex",
         gap: "1rem",
         margin: 2,
       }}
     >
+      {
+        // add a search filter
+        <TextField
+          label="Search"
+          sx={{ mb: 2, width: 224 }}
+          onChange={(e) => setSearch?.(e.target.value)}
+          placeholder="Search"
+          slotProps={{
+            inputLabel: {
+              shrink: true,
+            },
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
+      }
+
       {setFromYear && (
         // add a from-year filter
         <TextField
           label="From Year"
-          fullWidth
-          sx={{ mb: 2 }}
+          sx={{ mb: 2, width: 224 }}
           type="number"
           slotProps={{ htmlInput: { min: 1982, max: 2100 } }}
           defaultValue={new Date().getFullYear()}
@@ -53,8 +78,7 @@ const ActionFilters = (props: ActionFiltersProps) => {
         // add a to-year filter
         <TextField
           label="To Year"
-          fullWidth
-          sx={{ mb: 2 }}
+          sx={{ mb: 2, width: 224 }}
           type="number"
           slotProps={{ htmlInput: { min: 1982, max: 2100 } }}
           defaultValue={new Date().getFullYear()}
@@ -66,8 +90,7 @@ const ActionFilters = (props: ActionFiltersProps) => {
         // add a month filter
         <TextField
           label="Months"
-          fullWidth
-          sx={{ mb: 2 }}
+          sx={{ mb: 2, width: 224 }}
           select
           slotProps={{ select: { multiple: true } }}
           defaultValue={["all"]}
@@ -93,8 +116,7 @@ const ActionFilters = (props: ActionFiltersProps) => {
         // add a type filter
         <TextField
           label="type"
-          fullWidth
-          sx={{ mb: 2 }}
+          sx={{ mb: 2, width: 224 }}
           select
           slotProps={{
             inputLabel: {
@@ -119,8 +141,7 @@ const ActionFilters = (props: ActionFiltersProps) => {
         // add a workplace filter
         <TextField
           label="workPlaces"
-          fullWidth
-          sx={{ mb: 2 }}
+          sx={{ mb: 2, width: 224 }}
           select
           slotProps={{
             inputLabel: {
@@ -152,8 +173,7 @@ const ActionFilters = (props: ActionFiltersProps) => {
         // add a status filter
         <TextField
           label="Status"
-          fullWidth
-          sx={{ mb: 2 }}
+          sx={{ mb: 2, width: 224 }}
           select
           slotProps={{
             inputLabel: {

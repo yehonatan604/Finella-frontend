@@ -22,12 +22,15 @@ const SalariesPage = () => {
     setIsSalaryDetailsDialogOpen,
     setSelectedSalary,
     selectedSalary,
+    setSearch,
+    filteredRows,
   } = useSalary(true);
 
   return (
     <>
       <Page title="Salaries">
         <ActionFilters
+          setSearch={setSearch}
           setFromYear={setFromYear}
           setToYear={setToYear}
           setMonths={setMonths}
@@ -48,7 +51,7 @@ const SalariesPage = () => {
           }}
         >
           <DataGrid
-            rows={rows}
+            rows={filteredRows}
             columns={columns as GridColDef[]}
             sx={{
               width: "60vw",

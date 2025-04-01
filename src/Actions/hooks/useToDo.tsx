@@ -22,6 +22,7 @@ const useToDo = (isTodoPage: boolean = false) => {
   const [pickedStatus, setPickedStatus] = useState<string>("all");
   const [isToDoDetailsDialogOpen, setIsToDoDetailsDialogOpen] = useState(false);
   const [selectedToDo, setSelectedToDo] = useState<TToDo | null>(null);
+  const [search, setSearch] = useState<string>("");
 
   const {
     register,
@@ -31,6 +32,15 @@ const useToDo = (isTodoPage: boolean = false) => {
     mode: "onChange",
     defaultValues: addToDoFormDefault,
   });
+
+  const getToDos = useCallback(async (query: string) => {
+    try {
+      const response = await sendApiRequest("/todo/by" + query, HTTPMethodTypes.GET);
+      setFetchedTodos(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
 
   const onUpdate = useCallback(
     async (data: TToDo) => {
@@ -139,23 +149,6 @@ const useToDo = (isTodoPage: boolean = false) => {
     [user?._id]
   );
 
-  const columns = useMemo(
-    () =>
-      todoCols(
-        onCellUpdate,
-        (params: TDataGridInputCellParams) => {
-          setSelectedToDo(fetchedToDos.find((todo) => todo._id === params.id) ?? null);
-          setIsToDoDetailsDialogOpen(true);
-        },
-        (params: TDataGridInputCellParams) => {
-          onDelete(params.id as string);
-        }
-      ),
-    [onCellUpdate, fetchedToDos, onDelete]
-  );
-
-  const rows = useMemo(() => todoRows(fetchedToDos), [fetchedToDos]);
-
   const onSubmit = async (data: TToDo) => {
     try {
       setLoading(true);
@@ -177,14 +170,26 @@ const useToDo = (isTodoPage: boolean = false) => {
     }
   };
 
-  const getToDos = useCallback(async (query: string) => {
-    try {
-      const response = await sendApiRequest("/todo/by" + query, HTTPMethodTypes.GET);
-      setFetchedTodos(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  const columns = useMemo(
+    () =>
+      todoCols(
+        onCellUpdate,
+        (params: TDataGridInputCellParams) => {
+          setSelectedToDo(fetchedToDos.find((todo) => todo._id === params.id) ?? null);
+          setIsToDoDetailsDialogOpen(true);
+        },
+        (params: TDataGridInputCellParams) => {
+          onDelete(params.id as string);
+        }
+      ),
+    [onCellUpdate, fetchedToDos, onDelete]
+  );
+
+  const rows = useMemo(() => todoRows(fetchedToDos), [fetchedToDos]);
+
+  const filteredRows = rows.filter((row) =>
+    JSON.stringify(row).toLowerCase().includes(search.toLowerCase())
+  );
 
   useEffect(() => {
     if (!isTodoPage) return;
@@ -238,6 +243,8 @@ const useToDo = (isTodoPage: boolean = false) => {
     setIsToDoDetailsDialogOpen,
     selectedToDo,
     setSelectedToDo,
+    setSearch,
+    filteredRows,
   };
 };
 
