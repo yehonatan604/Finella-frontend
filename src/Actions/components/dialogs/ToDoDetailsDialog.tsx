@@ -13,11 +13,11 @@ import {
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
-import { TToDo } from "../types/TToDo";
 import { ChangeEvent, useEffect, useState } from "react";
-import { capitalizeFirstLetter } from "../../Core/helpers/stringHelpers";
-import DialogXButton from "../components/DialogXButton";
-import StyledTitleInput from "../components/styled/StyledTitleInput";
+import { capitalizeFirstLetter } from "../../../Core/helpers/stringHelpers";
+import { TToDo } from "../../types/TToDo";
+import DialogXButton from "../DialogXButton";
+import StyledTitleInput from "../styled/StyledTitleInput";
 
 type ToDoDetailsDialogProps = {
   isOpen: boolean;

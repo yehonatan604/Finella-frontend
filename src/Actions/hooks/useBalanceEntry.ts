@@ -43,9 +43,6 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
                     ? fixPriceString(data.price + "")
                     : data.price;
 
-                console.log(data.notes, "notes");
-
-
                 await sendApiRequest(`/balance-entry`, HTTPMethodTypes.PUT, {
                     ...data,
                     userId: user?._id,
@@ -54,12 +51,16 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
 
                 setFetchedBalanceEntries((prev) =>
                     prev.map((bEntry) => {
+                        const fixedPrice = bEntry.price.toString().includes("-")
+                            ? fixPriceString(bEntry.price + "")
+                            : bEntry.price;
+
                         const fixedBEntry = {
                             ...bEntry,
                             price: +fixedPrice,
                         };
 
-                        return fixedBEntry;
+                        return (bEntry._id === data._id ? fixedBEntry : bEntry)
                     })
                 );
                 toastify.success("Balance Entry updated successfully");

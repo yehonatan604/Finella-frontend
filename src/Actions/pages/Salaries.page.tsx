@@ -8,7 +8,7 @@ import ActionButtons from "../components/ActionButtons";
 import AddButton from "../components/AddButton";
 import { useState } from "react";
 import { TSalary } from "../types/TSalary";
-import SalaryDetailsDialog from "../dialogs/SalaryDetailsDialog";
+import SalaryDetailsDialog from "../components/dialogs/SalaryDetailsDialog";
 
 const SalariesPage = () => {
   const {

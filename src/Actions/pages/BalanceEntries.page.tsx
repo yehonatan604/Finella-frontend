@@ -5,8 +5,8 @@ import BalanceEnetriesPdfDoc from "../components/BalanceEnetriesPdfDoc";
 import useBalanceEntry from "../hooks/useBalanceEntry";
 import ActionButtons from "../components/ActionButtons";
 import ActionFilters from "../components/ActionFilters";
-import BalanceEntryDetailsDialog from "../dialogs/BalanceEntryDetailsDialog";
 import AddButton from "../components/AddButton";
+import BalanceEntryDetailsDialog from "../components/dialogs/BalanceEntryDetailsDialog";
 
 const BalanceEntriesPage = () => {
   const {

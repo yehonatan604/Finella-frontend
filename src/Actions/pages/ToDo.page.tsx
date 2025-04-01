@@ -4,11 +4,11 @@ import Page from "../../UI/components/Page";
 import SalariesPdfDoc from "../components/SalariesPdfDoc";
 import ActionFilters from "../components/ActionFilters";
 import ActionButtons from "../components/ActionButtons";
-import ToDoDetailsDialog from "../dialogs/ToDoDetailsDialog";
 import { useState } from "react";
 import { TToDo } from "../types/TToDo";
 import useToDo from "../hooks/useToDo";
 import AddButton from "../components/AddButton";
+import ToDoDetailsDialog from "../components/dialogs/ToDoDetailsDialog";
 
 const ToDoPage = () => {
   const {
