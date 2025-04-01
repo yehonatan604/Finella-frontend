@@ -6,6 +6,7 @@ import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
 import { toastify } from "../../UI/utilities/toast";
 import { workplaceCols } from "../data/workplaceCols";
 import { workplaceRows } from "../data/workplaceRows";
+import { TWorkplaceWithFormPhone } from "../types/TWorkplaceWithFormPhone";
 
 const useWorkplaces = () => {
     const [workplaces, setWorkplaces] = useState<TWorkplace[]>();
@@ -59,7 +60,7 @@ const useWorkplaces = () => {
             setError("");
 
             const finalWorlpace = {
-                _id: (workplace as TWorkplace & { id: string })["id"],
+                _id: workplace._id ? workplace._id : (workplace as TWorkplace & { id: string })["id"],
                 name: workplace.name,
                 address: workplace.address,
                 pricePerHour: workplace.pricePerHour,
@@ -67,8 +68,12 @@ const useWorkplaces = () => {
                 startDate: workplace.startDate,
                 endDate: workplace.endDate,
                 phone: {
-                    main: (workplace as TWorkplace & { "main phone": string })["main phone"],
-                    secondary: (workplace as TWorkplace & { "secondary phone": string })["secondary phone"],
+                    main: workplace.phone
+                        ? (workplace as TWorkplaceWithFormPhone).phone["main phone"] :
+                        (workplace as TWorkplace & { "main phone": string })["main phone"],
+                    secondary: workplace.phone
+                        ? (workplace as TWorkplaceWithFormPhone).phone["secondary phone"] :
+                        (workplace as TWorkplace & { "secondary phone": string })["secondary phone"],
                 },
                 email: workplace.email,
                 withVat: workplace.withVat,

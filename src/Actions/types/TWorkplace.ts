@@ -11,7 +11,7 @@ export type TWorkplace = TDbItem & {
         zip?: string;
     };
     phone?: {
-        main: string;
+        main?: string;
         secondary?: string;
     };
     pricePerHour?: number;

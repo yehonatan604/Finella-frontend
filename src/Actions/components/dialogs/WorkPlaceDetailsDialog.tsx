@@ -16,6 +16,7 @@ import CenterBox from "../../../UI/components/CenterBox";
 import DialogXButton from "../DialogXButton";
 import StyledTitleInput from "../styled/StyledTitleInput";
 import { TWorkplace } from "../../types/TWorkplace";
+import { DeepPartial } from "react-hook-form";
 
 type WorkplaceDetailsDialogProps = {
   isOpen: boolean;
@@ -30,18 +31,47 @@ const WorkplaceDetailsDialog = ({
   workplace,
   onSubmit,
 }: WorkplaceDetailsDialogProps) => {
-  const [data, setData] = useState<TWorkplace>(workplace);
+  const [data, setData] = useState<TWorkplace | DeepPartial<TWorkplace>>(workplace);
 
-  const handlChanges = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChanges = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setData({
-      ...data,
-      [name]: value,
+
+    const isPhone = name === "main phone" || name === "secondary phone";
+    const isAddress =
+      name === "street" ||
+      name === "streetNumber" ||
+      name === "city" ||
+      name === "country" ||
+      name === "zip";
+
+    setData((prev) => {
+      if (isPhone) {
+        return {
+          ...prev,
+          phone: {
+            [name]: value,
+          },
+        };
+      }
+
+      if (isAddress) {
+        return {
+          ...prev,
+          address: {
+            [name]: value,
+          },
+        };
+      }
+
+      return {
+        ...prev,
+        [name]: value,
+      };
     });
   };
 
   const handleSubmit = () => {
-    onSubmit(data);
+    onSubmit(data as TWorkplace);
     onClose();
   };
 
@@ -61,9 +91,9 @@ const WorkplaceDetailsDialog = ({
         <StyledTitleInput
           type="text"
           name="name"
-          value={capitalizeFirstLetter(data.name)}
+          value={capitalizeFirstLetter(data.name!)}
           sx={{ width: 705 }}
-          onChange={handlChanges}
+          onChange={handleChanges}
         />
         <DialogXButton onClose={onClose} />
       </DialogTitle>
@@ -86,7 +116,7 @@ const WorkplaceDetailsDialog = ({
               label="Email"
               size="small"
               sx={{ width: 217 }}
-              onChange={handlChanges}
+              onChange={handleChanges}
             />
 
             <TextField
@@ -98,7 +128,7 @@ const WorkplaceDetailsDialog = ({
               }
               size="small"
               sx={{ width: 217 }}
-              onChange={handlChanges}
+              onChange={handleChanges}
             />
 
             <TextField
@@ -110,7 +140,7 @@ const WorkplaceDetailsDialog = ({
               label="End Date"
               size="small"
               sx={{ width: 217 }}
-              onChange={handlChanges}
+              onChange={handleChanges}
               slotProps={{
                 inputLabel: {
                   shrink: true,
@@ -119,21 +149,21 @@ const WorkplaceDetailsDialog = ({
             />
             <TextField
               type="phone"
-              name="phone.main"
-              value={data.phone?.main}
+              name="main phone"
+              defaultValue={data.phone?.main}
               label="Main Phone"
               size="small"
               sx={{ width: 217 }}
-              onChange={handlChanges}
+              onChange={handleChanges}
             />
             <TextField
               type="phone"
-              name="phone.secondary"
-              value={data.phone?.secondary}
+              name="secondary phone"
+              defaultValue={data.phone?.secondary}
               label="Secondary Phone"
               size="small"
               sx={{ width: 217 }}
-              onChange={handlChanges}
+              onChange={handleChanges}
             />
           </CenterBox>
           <Divider sx={{ width: "100%", my: 2 }} />
@@ -146,7 +176,7 @@ const WorkplaceDetailsDialog = ({
               label="Street"
               size="small"
               sx={{ width: 217 }}
-              onChange={handlChanges}
+              onChange={handleChanges}
             />
 
             <TextField
@@ -156,7 +186,7 @@ const WorkplaceDetailsDialog = ({
               label="House Number"
               size="small"
               sx={{ width: 217 }}
-              onChange={handlChanges}
+              onChange={handleChanges}
             />
 
             <TextField
@@ -166,7 +196,7 @@ const WorkplaceDetailsDialog = ({
               label="City"
               size="small"
               sx={{ width: 217 }}
-              onChange={handlChanges}
+              onChange={handleChanges}
             />
 
             <TextField
@@ -176,7 +206,7 @@ const WorkplaceDetailsDialog = ({
               label="Country"
               size="small"
               sx={{ width: 217 }}
-              onChange={handlChanges}
+              onChange={handleChanges}
             />
 
             <TextField
@@ -186,7 +216,7 @@ const WorkplaceDetailsDialog = ({
               label="Zip Code"
               size="small"
               sx={{ width: 217 }}
-              onChange={handlChanges}
+              onChange={handleChanges}
             />
           </CenterBox>
 
@@ -200,7 +230,7 @@ const WorkplaceDetailsDialog = ({
               label="Price per Hour"
               size="small"
               sx={{ width: 217, color: "#fff" }}
-              onChange={handlChanges}
+              onChange={handleChanges}
             />
             <TextField
               type="number"
@@ -209,7 +239,7 @@ const WorkplaceDetailsDialog = ({
               label="Price per Month"
               size="small"
               sx={{ width: 217, color: "#fff" }}
-              onChange={handlChanges}
+              onChange={handleChanges}
             />
 
             <FormControlLabel
@@ -236,7 +266,7 @@ const WorkplaceDetailsDialog = ({
             multiline
             rows={4}
             sx={{ width: "100%" }}
-            onChange={handlChanges}
+            onChange={handleChanges}
           />
         </Box>
       </DialogContent>
