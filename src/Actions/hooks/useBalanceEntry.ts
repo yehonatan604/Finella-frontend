@@ -54,16 +54,12 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
 
                 setFetchedBalanceEntries((prev) =>
                     prev.map((bEntry) => {
-                        const fixedPrice = bEntry.price.toString().includes("-")
-                            ? fixPriceString(bEntry.price + "")
-                            : bEntry.price;
-
                         const fixedBEntry = {
                             ...bEntry,
                             price: +fixedPrice,
                         };
 
-                        return (bEntry._id === data._id ? fixedBEntry : bEntry)
+                        return fixedBEntry;
                     })
                 );
                 toastify.success("Balance Entry updated successfully");
@@ -97,7 +93,9 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
                 const normalizeRow = (row: Partial<TBalanceEntry>) => {
                     return {
                         name: row?.name,
-                        date: row?.date?.includes("T") ? formatDate(row?.date) : row?.date,
+                        date: typeof row?.date === "string" && row?.date?.includes("T")
+                            ? formatDate(row?.date)
+                            : row?.date,
                         type: row?.type,
                         price: row?.price,
                         withVat: row?.withVat,
@@ -125,6 +123,15 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
                     notes: row.notes ?? fetchedRow?.notes ?? "",
                 };
                 onUpdate(finalRow as unknown as TBalanceEntry);
+
+                setFetchedBalanceEntries((prev) =>
+                    prev.map((bEntry) => {
+                        if (bEntry._id === row.id) {
+                            return finalRow as unknown as TBalanceEntry;
+                        }
+                        return bEntry;
+                    })
+                );
             },
         [fetchedBalanceEntries, onUpdate]
     );
