@@ -4,7 +4,7 @@ import Page from "../../UI/components/Page";
 import useWorkplaces from "../hooks/useWorkplace";
 import WorkplacesPdfDoc from "../components/WorkplacesPdfDoc";
 import ActionButtons from "../components/ActionButtons";
-import AddButton from "../components/AddButton";
+import PlusButton from "../components/PlusButton";
 import WorkplaceDetailsDialog from "../components/dialogs/WorkPlaceDetailsDialog";
 import ActionFilters from "../components/ActionFilters";
 
@@ -60,7 +60,7 @@ const WorkplacesPage = () => {
                 paginationModel: { pageSize: 10 },
               },
             }}
-            pageSizeOptions={[5, 10, 25]}
+            pageSizeOptions={[5]}
             disableRowSelectionOnClick
             onCellEditStart={(_, event) => {
               event.defaultMuiPrevented = true;
@@ -83,7 +83,7 @@ const WorkplacesPage = () => {
         />
       )}
 
-      <AddButton addUrl="/actions/add-workplace" />
+      <PlusButton addUrl="/actions/add-workplace" />
     </>
   );
 };

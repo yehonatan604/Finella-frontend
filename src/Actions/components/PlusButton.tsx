@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 
-const AddButton = ({ addUrl }: { addUrl: string }) => {
+const PlusButton = ({ addUrl }: { addUrl: string }) => {
   const nav = useNavigate();
   return (
     <Button
@@ -28,4 +28,4 @@ const AddButton = ({ addUrl }: { addUrl: string }) => {
   );
 };
 
-export default AddButton;
+export default PlusButton;

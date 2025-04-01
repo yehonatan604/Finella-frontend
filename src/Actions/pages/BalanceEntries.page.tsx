@@ -5,7 +5,7 @@ import BalanceEnetriesPdfDoc from "../components/BalanceEnetriesPdfDoc";
 import useBalanceEntry from "../hooks/useBalanceEntry";
 import ActionButtons from "../components/ActionButtons";
 import ActionFilters from "../components/ActionFilters";
-import AddButton from "../components/AddButton";
+import PlusButton from "../components/PlusButton";
 import BalanceEntryDetailsDialog from "../components/dialogs/BalanceEntryDetailsDialog";
 
 const BalanceEntriesPage = () => {
@@ -74,7 +74,7 @@ const BalanceEntriesPage = () => {
                 paginationModel: { pageSize: 10 },
               },
             }}
-            pageSizeOptions={[5, 10, 25]}
+            pageSizeOptions={[5]}
             onCellEditStart={(_, event) => {
               event.defaultMuiPrevented = true;
             }}
@@ -96,7 +96,7 @@ const BalanceEntriesPage = () => {
         />
       )}
 
-      <AddButton addUrl="/actions/add-balance-entry" />
+      <PlusButton addUrl="/actions/add-balance-entry" />
     </>
   );
 };

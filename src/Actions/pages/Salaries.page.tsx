@@ -5,7 +5,7 @@ import Page from "../../UI/components/Page";
 import SalariesPdfDoc from "../components/SalariesPdfDoc";
 import ActionFilters from "../components/ActionFilters";
 import ActionButtons from "../components/ActionButtons";
-import AddButton from "../components/AddButton";
+import PlusButton from "../components/PlusButton";
 import SalaryDetailsDialog from "../components/dialogs/SalaryDetailsDialog";
 
 const SalariesPage = () => {
@@ -75,7 +75,7 @@ const SalariesPage = () => {
                 paginationModel: { pageSize: 10 },
               },
             }}
-            pageSizeOptions={[5, 10, 25]}
+            pageSizeOptions={[5]}
             onCellEditStart={(_, event) => {
               event.defaultMuiPrevented = true;
             }}
@@ -98,7 +98,7 @@ const SalariesPage = () => {
         />
       )}
 
-      <AddButton addUrl="/actions/add-salary" />
+      <PlusButton addUrl="/actions/add-salary" />
     </>
   );
 };

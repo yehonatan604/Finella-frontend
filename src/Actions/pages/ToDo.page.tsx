@@ -5,7 +5,7 @@ import SalariesPdfDoc from "../components/SalariesPdfDoc";
 import ActionFilters from "../components/ActionFilters";
 import ActionButtons from "../components/ActionButtons";
 import useToDo from "../hooks/useToDo";
-import AddButton from "../components/AddButton";
+import PlusButton from "../components/PlusButton";
 import ToDoDetailsDialog from "../components/dialogs/ToDoDetailsDialog";
 
 const ToDoPage = () => {
@@ -71,7 +71,7 @@ const ToDoPage = () => {
                 paginationModel: { pageSize: 10 },
               },
             }}
-            pageSizeOptions={[5, 10, 25]}
+            pageSizeOptions={[5]}
             disableRowSelectionOnClick
             onCellEditStart={(_, event) => {
               event.defaultMuiPrevented = true;
@@ -83,7 +83,7 @@ const ToDoPage = () => {
 
       <ActionButtons fileName="ToDo" rows={rows} Doc={SalariesPdfDoc} />
 
-      <AddButton addUrl="/actions/add-todo" />
+      <PlusButton addUrl="/actions/add-todo" />
 
       {isToDoDetailsDialogOpen && selectedToDo && (
         <ToDoDetailsDialog
