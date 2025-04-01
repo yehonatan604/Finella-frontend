@@ -10,12 +10,10 @@ import BalanceIcon from "@mui/icons-material/Balance";
 import LocalAtmIcon from "@mui/icons-material/LocalAtm";
 import ApartmentIcon from "@mui/icons-material/Apartment";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import AirIcon from "@mui/icons-material/Air";
-import AttachFileIcon from "@mui/icons-material/AttachFile";
 import ScheduleIcon from "@mui/icons-material/Schedule";
 import LaunchIcon from "@mui/icons-material/Launch";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
@@ -113,12 +111,6 @@ const LeftNavigation = () => {
             </Link>
             <Link to={"/data/workplaces"}>
               <MenuItemWithIcon
-                title="Calendar"
-                icon={<CalendarMonthIcon sx={{ color: "#ccc" }} />}
-              />
-            </Link>
-            <Link to={"/data/workplaces"}>
-              <MenuItemWithIcon
                 title="Notes"
                 icon={<EditNoteIcon sx={{ color: "#ccc" }} />}
               />
@@ -135,10 +127,6 @@ const LeftNavigation = () => {
               icon={<CurrencyExchangeIcon sx={{ color: "#ccc" }} />}
             />
             <MenuItemWithIcon title="Weather" icon={<AirIcon sx={{ color: "#ccc" }} />} />
-            <MenuItemWithIcon
-              title="Files Browser"
-              icon={<AttachFileIcon sx={{ color: "#ccc" }} />}
-            />
           </MenuAccordion>
 
           <MenuAccordion
