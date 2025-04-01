@@ -2,6 +2,9 @@ import { Button } from "@mui/material";
 import { Box } from "@mui/system";
 import { exportDataToExcel } from "../helpers/exportDataToExcel";
 import { exportDataToPDF } from "../helpers/exportDataToPDF";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 
 type DocProps = {
   fileName: string;
@@ -17,16 +20,19 @@ const ActionButtons = (props: DocProps) => {
         variant="contained"
         color="primary"
         sx={{ mt: 2, ml: 2 }}
+        startIcon={<FileDownloadIcon />}
         onClick={() => {
           exportDataToExcel([...rows], `${fileName}`);
         }}
       >
         Export to Excel
       </Button>
+
       <Button
         variant="contained"
         color="success"
         sx={{ mt: 2, ml: 2 }}
+        startIcon={<PictureAsPdfIcon />}
         onClick={async () => {
           const data = [...rows];
           data.pop();
@@ -35,10 +41,12 @@ const ActionButtons = (props: DocProps) => {
       >
         Export to PDF
       </Button>
+
       <Button
         variant="contained"
         color="secondary"
         sx={{ mt: 2, ml: 2 }}
+        startIcon={<AutoFixHighIcon />}
         onClick={() => {}}
       >
         Create Report
