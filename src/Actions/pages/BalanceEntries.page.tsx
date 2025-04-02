@@ -61,6 +61,8 @@ const BalanceEntriesPage = () => {
         >
           <DataGrid
             rows={filteredRows}
+            rowCount={rows.length - 1}
+            paginationMode="server"
             columns={columns as GridColDef[]}
             sx={{
               width: "60vw",

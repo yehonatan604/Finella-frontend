@@ -74,7 +74,6 @@ const useSalary = (isSalariesPage: boolean = false) => {
     } = useForm<TSalary>({
         mode: "onChange",
         defaultValues: addSalaryFormDefault(user?._id || ""),
-        //resolver: joiResolver(addWorkplaceSchema),
     });
 
     const onSubmit = async (data: Record<string, unknown>) => {

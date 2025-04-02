@@ -23,11 +23,17 @@ export const salaryRows = (
         })) || [];
 
     const totalHours = data.reduce(
-        (acc, curr) => acc + (Number(curr["total hours"]) || 0),
+        (acc, curr) => {
+            if (curr.status === "inactive") return acc;
+            return acc + (Number(curr["total hours"]) || 0);
+        },
         0
     );
     const totalSum = data.reduce(
-        (acc, curr) => acc + (Number(curr["total sum"]) || 0),
+        (acc, curr) => {
+            if (curr.status === "inactive") return acc;
+            return acc + (Number(curr["total sum"]) || 0)
+        },
         0
     );
     return [
