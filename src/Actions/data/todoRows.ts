@@ -11,6 +11,7 @@ export const todoRows = (fetchedToDos: TToDo[]) => {
             endDate: formatDate(todo.endDate),
             toDoStatus: todo.toDoStatus,
             tasks: todo.tasks?.length,
+            status: todo.status,
         })) || []
     );
 };

@@ -43,7 +43,7 @@ const SalariesPage = () => {
         <ShowInactiveCheckbox
           showInactive={showInactive}
           setShowInactive={setShowInactive}
-          label="Show Inactive Entries"
+          label="Show Inactive Salaries"
         />
         <Box
           component={Paper}
@@ -60,7 +60,13 @@ const SalariesPage = () => {
         >
           <DataGrid
             rows={filteredRows}
-            rowCount={rows.length - 1}
+            rowCount={
+              !showInactive
+                ? filteredRows.filter(
+                    (row) => (row as { status: string }).status !== "inactive"
+                  ).length - 1
+                : filteredRows.length - 1
+            }
             paginationMode="server"
             columns={columns as GridColDef[]}
             sx={{

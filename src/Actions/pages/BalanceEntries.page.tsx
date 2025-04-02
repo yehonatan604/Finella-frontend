@@ -61,7 +61,13 @@ const BalanceEntriesPage = () => {
         >
           <DataGrid
             rows={filteredRows}
-            rowCount={rows.length - 1}
+            rowCount={
+              !showInactive
+                ? filteredRows.filter(
+                    (row) => (row as { status: string }).status !== "inactive"
+                  ).length - 1
+                : filteredRows.length - 1
+            }
             paginationMode="server"
             columns={columns as GridColDef[]}
             sx={{

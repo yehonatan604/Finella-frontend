@@ -7,6 +7,7 @@ import ActionButtons from "../components/ActionButtons";
 import useToDo from "../hooks/useToDo";
 import PlusButton from "../components/PlusButton";
 import ToDoDetailsDialog from "../components/dialogs/ToDoDetailsDialog";
+import ShowInactiveCheckbox from "../components/ShowInactiveCheckbox";
 
 const ToDoPage = () => {
   const {
@@ -23,6 +24,8 @@ const ToDoPage = () => {
     selectedToDo,
     setSearch,
     filteredRows,
+    showInactive,
+    setShowInactive,
   } = useToDo(true);
 
   return (
@@ -35,6 +38,12 @@ const ToDoPage = () => {
           setMonths={setMonths}
           setPickedStatus={setPickedStatus}
           statusTypes={["PENDING", "COMPLETED", "CANCELLED", "FAILED"]}
+        />
+
+        <ShowInactiveCheckbox
+          showInactive={showInactive}
+          setShowInactive={setShowInactive}
+          label="Show Inactive Entries"
         />
 
         <Box
@@ -52,6 +61,14 @@ const ToDoPage = () => {
         >
           <DataGrid
             rows={filteredRows}
+            rowCount={
+              !showInactive
+                ? filteredRows.filter(
+                    (row) => (row as { status: string }).status !== "inactive"
+                  ).length
+                : filteredRows.length
+            }
+            paginationMode="server"
             columns={columns as GridColDef[]}
             sx={{
               width: "60vw",

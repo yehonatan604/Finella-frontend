@@ -217,28 +217,28 @@ const useSalary = (isSalariesPage: boolean = false) => {
         async (id: string) => {
             try {
                 await question(
-                    "Delete Balance Entry",
-                    "Are you sure you want to delete this Balance Entry?",
+                    "Delete Salary",
+                    "Are you sure you want to delete this Salary?",
                     "warning",
                     async () => {
                         setLoading(true);
                         setError(null);
-                        await sendApiRequest(`/balance-entry/${id}`, HTTPMethodTypes.DELETE, { userId: user?._id });
+                        await sendApiRequest(`/salary/${id}`, HTTPMethodTypes.DELETE, { userId: user?._id });
                         setFetchedSalaries((prev) => {
-                            const bentry = prev.find((bEntry) => bEntry._id === id);
-                            if (!bentry) return prev;
-                            const fixedBEntry = {
-                                ...bentry,
+                            const salary = prev.find((sal) => sal._id === id);
+                            if (!salary) return prev;
+                            const fixedSalary = {
+                                ...salary,
                                 status: "inactive"
                             };
-                            return prev.map((bEntry) => (bEntry._id === id ? fixedBEntry : bEntry));
+                            return prev.map((sal) => (sal._id === id ? fixedSalary : sal));
                         });
-                        toastify.success("Balance Entry deleted successfully");
+                        toastify.success("Salary deleted successfully");
                     }
                 );
             } catch (error) {
                 console.log(error);
-                toastify.error("Error deleting Balance Entry");
+                toastify.error("Error deleting Salary");
 
                 if (error instanceof Error) {
                     setError(error.message);
@@ -254,28 +254,28 @@ const useSalary = (isSalariesPage: boolean = false) => {
         async (id: string) => {
             try {
                 await question(
-                    "Undelete Balance Entry",
-                    "Are you sure you want to undelete this Balance Entry?",
+                    "Undelete Salary",
+                    "Are you sure you want to undelete this Salary?",
                     "warning",
                     async () => {
                         setLoading(true);
                         setError(null);
-                        await sendApiRequest(`/balance-entry/undelete/${id}`, HTTPMethodTypes.PATCH, { userId: user?._id });
+                        await sendApiRequest(`/salary/undelete/${id}`, HTTPMethodTypes.PATCH, { userId: user?._id });
                         setFetchedSalaries((prev) => {
-                            const bentry = prev.find((bEntry) => bEntry._id === id);
-                            if (!bentry) return prev;
-                            const fixedBEntry = {
-                                ...bentry,
+                            const salary = prev.find((sal) => sal._id === id);
+                            if (!salary) return prev;
+                            const fixedSalary = {
+                                ...salary,
                                 status: "active"
                             };
-                            return prev.map((bEntry) => (bEntry._id === id ? fixedBEntry : bEntry));
+                            return prev.map((sal) => (sal._id === id ? fixedSalary : sal));
                         });
-                        toastify.success("Balance Entry undeleted successfully");
+                        toastify.success("Salary undeleted successfully");
                     }
                 );
             } catch (error) {
                 console.log(error);
-                toastify.error("Error undeleting Balance Entry");
+                toastify.error("Error undeleting Salary");
 
                 if (error instanceof Error) {
                     setError(error.message);

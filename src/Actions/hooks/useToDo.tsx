@@ -10,6 +10,7 @@ import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
 import { formatDate } from "../../Core/helpers/dateHelpers";
 import { todoCols } from "../data/todoCols";
 import { todoRows } from "../data/todoRows";
+import { question } from "../../UI/utilities/question";
 
 const useToDo = (isTodoPage: boolean = false) => {
   const { user } = useAuth();
@@ -23,6 +24,7 @@ const useToDo = (isTodoPage: boolean = false) => {
   const [isToDoDetailsDialogOpen, setIsToDoDetailsDialogOpen] = useState(false);
   const [selectedToDo, setSelectedToDo] = useState<TToDo | null>(null);
   const [search, setSearch] = useState<string>("");
+  const [showInactive, setShowInactive] = useState(false);
 
   const {
     register,
@@ -124,18 +126,75 @@ const useToDo = (isTodoPage: boolean = false) => {
     [fetchedToDos, onUpdate]
   );
 
+  const onUndelete = useCallback(
+    async (id: string) => {
+      try {
+        await question(
+          "Undelete Todo",
+          "Are you sure you want to undelete this Todo?",
+          "warning",
+          async () => {
+            setLoading(true);
+            setError(null);
+            await sendApiRequest(`/todo/undelete/${id}`, HTTPMethodTypes.PATCH, {
+              userId: user?._id,
+            });
+            setFetchedTodos((prev) => {
+              const todo = prev.find((td) => td._id === id);
+              if (!todo) return prev;
+              const fixedTodo = {
+                ...todo,
+                status: "active",
+              };
+              return prev.map((td) => (td._id === id ? fixedTodo : td));
+            });
+            toastify.success("ToDo undeleted successfully");
+          }
+        );
+      } catch (error) {
+        console.log(error);
+        toastify.error("Error undeleting ToDo");
+
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError(error as string);
+        }
+      } finally {
+        setLoading(false);
+      }
+    },
+    [user?._id]
+  );
+
   const onDelete = useCallback(
     async (id: string) => {
       try {
-        setLoading(true);
-        setError(null);
-        await sendApiRequest(`/todo/${id}`, HTTPMethodTypes.DELETE, {
-          userId: user?._id,
-        });
-        setFetchedTodos((prev) => prev.filter((todo) => todo._id !== id));
-        toastify.success("ToDo deleted successfully");
+        await question(
+          "Delete ToDo",
+          "Are you sure you want to delete this ToDo?",
+          "warning",
+          async () => {
+            setLoading(true);
+            setError(null);
+            await sendApiRequest(`/todo/${id}`, HTTPMethodTypes.DELETE, {
+              userId: user?._id,
+            });
+            setFetchedTodos((prev) => {
+              const todo = prev.find((td) => td._id === id);
+              if (!todo) return prev;
+              const fixedTodo = {
+                ...todo,
+                status: "inactive",
+              };
+              return prev.map((td) => (td._id === id ? fixedTodo : td));
+            });
+            toastify.success("ToDo deleted successfully");
+          }
+        );
       } catch (error) {
         console.log(error);
+        toastify.error("Error deleting Salary");
 
         if (error instanceof Error) {
           setError(error.message);
@@ -180,15 +239,18 @@ const useToDo = (isTodoPage: boolean = false) => {
         },
         (params: TDataGridInputCellParams) => {
           onDelete(params.id as string);
-        }
+        },
+        (params: TDataGridInputCellParams) => onUndelete(params.row.id as string)
       ),
-    [onCellUpdate, fetchedToDos, onDelete]
+    [onCellUpdate, fetchedToDos, onDelete, onUndelete]
   );
 
   const rows = useMemo(() => todoRows(fetchedToDos), [fetchedToDos]);
 
-  const filteredRows = rows.filter((row) =>
-    JSON.stringify(row).toLowerCase().includes(search.toLowerCase())
+  const filteredRows = rows.filter(
+    (row) =>
+      JSON.stringify(row).toLowerCase().includes(search.toLowerCase()) &&
+      (showInactive || (row as { status: string }).status !== "inactive")
   );
 
   useEffect(() => {
@@ -245,6 +307,8 @@ const useToDo = (isTodoPage: boolean = false) => {
     setSelectedToDo,
     setSearch,
     filteredRows,
+    showInactive,
+    setShowInactive,
   };
 };
 
