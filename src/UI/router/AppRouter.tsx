@@ -16,6 +16,7 @@ import BalanceEntriesPage from "../../Actions/pages/BalanceEntries.page";
 import ToDoPage from "../../Actions/pages/ToDo.page";
 import AddToDo from "../../Actions/forms/AddToDo";
 import NotesPage from "../../Actions/pages/Notes.page";
+import AddNote from "../../Actions/forms/AddNote";
 
 const AppRouter = () => {
   const { loginByToken } = useAuth();
@@ -54,6 +55,7 @@ const AppRouter = () => {
         <Route path="add-vacation" element={<AddVacation />} />
         <Route path="add-workplace" index element={<AddWorkplace />} />
         <Route path="add-todo" index element={<AddToDo />} />
+        <Route path="add-note" index element={<AddNote />} />
       </Route>
     </Routes>
   );

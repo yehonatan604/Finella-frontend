@@ -12,29 +12,7 @@ export const createDataGridInputCell = (
 ) => {
   const { row, value, hasFocus } = params;
 
-  if (hasFocus) {
-    if (type === "checkbox") {
-      return (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%",
-            height: "100%",
-          }}
-        >
-          <Checkbox
-            checked={Boolean(value ?? false)}
-            onChange={(event) => {
-              const updatedRow = { ...row, [field]: event.target.checked };
-              processRowOnCellUpdate(updatedRow as never);
-            }}
-            sx={{ pt: 0.5 }}
-          />
-        </Box>
-      );
-    }
+  if (hasFocus && type !== "checkbox") {
     if (type === "select") {
       return (
         <TextField

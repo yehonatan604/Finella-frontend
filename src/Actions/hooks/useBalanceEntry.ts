@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import useAuth from "../../Auth/hooks/useAuth";
 import { TBalanceEntry } from "../types/TBalanceEntry";
 import { sendApiRequest } from "../../Core/helpers/sendApiRequest";
-import { addBalanceEntryFormDefault } from "../forms/initialData/addBalanceEntryFormDefault copy";
+import { addBalanceEntryFormDefault } from "../forms/initialData/addBalanceEntryFormDefault";
 import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
 import { toastify } from "../../UI/utilities/toast";
 import { formatDate } from "../../Core/helpers/dateHelpers";

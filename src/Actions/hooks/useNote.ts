@@ -9,8 +9,11 @@ import { noteCols } from "../data/noteCols";
 import { noteRows } from "../data/noteRows";
 import useAuth from "../../Auth/hooks/useAuth";
 import { formatStringDate } from "../../Core/helpers/dateHelpers";
+import { useForm } from "react-hook-form";
+import { addNoteFormDefault } from "../forms/initialData/addNoteFormDefault";
+import { useNavigate } from "react-router-dom";
 
-const useNote = () => {
+const useNote = (isNotesPage: boolean = false) => {
     const [fetchedNotes, setFetchedNotes] = useState<TNote[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
@@ -18,32 +21,39 @@ const useNote = () => {
     const [selectedNote, setSelectedNote] = useState<TNote | null>(null);
     const [search, setSearch] = useState<string>("");
     const [showInactive, setShowInactive] = useState(false);
-    const { user } = useAuth()
+    const [fromYear, setFromYear] = useState(new Date().getFullYear());
+    const [toYear, setToYear] = useState(new Date().getFullYear());
+    const [months, setMonths] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
 
-    const getAllNotes = useCallback(async () => {
+    const { user } = useAuth();
+    const nav = useNavigate();
+
+    const {
+        register,
+        formState: { errors },
+        handleSubmit,
+    } = useForm<TNote>({
+        mode: "onChange",
+        defaultValues: addNoteFormDefault,
+    });
+
+    const getAllNotes = useCallback(async (query: string) => {
         try {
-            setLoading(true);
-            setError("");
-
-            const res = await sendApiRequest("/note", HTTPMethodTypes.GET);
-            setFetchedNotes(res.data);
-        } catch (e) {
-            if (e instanceof Error) {
-                setError(e.message);
-            } else {
-                setError(String(e));
-            }
-        } finally {
-            setLoading(false);
+            const response = await sendApiRequest("/note/by" + query, HTTPMethodTypes.GET);
+            setFetchedNotes(response.data);
+        }
+        catch (error) {
+            console.log(error);
         }
     }, []);
 
-    const add = useCallback(async (note: TNote) => {
+    const onSubmit = useCallback(async (note: TNote) => {
         try {
             setLoading(true);
             setError("");
             const res = await sendApiRequest("/note", HTTPMethodTypes.POST, { ...note, userId: user?._id });
             setFetchedNotes(prev => [...(prev || []), res.data]);
+            nav("/data/notes");
             toastify.success("Note added successfully");
         } catch (e) {
             console.log(e);
@@ -57,7 +67,7 @@ const useNote = () => {
         } finally {
             setLoading(false);
         }
-    }, [user?._id]);
+    }, [nav, user?._id]);
 
     const onUpdate = useCallback(async (note: TNote) => {
         try {
@@ -231,15 +241,35 @@ const useNote = () => {
     );
 
     useEffect(() => {
-        getAllNotes();
-    }, [getAllNotes]);
+        if (!isNotesPage) return;
+        const fetchData = async () => {
+            const queryParams = new URLSearchParams();
+
+            if (fromYear) {
+                queryParams.append("fromYear", fromYear.toString());
+            }
+
+            if (toYear) {
+                queryParams.append("toYear", toYear.toString());
+            }
+
+            if (months.length > 0 && months.length < 12) {
+                queryParams.append("months", months.join(","));
+            }
+
+            const queryString = queryParams.toString();
+            await getAllNotes(`?${queryString}`);
+        };
+
+        fetchData();
+    }, [fromYear, getAllNotes, isNotesPage, months, toYear]);
 
     return {
         fetchedNotes,
         columns,
         rows,
         getAllNotes,
-        add,
+        onSubmit,
         error,
         loading,
         isUpdateDialogOpen,
@@ -251,6 +281,13 @@ const useNote = () => {
         filteredRows,
         setShowInactive,
         showInactive,
+        handleSubmit,
+        register,
+        errors,
+        setError,
+        setMonths,
+        setFromYear,
+        setToYear,
     }
 }
 

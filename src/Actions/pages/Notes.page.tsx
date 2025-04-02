@@ -22,12 +22,20 @@ const NotesPage = () => {
     filteredRows,
     showInactive,
     setShowInactive,
-  } = useNote();
+    setMonths,
+    setFromYear,
+    setToYear,
+  } = useNote(true);
 
   return (
     <>
       <Page title="Notes">
-        <ActionFilters setSearch={setSearch} />
+        <ActionFilters
+          setSearch={setSearch}
+          setMonths={setMonths}
+          setFromYear={setFromYear}
+          setToYear={setToYear}
+        />
 
         <ShowInactiveCheckbox
           showInactive={showInactive}
@@ -100,7 +108,7 @@ const NotesPage = () => {
         />
       )}
 
-      <PlusButton addUrl="/actions/add-workplace" />
+      <PlusButton addUrl="/actions/add-note" />
     </>
   );
 };
