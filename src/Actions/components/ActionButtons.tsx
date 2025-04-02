@@ -10,10 +10,11 @@ type DocProps = {
   fileName: string;
   rows: Record<string, unknown>[];
   Doc: React.FC<{ rows: Record<string, unknown>[] }>;
+  openCharts?: () => void;
 };
 
 const ActionButtons = (props: DocProps) => {
-  const { fileName, rows, Doc } = props;
+  const { fileName, rows, Doc, openCharts } = props;
   return (
     <Box sx={{ display: "flex", flexDirection: "row" }}>
       <Button
@@ -47,7 +48,7 @@ const ActionButtons = (props: DocProps) => {
         color="secondary"
         sx={{ mt: 2, ml: 2 }}
         startIcon={<AutoFixHighIcon />}
-        onClick={() => {}}
+        onClick={openCharts}
       >
         Create Report
       </Button>

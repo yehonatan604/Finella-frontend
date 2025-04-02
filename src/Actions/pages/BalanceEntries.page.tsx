@@ -8,6 +8,8 @@ import ActionFilters from "../components/ActionFilters";
 import PlusButton from "../components/PlusButton";
 import BalanceEntryDetailsDialog from "../components/dialogs/BalanceEntryDetailsDialog";
 import ShowInactiveCheckbox from "../components/ShowInactiveCheckbox";
+import { useState } from "react";
+import BalanceEntriesChartsDialog from "../components/dialogs/BalanceEntriesChartsDialog";
 
 const BalanceEntriesPage = () => {
   const {
@@ -27,6 +29,10 @@ const BalanceEntriesPage = () => {
     showInactive,
     setShowInactive,
   } = useBalanceEntry(true);
+
+  const [isChartsDialogOpen, setIsChartsDialogOpen] = useState(false);
+
+  console.log("filteredRows", filteredRows);
 
   return (
     <>
@@ -100,7 +106,12 @@ const BalanceEntriesPage = () => {
           />
         </Box>
       </Page>
-      <ActionButtons fileName="BalanceEntries" rows={rows} Doc={BalanceEnetriesPdfDoc} />
+      <ActionButtons
+        fileName="BalanceEntries"
+        rows={rows}
+        Doc={BalanceEnetriesPdfDoc}
+        openCharts={() => setIsChartsDialogOpen(true)}
+      />
 
       {isBEntryDetailsDialogOpen && selectedBEntry && (
         <BalanceEntryDetailsDialog
@@ -111,6 +122,14 @@ const BalanceEntriesPage = () => {
             onUpdate(data);
             setSelectedBEntry(null);
           }}
+        />
+      )}
+
+      {isChartsDialogOpen && (
+        <BalanceEntriesChartsDialog
+          open={isChartsDialogOpen}
+          onClose={() => setIsChartsDialogOpen(false)}
+          data={filteredRows}
         />
       )}
 
