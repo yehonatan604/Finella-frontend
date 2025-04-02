@@ -97,7 +97,7 @@ const BalanceEntriesChartsDialog = ({
           p: "1rem",
         }}
       >
-        Notes Report
+        Balance Entries Report
         <DialogXButton onClose={onClose} />
       </DialogTitle>
 
