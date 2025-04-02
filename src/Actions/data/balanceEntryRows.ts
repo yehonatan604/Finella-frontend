@@ -15,7 +15,10 @@ export const balanceEntryRows = (fetchedBalanceEntries: TBalanceEntry[]) => {
         })) || [];
 
     const totalPrice = data.reduce(
-        (total, current) => total + Number(current.price),
+        (total, current) => {
+            if (current.status === "inactive") return total;
+            return total + Number(current.price)
+        },
         0
     );
     return [
