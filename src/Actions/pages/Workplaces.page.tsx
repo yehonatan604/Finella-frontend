@@ -7,6 +7,7 @@ import ActionButtons from "../components/ActionButtons";
 import PlusButton from "../components/PlusButton";
 import WorkplaceDetailsDialog from "../components/dialogs/WorkPlaceDetailsDialog";
 import ActionFilters from "../components/ActionFilters";
+import ShowInactiveCheckbox from "../components/ShowInactiveCheckbox";
 
 const WorkplacesPage = () => {
   const {
@@ -19,12 +20,20 @@ const WorkplacesPage = () => {
     onUpdate,
     setSearch,
     filteredRows,
+    showInactive,
+    setShowInactive,
   } = useWorkplaces();
 
   return (
     <>
       <Page title="Workplaces">
         <ActionFilters setSearch={setSearch} />
+
+        <ShowInactiveCheckbox
+          showInactive={showInactive}
+          setShowInactive={setShowInactive}
+          label="Show Inactive Workplaces"
+        />
 
         <Box
           component={Paper}
@@ -41,6 +50,14 @@ const WorkplacesPage = () => {
         >
           <DataGrid
             rows={filteredRows}
+            rowCount={
+              !showInactive
+                ? filteredRows.filter(
+                    (row) => (row as { status: string }).status !== "inactive"
+                  ).length
+                : filteredRows.length
+            }
+            paginationMode="server"
             columns={columns as GridColDef[]}
             sx={{
               width: "60vw",

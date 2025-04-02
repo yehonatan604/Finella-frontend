@@ -13,7 +13,7 @@ export const workplaceRows = (workplaces: TWorkplace[]) => {
             ["secondary phone"]: workplace.phone?.secondary,
             startDate: workplace.startDate,
             endDate: workplace.endDate,
-
+            status: workplace.status,
         })) || []
     );
 };

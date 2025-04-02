@@ -7,14 +7,16 @@ import { toastify } from "../../UI/utilities/toast";
 import { workplaceCols } from "../data/workplaceCols";
 import { workplaceRows } from "../data/workplaceRows";
 import { TWorkplaceWithFormPhone } from "../types/TWorkplaceWithFormPhone";
+import { question } from "../../UI/utilities/question";
 
 const useWorkplaces = () => {
     const [workplaces, setWorkplaces] = useState<TWorkplace[]>();
-    const [error, setError] = useState<string>();
+    const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
     const [selectedWorkplace, setSelectedWorkplace] = useState<TWorkplace | null>(null);
     const [search, setSearch] = useState<string>("");
+    const [showInactive, setShowInactive] = useState(false);
 
     const getAllWorkplaces = useCallback(async () => {
         try {
@@ -141,25 +143,83 @@ const useWorkplaces = () => {
         [onUpdate, workplaces]
     );
 
-    const onDelete = useCallback(async (id: string) => {
-        try {
-            setLoading(true);
-            setError("");
+    const onUndelete = useCallback(
+        async (id: string) => {
+            try {
+                await question(
+                    "Undelete WorkPlace",
+                    "Are you sure you want to undelete this WorkPlace?",
+                    "warning",
+                    async () => {
+                        setLoading(true);
+                        setError(null);
+                        await sendApiRequest(`/work-place/undelete/${id}`, HTTPMethodTypes.PATCH);
+                        setWorkplaces((prev) => {
+                            const workplace = prev?.find((wp) => wp._id === id);
+                            if (!workplace) return prev;
+                            const fixedWorkPlace = {
+                                ...workplace,
+                                status: "active",
+                            };
+                            return prev?.map((wp) => (wp._id === id ? fixedWorkPlace : wp));
+                        });
+                        toastify.success("WorkPlace undeleted successfully");
+                    }
+                );
+            } catch (error) {
+                console.log(error);
+                toastify.error("Error undeleting WorkPlace");
 
-            await sendApiRequest(`/work-place/${id}`, HTTPMethodTypes.DELETE);
-            setWorkplaces(prev => prev?.filter(w => w._id !== id) || []);
-        } catch (e) {
-            console.log(e);
-
-            if (e instanceof Error) {
-                setError(e.message);
-            } else {
-                setError(String(e));
+                if (error instanceof Error) {
+                    setError(error.message);
+                } else {
+                    setError(error as string);
+                }
+            } finally {
+                setLoading(false);
             }
-        } finally {
-            setLoading(false);
-        }
-    }, []);
+        },
+        []
+    );
+
+    const onDelete = useCallback(
+        async (id: string) => {
+            try {
+                await question(
+                    "Delete WorkPlace",
+                    "Are you sure you want to delete this WorkPlace?",
+                    "warning",
+                    async () => {
+                        setLoading(true);
+                        setError(null);
+                        await sendApiRequest(`/work-place/${id}`, HTTPMethodTypes.DELETE);
+                        setWorkplaces((prev) => {
+                            const workPlace = prev?.find((wp) => wp._id === id);
+                            if (!workPlace) return prev;
+                            const fixedTodo = {
+                                ...workPlace,
+                                status: "inactive",
+                            };
+                            return prev?.map((wp) => (wp._id === id ? fixedTodo : wp));
+                        });
+                        toastify.success("WorkPlace deleted successfully");
+                    }
+                );
+            } catch (error) {
+                console.log(error);
+                toastify.error("Error deleting WorkPlace");
+
+                if (error instanceof Error) {
+                    setError(error.message);
+                } else {
+                    setError(error as string);
+                }
+            } finally {
+                setLoading(false);
+            }
+        },
+        []
+    );
 
     const columns = useMemo(
         () => workplaceCols(
@@ -171,13 +231,18 @@ const useWorkplaces = () => {
             , (params: TDataGridInputCellParams) => {
                 onDelete(params.id as string);
             }
-        ), [onCellUpdate, onDelete, workplaces]
+            , (params: TDataGridInputCellParams) => {
+                onUndelete(params.id as string);
+            }
+
+        ), [onCellUpdate, onDelete, onUndelete, workplaces]
     );
 
     const rows = useMemo(() => workplaceRows(workplaces || []), [workplaces]);
 
     const filteredRows = rows.filter((row) =>
-        JSON.stringify(row).toLowerCase().includes(search.toLowerCase())
+        JSON.stringify(row).toLowerCase().includes(search.toLowerCase()) &&
+        (showInactive || (row as { status: string }).status !== "inactive")
     );
 
     useEffect(() => {
@@ -199,6 +264,8 @@ const useWorkplaces = () => {
         onUpdate,
         setSearch,
         filteredRows,
+        setShowInactive,
+        showInactive,
     }
 }
 
