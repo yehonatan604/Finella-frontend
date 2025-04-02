@@ -15,6 +15,7 @@ import AddSalary from "../../Actions/forms/AddSalary";
 import BalanceEntriesPage from "../../Actions/pages/BalanceEntries.page";
 import ToDoPage from "../../Actions/pages/ToDo.page";
 import AddToDo from "../../Actions/forms/AddToDo";
+import NotesPage from "../../Actions/pages/Notes.page";
 
 const AppRouter = () => {
   const { loginByToken } = useAuth();
@@ -44,6 +45,7 @@ const AppRouter = () => {
         <Route path="balance-entries" element={<BalanceEntriesPage />} />
         <Route path="workplaces" element={<WorkplacesPage />} />
         <Route path="todos" element={<ToDoPage />} />
+        <Route path="notes" element={<NotesPage />} />
       </Route>
 
       <Route path="/actions" element={<RouteGuard isLoggedIn />}>

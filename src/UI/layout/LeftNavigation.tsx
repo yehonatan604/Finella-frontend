@@ -109,7 +109,7 @@ const LeftNavigation = () => {
                 icon={<FormatListBulletedIcon sx={{ color: "#ccc" }} />}
               />
             </Link>
-            <Link to={"/data/workplaces"}>
+            <Link to={"/data/notes"}>
               <MenuItemWithIcon
                 title="Notes"
                 icon={<EditNoteIcon sx={{ color: "#ccc" }} />}
