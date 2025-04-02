@@ -8,6 +8,8 @@ import ActionButtons from "../components/ActionButtons";
 import PlusButton from "../components/PlusButton";
 import SalaryDetailsDialog from "../components/dialogs/SalaryDetailsDialog";
 import ShowInactiveCheckbox from "../components/ShowInactiveCheckbox";
+import { useState } from "react";
+import SalariesChartsDialog from "../components/dialogs/SalariesChartsDialog";
 
 const SalariesPage = () => {
   const {
@@ -28,6 +30,10 @@ const SalariesPage = () => {
     showInactive,
     setShowInactive,
   } = useSalary(true);
+
+  const [isChartsDialogOpen, setIsChartsDialogOpen] = useState(false);
+
+  console.log("filteredRows", filteredRows);
 
   return (
     <>
@@ -99,7 +105,12 @@ const SalariesPage = () => {
           />
         </Box>
       </Page>
-      <ActionButtons fileName="Salaries" rows={rows} Doc={SalariesPdfDoc} />
+      <ActionButtons
+        fileName="Salaries"
+        rows={rows}
+        Doc={SalariesPdfDoc}
+        openCharts={() => setIsChartsDialogOpen(true)}
+      />
 
       {isSalaryDetailsDialogOpen && selectedSalary && (
         <SalaryDetailsDialog
@@ -111,6 +122,14 @@ const SalariesPage = () => {
             setSelectedSalary(null);
           }}
           workplaces={workplaces ?? []}
+        />
+      )}
+
+      {isChartsDialogOpen && (
+        <SalariesChartsDialog
+          open={isChartsDialogOpen}
+          onClose={() => setIsChartsDialogOpen(false)}
+          data={filteredRows.filter((d) => d.id !== "total")}
         />
       )}
 

@@ -32,8 +32,6 @@ const BalanceEntriesPage = () => {
 
   const [isChartsDialogOpen, setIsChartsDialogOpen] = useState(false);
 
-  console.log("filteredRows", filteredRows);
-
   return (
     <>
       <Page title="Balance Entries">

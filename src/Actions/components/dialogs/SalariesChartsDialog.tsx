@@ -20,32 +20,28 @@ import {
   StyleSheet,
 } from "@react-pdf/renderer";
 
-type BalanceEntriesChartsDialogProps = {
+type SalariesChartsDialogProps = {
   open: boolean;
   onClose: () => void;
   data: (
     | {
         id: string | undefined;
-        name: string;
-        date: string;
-        type: "income" | "expense";
-        price: string | number;
-        withVat: boolean;
-        notes: string;
+        workplace: string;
+        year: string;
+        month: string;
+        "total hours": string | number;
+        "total sum": string | number;
         status: string | undefined;
+        notes: string;
       }
     | {
         id: string;
-        name: string;
-        price: string;
+        workplace: string;
+        "total hours": string;
+        "total sum": string;
       }
   )[];
 };
-
-function parseDDMMYYYY(dateStr: string): Date {
-  const [day, month, year] = dateStr.split("/");
-  return new Date(`${year}-${month}-${day}`);
-}
 
 const styles = StyleSheet.create({
   image: {
@@ -56,14 +52,18 @@ const styles = StyleSheet.create({
   },
 });
 
-const BalanceEntriesChartsDialog = ({
-  open,
-  onClose,
-  data,
-}: BalanceEntriesChartsDialogProps) => {
+const SalariesChartsDialog = ({ open, onClose, data }: SalariesChartsDialogProps) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const [chartImage, setChartImage] = useState<string | null>(null);
   const [pdfReady, setPdfReady] = useState(false);
+
+  const filtered = data.filter(
+    (d) =>
+      d.id !== "total" &&
+      d.workplace?.trim() !== "" &&
+      d["total sum"] !== "" &&
+      !isNaN(Number(d["total sum"]))
+  );
 
   const handleExportToPdf = async () => {
     if (!chartRef.current) return;
@@ -103,23 +103,24 @@ const BalanceEntriesChartsDialog = ({
 
       <DialogContent>
         <div ref={chartRef} style={{ padding: 16 }}>
-          <DialogContentText sx={{ mb: 1 }}>By Name</DialogContentText>
+          <DialogContentText sx={{ mb: 1 }}>By Workplace</DialogContentText>
           <BarChart
             xAxis={[
               {
-                id: "categories",
-                data: data.filter((d) => d.id !== "total").map((d) => d.name),
+                id: "workplaces",
+                data: filtered.map((d) => d.workplace),
                 scaleType: "band",
               },
             ]}
-            yAxis={[{ id: "price-axis", min: -10000, max: 10000 }]}
+            yAxis={[{ id: "sum-axis", min: 0 }]} // let it auto-scale
             series={[
               {
-                data: data
-                  .filter((d) => d.id !== "total")
-                  .map((d) =>
-                    typeof d.price === "string" ? parseFloat(d.price) : d.price
-                  ),
+                label: "Total Sum",
+                data: filtered.map((d) =>
+                  typeof d["total sum"] === "string"
+                    ? parseFloat(d["total sum"])
+                    : d["total sum"]
+                ),
               },
             ]}
             width={500}
@@ -132,23 +133,25 @@ const BalanceEntriesChartsDialog = ({
           <LineChart
             xAxis={[
               {
-                id: "dates",
-                data: data
-                  .filter((d) => d.id !== "total" && "date" in d)
-                  .map((d) => parseDDMMYYYY((d as { date: string }).date)),
+                id: "date",
+                data: filtered.map((d) =>
+                  "year" in d && "month" in d
+                    ? new Date(`${d.year}-${String(d.month).padStart(2, "0")}-01`)
+                    : null
+                ),
                 scaleType: "time",
               },
             ]}
-            yAxis={[{ id: "price-axis", min: -10000, max: 10000 }]}
+            yAxis={[{ id: "sum-axis", min: 0 }]}
             series={[
               {
-                id: "prices",
-                label: "Amount",
-                data: data
-                  .filter((d) => d.id !== "total" && "price" in d)
-                  .map((d) =>
-                    typeof d.price === "string" ? parseFloat(d.price) : d.price
-                  ),
+                id: "sum",
+                label: "Total Sum",
+                data: filtered.map((d) =>
+                  typeof d["total sum"] === "string"
+                    ? parseFloat(d["total sum"])
+                    : d["total sum"]
+                ),
               },
             ]}
             width={600}
@@ -190,4 +193,4 @@ const BalanceEntriesChartsDialog = ({
   );
 };
 
-export default BalanceEntriesChartsDialog;
+export default SalariesChartsDialog;
