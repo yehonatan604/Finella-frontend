@@ -15,7 +15,8 @@ export const salaryCols = (
         "total sum": number | undefined;
     }) => void,
     editFunc: (params: TDataGridInputCellParams) => void,
-    deleteFunc: (params: TDataGridInputCellParams) => void
+    deleteFunc: (params: TDataGridInputCellParams) => void,
+    undeleteFunc?: (params: TDataGridInputCellParams) => void,
 ) => [
         {
             field: "workplace",
@@ -94,7 +95,11 @@ export const salaryCols = (
             editable: false,
             renderCell: (params: TDataGridInputCellParams) => {
                 if (params.row.id === "total") return;
-                return createRowIcons(() => editFunc(params), () => deleteFunc(params));
+                return createRowIcons(
+                    () => editFunc(params),
+                    () => deleteFunc(params),
+                    params.row.status === "inactive" && undeleteFunc ? () => undeleteFunc(params) : undefined
+                );
             }
         }
     ];

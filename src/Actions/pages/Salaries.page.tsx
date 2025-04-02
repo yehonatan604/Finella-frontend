@@ -7,6 +7,7 @@ import ActionFilters from "../components/ActionFilters";
 import ActionButtons from "../components/ActionButtons";
 import PlusButton from "../components/PlusButton";
 import SalaryDetailsDialog from "../components/dialogs/SalaryDetailsDialog";
+import ShowInactiveCheckbox from "../components/ShowInactiveCheckbox";
 
 const SalariesPage = () => {
   const {
@@ -24,6 +25,8 @@ const SalariesPage = () => {
     selectedSalary,
     setSearch,
     filteredRows,
+    showInactive,
+    setShowInactive,
   } = useSalary(true);
 
   return (
@@ -36,6 +39,11 @@ const SalariesPage = () => {
           setMonths={setMonths}
           setPickedWorkplaces={setPickedWorkplaces}
           workplaces={workplaces}
+        />
+        <ShowInactiveCheckbox
+          showInactive={showInactive}
+          setShowInactive={setShowInactive}
+          label="Show Inactive Entries"
         />
         <Box
           component={Paper}
@@ -75,7 +83,7 @@ const SalariesPage = () => {
                 paginationModel: { pageSize: 10 },
               },
             }}
-            pageSizeOptions={[5]}
+            pageSizeOptions={[5, 10]}
             onCellEditStart={(_, event) => {
               event.defaultMuiPrevented = true;
             }}

@@ -12,6 +12,7 @@ import { toastify } from "../../UI/utilities/toast";
 import { salaryCols } from "../data/salaryCols";
 import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
 import { salaryRows } from "../data/salaryRows";
+import { question } from "../../UI/utilities/question";
 
 const useSalary = (isSalariesPage: boolean = false) => {
     const { user } = useAuth();
@@ -32,6 +33,7 @@ const useSalary = (isSalariesPage: boolean = false) => {
     const [selectedSalary, setSelectedSalary] = useState<TSalary | null>(null);
     const [isSalaryDetailsDialogOpen, setIsSalaryDetailsDialogOpen] = useState(false);
     const [search, setSearch] = useState<string>("");
+    const [showInactive, setShowInactive] = useState(false);
 
     const addNewSalaryHour = useCallback(() => {
         setSalaryHours((prev) => {
@@ -215,13 +217,26 @@ const useSalary = (isSalariesPage: boolean = false) => {
     const onDelete = useCallback(
         async (id: string) => {
             try {
-                setLoading(true);
-                setError(null);
-
-                await sendApiRequest(`/salary/${id}`, HTTPMethodTypes.DELETE);
-
-                setFetchedSalaries((prev) => prev.filter((entry) => entry._id !== id));
-                toastify.success("Balance Entry deleted successfully");
+                await question(
+                    "Delete Balance Entry",
+                    "Are you sure you want to delete this Balance Entry?",
+                    "warning",
+                    async () => {
+                        setLoading(true);
+                        setError(null);
+                        await sendApiRequest(`/balance-entry/${id}`, HTTPMethodTypes.DELETE, { userId: user?._id });
+                        setFetchedSalaries((prev) => {
+                            const bentry = prev.find((bEntry) => bEntry._id === id);
+                            if (!bentry) return prev;
+                            const fixedBEntry = {
+                                ...bentry,
+                                status: "inactive"
+                            };
+                            return prev.map((bEntry) => (bEntry._id === id ? fixedBEntry : bEntry));
+                        });
+                        toastify.success("Balance Entry deleted successfully");
+                    }
+                );
             } catch (error) {
                 console.log(error);
                 toastify.error("Error deleting Balance Entry");
@@ -234,7 +249,45 @@ const useSalary = (isSalariesPage: boolean = false) => {
             } finally {
                 setLoading(false);
             }
-        }, []
+        }, [user?._id]);
+
+    const onUndelete = useCallback(
+        async (id: string) => {
+            try {
+                await question(
+                    "Undelete Balance Entry",
+                    "Are you sure you want to undelete this Balance Entry?",
+                    "warning",
+                    async () => {
+                        setLoading(true);
+                        setError(null);
+                        await sendApiRequest(`/balance-entry/undelete/${id}`, HTTPMethodTypes.PATCH, { userId: user?._id });
+                        setFetchedSalaries((prev) => {
+                            const bentry = prev.find((bEntry) => bEntry._id === id);
+                            if (!bentry) return prev;
+                            const fixedBEntry = {
+                                ...bentry,
+                                status: "active"
+                            };
+                            return prev.map((bEntry) => (bEntry._id === id ? fixedBEntry : bEntry));
+                        });
+                        toastify.success("Balance Entry undeleted successfully");
+                    }
+                );
+            } catch (error) {
+                console.log(error);
+                toastify.error("Error undeleting Balance Entry");
+
+                if (error instanceof Error) {
+                    setError(error.message);
+                } else {
+                    setError(error as string);
+                }
+            } finally {
+                setLoading(false);
+            }
+        },
+        [user?._id]
     );
 
     const columns = useMemo(
@@ -247,8 +300,9 @@ const useSalary = (isSalariesPage: boolean = false) => {
                 );
                 setIsSalaryDetailsDialogOpen(true);
             },
-            (params: TDataGridInputCellParams) => onDelete(params.row.id as string)
-        ), [fetchedSalaries, onCellUpdate, workplaces, onDelete]
+            (params: TDataGridInputCellParams) => onDelete(params.row.id as string),
+            (params: TDataGridInputCellParams) => onUndelete(params.row.id as string),
+        ), [fetchedSalaries, onCellUpdate, workplaces, onDelete, onUndelete]
     );
 
     const rows = useMemo(() => salaryRows(
@@ -259,7 +313,8 @@ const useSalary = (isSalariesPage: boolean = false) => {
     ), [calcTotalHours, calcTotalSum, fetchedSalaries, workplaces]);
 
     const filteredRows = rows.filter((row) =>
-        JSON.stringify(row).toLowerCase().includes(search.toLowerCase())
+        JSON.stringify(row).toLowerCase().includes(search.toLowerCase()) &&
+        (showInactive || (row as { status: string }).status !== "inactive")
     );
 
     useEffect(() => {
@@ -321,6 +376,8 @@ const useSalary = (isSalariesPage: boolean = false) => {
         setIsSalaryDetailsDialogOpen,
         setSearch,
         filteredRows,
+        showInactive,
+        setShowInactive,
     };
 };
 

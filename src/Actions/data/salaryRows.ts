@@ -18,6 +18,8 @@ export const salaryRows = (
             month: salary.date.split("-")[0],
             "total hours": calcTotalHours(salary.hours) || "",
             "total sum": calcTotalSum(salary) || "",
+            status: salary.status,
+            notes: salary.notes,
         })) || [];
 
     const totalHours = data.reduce(
