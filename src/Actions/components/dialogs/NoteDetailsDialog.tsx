@@ -17,6 +17,7 @@ import DialogXButton from "../DialogXButton";
 import StyledTitleInput from "../styled/StyledTitleInput";
 import { DeepPartial } from "react-hook-form";
 import { TNote } from "../../types/TNote";
+import { formatDate, formatStringDate } from "../../../Core/helpers/dateHelpers";
 
 type NoteDetailsDialogProps = {
   isOpen: boolean;
@@ -44,7 +45,7 @@ const NoteDetailsDialog = ({
   };
 
   return (
-    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="lg" sx={{ left: "15vw" }}>
+    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="md" sx={{ left: "15vw" }}>
       <DialogTitle
         sx={{
           backgroundColor: "primary.main",
@@ -70,37 +71,27 @@ const NoteDetailsDialog = ({
           sx={{
             display: "flex",
             flexDirection: "column",
-            alignItems: "start",
+            alignItems: "center",
             justifyContent: "center",
-            my: 2,
+            mb: 2,
+            mt: 4,
             gap: 2,
           }}
         >
-          <CenterBox sx={{ flexDirection: "row", flexWrap: "wrap", gap: 2 }}>
-            <TextField
-              type="text"
-              name="content"
-              value={data.content}
-              multiline
-              rows={4}
-              label="Content"
-              size="small"
-              sx={{ width: 217 }}
-              onChange={handleChanges}
-            />
-          </CenterBox>
-
-          <Divider sx={{ width: "100%", my: 2 }} />
-
           <CenterBox sx={{ flexDirection: "row", gap: 2, flexWrap: "wrap" }}>
             <TextField
               type="date"
               name="date"
               label="Date"
-              value={data.date}
+              value={formatStringDate(formatDate(data.date!))}
               size="small"
               sx={{ width: 217 }}
               onChange={handleChanges}
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
             />
 
             <FormControlLabel
@@ -115,6 +106,27 @@ const NoteDetailsDialog = ({
           </CenterBox>
 
           <Divider sx={{ width: "100%", my: 2 }} />
+
+          <CenterBox
+            sx={{
+              flexDirection: "row",
+              flexWrap: "wrap",
+              gap: 2,
+              width: "100%",
+            }}
+          >
+            <TextField
+              type="text"
+              name="content"
+              value={data.content}
+              multiline
+              rows={4}
+              label="Content"
+              size="small"
+              fullWidth
+              onChange={handleChanges}
+            />
+          </CenterBox>
 
           <Divider sx={{ width: "100%", my: 2 }} />
 

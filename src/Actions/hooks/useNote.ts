@@ -8,6 +8,7 @@ import { TNote } from "../types/TNote";
 import { noteCols } from "../data/noteCols";
 import { noteRows } from "../data/noteRows";
 import useAuth from "../../Auth/hooks/useAuth";
+import { formatStringDate } from "../../Core/helpers/dateHelpers";
 
 const useNote = () => {
     const [fetchedNotes, setFetchedNotes] = useState<TNote[]>([]);
@@ -68,7 +69,7 @@ const useNote = () => {
                 userId: user?._id,
                 name: note.name,
                 content: note.content,
-                date: note.date,
+                date: new Date(formatStringDate(note.date)),
                 isSticky: note.isSticky,
                 notes: note.notes,
             };

@@ -5,7 +5,7 @@ const formatDate = (value?: string | Date) => {
 };
 
 const formatStringDate = (value: string) => {
-    return value.split("/").reverse().join("/")
+    return value.split("/").reverse().join("-")
 };
 
 export { formatDate, formatStringDate };
