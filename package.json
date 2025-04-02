@@ -21,6 +21,7 @@
     "@react-pdf/renderer": "^4.3.0",
     "@reduxjs/toolkit": "^2.5.1",
     "axios": "^1.7.9",
+    "html2canvas": "^1.4.1",
     "joi": "^17.13.3",
     "jwt-decode": "^4.0.0",
     "react": "^19.0.0",
