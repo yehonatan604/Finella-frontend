@@ -32,8 +32,6 @@ const ToDoPage = () => {
 
   const [isChartsDialogOpen, setIsChartsDialogOpen] = useState(false);
 
-  console.log("filteredRows", filteredRows);
-
   return (
     <>
       <Page title="To Do's">
