@@ -11,11 +11,11 @@ import {
   Typography,
 } from "@mui/material";
 import { ChangeEvent, useState } from "react";
-import { capitalizeFirstLetter } from "../../../Core/helpers/stringHelpers";
-import { TSalary } from "../../types/TSalary";
-import { TSalaryHours } from "../../types/TSalaryHours";
-import { TWorkplace } from "../../types/TWorkplace";
-import DialogXButton from "../DialogXButton";
+import { capitalizeFirstLetter } from "../../../../Core/helpers/stringHelpers";
+import { TSalary } from "../../../types/TSalary";
+import { TSalaryHours } from "../../../types/TSalaryHours";
+import { TWorkplace } from "../../../types/TWorkplace";
+import DialogXButton from "../../DialogXButton";
 
 type SalaryDetailsDialogProps = {
   isOpen: boolean;

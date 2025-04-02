@@ -14,10 +14,10 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
-import { capitalizeFirstLetter } from "../../../Core/helpers/stringHelpers";
-import { TToDo } from "../../types/TToDo";
-import DialogXButton from "../DialogXButton";
-import StyledTitleInput from "../styled/StyledTitleInput";
+import { capitalizeFirstLetter } from "../../../../Core/helpers/stringHelpers";
+import { TToDo } from "../../../types/TToDo";
+import DialogXButton from "../../DialogXButton";
+import StyledTitleInput from "../../styled/StyledTitleInput";
 
 type ToDoDetailsDialogProps = {
   isOpen: boolean;

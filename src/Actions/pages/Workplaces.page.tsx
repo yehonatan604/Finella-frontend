@@ -5,9 +5,9 @@ import useWorkplaces from "../hooks/useWorkplace";
 import WorkplacesPdfDoc from "../components/WorkplacesPdfDoc";
 import ActionButtons from "../components/ActionButtons";
 import PlusButton from "../components/PlusButton";
-import WorkplaceDetailsDialog from "../components/dialogs/WorkPlaceDetailsDialog";
 import ActionFilters from "../components/ActionFilters";
 import ShowInactiveCheckbox from "../components/ShowInactiveCheckbox";
+import WorkplaceDetailsDialog from "../components/dialogs/detailsDialogs/WorkPlaceDetailsDialog";
 
 const WorkplacesPage = () => {
   const {

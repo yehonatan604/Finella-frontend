@@ -6,10 +6,10 @@ import SalariesPdfDoc from "../components/SalariesPdfDoc";
 import ActionFilters from "../components/ActionFilters";
 import ActionButtons from "../components/ActionButtons";
 import PlusButton from "../components/PlusButton";
-import SalaryDetailsDialog from "../components/dialogs/SalaryDetailsDialog";
 import ShowInactiveCheckbox from "../components/ShowInactiveCheckbox";
 import { useState } from "react";
-import SalariesChartsDialog from "../components/dialogs/SalariesChartsDialog";
+import SalariesChartsDialog from "../components/dialogs/chratDialogs/SalariesChartsDialog";
+import SalaryDetailsDialog from "../components/dialogs/detailsDialogs/SalaryDetailsDialog";
 
 const SalariesPage = () => {
   const {
@@ -32,8 +32,6 @@ const SalariesPage = () => {
   } = useSalary(true);
 
   const [isChartsDialogOpen, setIsChartsDialogOpen] = useState(false);
-
-  console.log("filteredRows", filteredRows);
 
   return (
     <>

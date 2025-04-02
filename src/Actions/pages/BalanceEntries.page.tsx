@@ -6,10 +6,10 @@ import useBalanceEntry from "../hooks/useBalanceEntry";
 import ActionButtons from "../components/ActionButtons";
 import ActionFilters from "../components/ActionFilters";
 import PlusButton from "../components/PlusButton";
-import BalanceEntryDetailsDialog from "../components/dialogs/BalanceEntryDetailsDialog";
 import ShowInactiveCheckbox from "../components/ShowInactiveCheckbox";
 import { useState } from "react";
-import BalanceEntriesChartsDialog from "../components/dialogs/BalanceEntriesChartsDialog";
+import BalanceEntriesChartsDialog from "../components/dialogs/chratDialogs/BalanceEntriesChartsDialog";
+import BalanceEntryDetailsDialog from "../components/dialogs/detailsDialogs/BalanceEntryDetailsDialog";
 
 const BalanceEntriesPage = () => {
   const {

@@ -11,13 +11,13 @@ import {
   Checkbox,
 } from "@mui/material";
 import { ChangeEvent, useState } from "react";
-import { capitalizeFirstLetter } from "../../../Core/helpers/stringHelpers";
-import CenterBox from "../../../UI/components/CenterBox";
-import DialogXButton from "../DialogXButton";
-import StyledTitleInput from "../styled/StyledTitleInput";
 import { DeepPartial } from "react-hook-form";
-import { TNote } from "../../types/TNote";
-import { formatDate, formatStringDate } from "../../../Core/helpers/dateHelpers";
+import { formatStringDate, formatDate } from "../../../../Core/helpers/dateHelpers";
+import { capitalizeFirstLetter } from "../../../../Core/helpers/stringHelpers";
+import CenterBox from "../../../../UI/components/CenterBox";
+import { TNote } from "../../../types/TNote";
+import DialogXButton from "../../DialogXButton";
+import StyledTitleInput from "../../styled/StyledTitleInput";
 
 type NoteDetailsDialogProps = {
   isOpen: boolean;

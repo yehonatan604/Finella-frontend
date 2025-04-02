@@ -6,8 +6,8 @@ import ActionButtons from "../components/ActionButtons";
 import PlusButton from "../components/PlusButton";
 import ActionFilters from "../components/ActionFilters";
 import ShowInactiveCheckbox from "../components/ShowInactiveCheckbox";
-import NoteDetailsDialog from "../components/dialogs/NoteDetailsDialog";
 import useNote from "../hooks/useNote";
+import NoteDetailsDialog from "../components/dialogs/detailsDialogs/NoteDetailsDialog";
 
 const NotesPage = () => {
   const {

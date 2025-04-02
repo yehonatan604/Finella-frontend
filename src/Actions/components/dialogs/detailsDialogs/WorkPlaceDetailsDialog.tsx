@@ -11,12 +11,12 @@ import {
   Checkbox,
 } from "@mui/material";
 import { ChangeEvent, useState } from "react";
-import { capitalizeFirstLetter } from "../../../Core/helpers/stringHelpers";
-import CenterBox from "../../../UI/components/CenterBox";
-import DialogXButton from "../DialogXButton";
-import StyledTitleInput from "../styled/StyledTitleInput";
-import { TWorkplace } from "../../types/TWorkplace";
 import { DeepPartial } from "react-hook-form";
+import { capitalizeFirstLetter } from "../../../../Core/helpers/stringHelpers";
+import CenterBox from "../../../../UI/components/CenterBox";
+import { TWorkplace } from "../../../types/TWorkplace";
+import DialogXButton from "../../DialogXButton";
+import StyledTitleInput from "../../styled/StyledTitleInput";
 
 type WorkplaceDetailsDialogProps = {
   isOpen: boolean;

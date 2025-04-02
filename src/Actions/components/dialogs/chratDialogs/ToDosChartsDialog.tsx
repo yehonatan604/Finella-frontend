@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { LineChart } from "@mui/x-charts/LineChart";
-import DialogXButton from "../DialogXButton";
+import DialogXButton from "../../DialogXButton";
 import html2canvas from "html2canvas";
 import { useRef, useState } from "react";
 import {
@@ -20,27 +20,19 @@ import {
   StyleSheet,
 } from "@react-pdf/renderer";
 
-type SalariesChartsDialogProps = {
+type ToDosChartsDialogProps = {
   open: boolean;
   onClose: () => void;
-  data: (
-    | {
-        id: string | undefined;
-        workplace: string;
-        year: string;
-        month: string;
-        "total hours": string | number;
-        "total sum": string | number;
-        status: string | undefined;
-        notes: string;
-      }
-    | {
-        id: string;
-        workplace: string;
-        "total hours": string;
-        "total sum": string;
-      }
-  )[];
+  data: {
+    id: string | undefined;
+    name: string;
+    description: string;
+    startDate: string;
+    endDate: string;
+    toDoStatus: "PENDING" | "COMPLETE" | "CANCELED" | "FAILED";
+    tasks: number | undefined;
+    status: string | undefined;
+  }[];
 };
 
 const styles = StyleSheet.create({
@@ -52,18 +44,15 @@ const styles = StyleSheet.create({
   },
 });
 
-const SalariesChartsDialog = ({ open, onClose, data }: SalariesChartsDialogProps) => {
+function parseDDMMYYYY(dateStr: string): Date {
+  const [day, month, year] = dateStr.split("/");
+  return new Date(`${year}-${month}-${day}`);
+}
+
+const ToDosChartsDialogDialog = ({ open, onClose, data }: ToDosChartsDialogProps) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const [chartImage, setChartImage] = useState<string | null>(null);
   const [pdfReady, setPdfReady] = useState(false);
-
-  const filtered = data.filter(
-    (d) =>
-      d.id !== "total" &&
-      d.workplace?.trim() !== "" &&
-      d["total sum"] !== "" &&
-      !isNaN(Number(d["total sum"]))
-  );
 
   const handleExportToPdf = async () => {
     if (!chartRef.current) return;
@@ -97,7 +86,7 @@ const SalariesChartsDialog = ({ open, onClose, data }: SalariesChartsDialogProps
           p: "1rem",
         }}
       >
-        Notes Report
+        To Do's Report
         <DialogXButton onClose={onClose} />
       </DialogTitle>
 
@@ -107,20 +96,22 @@ const SalariesChartsDialog = ({ open, onClose, data }: SalariesChartsDialogProps
           <BarChart
             xAxis={[
               {
-                id: "workplaces",
-                data: filtered.map((d) => d.workplace),
+                id: "todos",
+                data: data.map((d) => d.name),
                 scaleType: "band",
               },
             ]}
-            yAxis={[{ id: "sum-axis", min: 0 }]} // let it auto-scale
+            yAxis={[
+              {
+                id: "task-count",
+                label: "Tasks",
+                min: 0,
+              },
+            ]}
             series={[
               {
-                label: "Total Sum",
-                data: filtered.map((d) =>
-                  typeof d["total sum"] === "string"
-                    ? parseFloat(d["total sum"])
-                    : d["total sum"]
-                ),
+                label: "Tasks",
+                data: data.map((d) => d.tasks ?? 0),
               },
             ]}
             width={500}
@@ -133,25 +124,23 @@ const SalariesChartsDialog = ({ open, onClose, data }: SalariesChartsDialogProps
           <LineChart
             xAxis={[
               {
-                id: "date",
-                data: filtered.map((d) =>
-                  "year" in d && "month" in d
-                    ? new Date(`${d.year}-${String(d.month).padStart(2, "0")}-01`)
-                    : null
-                ),
+                id: "start-dates",
+                data: data.map((d) => parseDDMMYYYY(d.startDate)),
                 scaleType: "time",
               },
             ]}
-            yAxis={[{ id: "sum-axis", min: 0 }]}
+            yAxis={[
+              {
+                id: "task-count",
+                label: "Tasks",
+                min: 0,
+              },
+            ]}
             series={[
               {
-                id: "sum",
-                label: "Total Sum",
-                data: filtered.map((d) =>
-                  typeof d["total sum"] === "string"
-                    ? parseFloat(d["total sum"])
-                    : d["total sum"]
-                ),
+                id: "tasks",
+                label: "Tasks",
+                data: data.map((d) => d.tasks ?? 0),
               },
             ]}
             width={600}
@@ -193,4 +182,4 @@ const SalariesChartsDialog = ({ open, onClose, data }: SalariesChartsDialogProps
   );
 };
 
-export default SalariesChartsDialog;
+export default ToDosChartsDialogDialog;

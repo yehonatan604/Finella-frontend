@@ -43,15 +43,17 @@ const ActionButtons = (props: DocProps) => {
         Export to PDF
       </Button>
 
-      <Button
-        variant="contained"
-        color="secondary"
-        sx={{ mt: 2, ml: 2 }}
-        startIcon={<AutoFixHighIcon />}
-        onClick={openCharts}
-      >
-        Create Report
-      </Button>
+      {openCharts && (
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{ mt: 2, ml: 2 }}
+          startIcon={<AutoFixHighIcon />}
+          onClick={openCharts}
+        >
+          Create Report
+        </Button>
+      )}
     </Box>
   );
 };

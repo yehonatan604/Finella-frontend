@@ -6,8 +6,10 @@ import ActionFilters from "../components/ActionFilters";
 import ActionButtons from "../components/ActionButtons";
 import useToDo from "../hooks/useToDo";
 import PlusButton from "../components/PlusButton";
-import ToDoDetailsDialog from "../components/dialogs/ToDoDetailsDialog";
 import ShowInactiveCheckbox from "../components/ShowInactiveCheckbox";
+import ToDoDetailsDialog from "../components/dialogs/detailsDialogs/ToDoDetailsDialog";
+import { useState } from "react";
+import ToDosChartsDialogDialog from "../components/dialogs/chratDialogs/ToDosChartsDialog";
 
 const ToDoPage = () => {
   const {
@@ -27,6 +29,10 @@ const ToDoPage = () => {
     showInactive,
     setShowInactive,
   } = useToDo(true);
+
+  const [isChartsDialogOpen, setIsChartsDialogOpen] = useState(false);
+
+  console.log("filteredRows", filteredRows);
 
   return (
     <>
@@ -88,7 +94,7 @@ const ToDoPage = () => {
                 paginationModel: { pageSize: 10 },
               },
             }}
-            pageSizeOptions={[5]}
+            pageSizeOptions={[5, 10]}
             disableRowSelectionOnClick
             onCellEditStart={(_, event) => {
               event.defaultMuiPrevented = true;
@@ -98,7 +104,12 @@ const ToDoPage = () => {
         </Box>
       </Page>
 
-      <ActionButtons fileName="ToDo" rows={rows} Doc={SalariesPdfDoc} />
+      <ActionButtons
+        fileName="ToDo"
+        rows={rows}
+        Doc={SalariesPdfDoc}
+        openCharts={() => setIsChartsDialogOpen(true)}
+      />
 
       <PlusButton addUrl="/actions/add-todo" />
 
@@ -111,6 +122,14 @@ const ToDoPage = () => {
             onUpdate(data);
             setSelectedToDo(null);
           }}
+        />
+      )}
+
+      {isChartsDialogOpen && (
+        <ToDosChartsDialogDialog
+          open={isChartsDialogOpen}
+          onClose={() => setIsChartsDialogOpen(false)}
+          data={filteredRows}
         />
       )}
     </>
