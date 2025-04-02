@@ -1,6 +1,7 @@
-import { MenuItem, TextField } from "@mui/material";
+import { Checkbox, MenuItem, TextField } from "@mui/material";
 import { TDataGridInputCellParams } from "../../types/TDataGridInputCellParams";
 import { formatStringDate } from "../../../Core/helpers/dateHelpers";
+import { Box } from "@mui/system";
 
 export const createDataGridInputCell = (
   params: TDataGridInputCellParams,
@@ -12,6 +13,28 @@ export const createDataGridInputCell = (
   const { row, value, hasFocus } = params;
 
   if (hasFocus) {
+    if (type === "checkbox") {
+      return (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          <Checkbox
+            checked={Boolean(value ?? false)}
+            onChange={(event) => {
+              const updatedRow = { ...row, [field]: event.target.checked };
+              processRowOnCellUpdate(updatedRow as never);
+            }}
+            sx={{ pt: 0.5 }}
+          />
+        </Box>
+      );
+    }
     if (type === "select") {
       return (
         <TextField
@@ -60,6 +83,28 @@ export const createDataGridInputCell = (
   } else {
     if (row.status === "inactive") {
       return <s>{value}</s>;
+    }
+    if (type === "checkbox") {
+      return (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          <Checkbox
+            checked={Boolean(value ?? false)}
+            onChange={(event) => {
+              const updatedRow = { ...row, [field]: event.target.checked };
+              processRowOnCellUpdate(updatedRow as never);
+            }}
+            sx={{ pt: 0.5 }}
+          />
+        </Box>
+      );
     }
     return value;
   }

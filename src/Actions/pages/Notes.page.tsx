@@ -1,13 +1,13 @@
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Box, Paper } from "@mui/material";
 import Page from "../../UI/components/Page";
-import useWorkplaces from "../hooks/useWorkplace";
 import WorkplacesPdfDoc from "../components/WorkplacesPdfDoc";
 import ActionButtons from "../components/ActionButtons";
 import PlusButton from "../components/PlusButton";
-import WorkplaceDetailsDialog from "../components/dialogs/WorkPlaceDetailsDialog";
 import ActionFilters from "../components/ActionFilters";
 import ShowInactiveCheckbox from "../components/ShowInactiveCheckbox";
+import NoteDetailsDialog from "../components/dialogs/NoteDetailsDialog";
+import useNote from "../hooks/useNote";
 
 const NotesPage = () => {
   const {
@@ -15,14 +15,14 @@ const NotesPage = () => {
     rows,
     isUpdateDialogOpen,
     setIsUpdateDialogOpen,
-    selectedWorkplace,
-    setSelectedWorkplace,
+    selectedNote,
+    setSelectedNote,
     onUpdate,
     setSearch,
     filteredRows,
     showInactive,
     setShowInactive,
-  } = useWorkplaces();
+  } = useNote();
 
   return (
     <>
@@ -77,7 +77,7 @@ const NotesPage = () => {
                 paginationModel: { pageSize: 10 },
               },
             }}
-            pageSizeOptions={[5]}
+            pageSizeOptions={[5, 10]}
             disableRowSelectionOnClick
             onCellEditStart={(_, event) => {
               event.defaultMuiPrevented = true;
@@ -88,14 +88,14 @@ const NotesPage = () => {
       </Page>
       <ActionButtons fileName="workplaces" rows={rows} Doc={WorkplacesPdfDoc} />
 
-      {isUpdateDialogOpen && selectedWorkplace && (
-        <WorkplaceDetailsDialog
+      {isUpdateDialogOpen && selectedNote && (
+        <NoteDetailsDialog
           isOpen={isUpdateDialogOpen}
           onClose={() => setIsUpdateDialogOpen(false)}
-          workplace={selectedWorkplace}
+          note={selectedNote}
           onSubmit={(data) => {
             onUpdate(data);
-            setSelectedWorkplace(null);
+            setSelectedNote(null);
           }}
         />
       )}
