@@ -37,7 +37,8 @@ const ActionFilters = (props: ActionFiltersProps) => {
         width: "73%",
         display: "flex",
         gap: "1rem",
-        margin: 2,
+        m: 2,
+        mb: 0,
       }}
     >
       {

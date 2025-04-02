@@ -11,6 +11,7 @@ import { formatDate } from "../../Core/helpers/dateHelpers";
 import { fixPriceString } from "../../Core/helpers/stringHelpers";
 import { balanceEntryCols } from "../data/balanceEntryCols";
 import { balanceEntryRows } from "../data/balanceEntryRows";
+import { question } from "../../UI/utilities/question";
 
 const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
     const { user } = useAuth();
@@ -24,6 +25,7 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
     const [selectedBEntry, setSelectedBEntry] = useState<TBalanceEntry | null>(null);
     const [isBEntryDetailsDialogOpen, setIsBEntryDetailsDialogOpen] = useState(false);
     const [search, setSearch] = useState<string>("");
+    const [showInactive, setShowInactive] = useState(false);
 
     const {
         register,
@@ -141,11 +143,26 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
     const onDelete = useCallback(
         async (id: string) => {
             try {
-                setLoading(true);
-                setError(null);
-                await sendApiRequest(`/balance-entry/${id}`, HTTPMethodTypes.DELETE, { userId: user?._id });
-                setFetchedBalanceEntries((prev) => prev.filter((bEntry) => bEntry._id !== id));
-                toastify.success("Balance Entry deleted successfully");
+                await question(
+                    "Delete Balance Entry",
+                    "Are you sure you want to delete this Balance Entry?",
+                    "warning",
+                    async () => {
+                        setLoading(true);
+                        setError(null);
+                        await sendApiRequest(`/balance-entry/${id}`, HTTPMethodTypes.DELETE, { userId: user?._id });
+                        setFetchedBalanceEntries((prev) => {
+                            const bentry = prev.find((bEntry) => bEntry._id === id);
+                            if (!bentry) return prev;
+                            const fixedBEntry = {
+                                ...bentry,
+                                status: "inactive"
+                            };
+                            return prev.map((bEntry) => (bEntry._id === id ? fixedBEntry : bEntry));
+                        });
+                        toastify.success("Balance Entry deleted successfully");
+                    }
+                );
             } catch (error) {
                 console.log(error);
                 toastify.error("Error deleting Balance Entry");
@@ -160,6 +177,43 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
             }
         }, [user?._id]);
 
+    const onUndelete = useCallback(
+        async (id: string) => {
+            try {
+                await question(
+                    "Undelete Balance Entry",
+                    "Are you sure you want to undelete this Balance Entry?",
+                    "warning",
+                    async () => {
+                        setLoading(true);
+                        setError(null);
+                        await sendApiRequest(`/balance-entry/undelete/${id}`, HTTPMethodTypes.PATCH, { userId: user?._id });
+                        setFetchedBalanceEntries((prev) => {
+                            const bentry = prev.find((bEntry) => bEntry._id === id);
+                            if (!bentry) return prev;
+                            const fixedBEntry = {
+                                ...bentry,
+                                status: "active"
+                            };
+                            return prev.map((bEntry) => (bEntry._id === id ? fixedBEntry : bEntry));
+                        });
+                        toastify.success("Balance Entry undeleted successfully");
+                    }
+                );
+            } catch (error) {
+                console.log(error);
+                toastify.error("Error undeleting Balance Entry");
+
+                if (error instanceof Error) {
+                    setError(error.message);
+                } else {
+                    setError(error as string);
+                }
+            } finally {
+                setLoading(false);
+            }
+        }
+        , [user?._id]);
 
     const onSubmit = async (data: TBalanceEntry) => {
         try {
@@ -199,16 +253,20 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
             },
             (params: TDataGridInputCellParams) => {
                 onDelete(params.id as string);
-            }
+            },
+            (params: TDataGridInputCellParams) => {
+                onUndelete(params.id as string);
+            },
         ),
-        [fetchedBalanceEntries, onCellUpdate, onDelete]
+        [fetchedBalanceEntries, onCellUpdate, onDelete, onUndelete]
     );
 
     const rows = useMemo(() => balanceEntryRows(fetchedBalanceEntries), [fetchedBalanceEntries]);
 
-    const filteredRows = rows.filter((row) =>
-        JSON.stringify(row).toLowerCase().includes(search.toLowerCase())
-    );
+    const filteredRows = rows.filter((row) => {
+        return JSON.stringify(row).toLowerCase().includes(search.toLowerCase()) &&
+            (showInactive || (row as { status: string }).status !== "inactive")
+    });
 
     useEffect(() => {
         if (!isBalanceEntryPage) return;
@@ -263,7 +321,9 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
         isBEntryDetailsDialogOpen,
         setIsBEntryDetailsDialogOpen,
         setSearch,
-        filteredRows
+        filteredRows,
+        showInactive,
+        setShowInactive,
     };
 }
 

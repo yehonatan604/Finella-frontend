@@ -5,6 +5,7 @@ import store from "./Core/store/store";
 import AppRouter from "./UI/router/AppRouter";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "sweetalert2/src/sweetalert2.scss";
 
 const App = () => {
   return (

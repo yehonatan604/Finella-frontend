@@ -8,8 +8,11 @@ export const balanceEntryCols = (
         id: string | undefined;
     }) => void,
     editFunc: (params: TDataGridInputCellParams) => void,
-    deleteFunc: (params: TDataGridInputCellParams) => void
-) => [
+    deleteFunc: (params: TDataGridInputCellParams) => void,
+    undeleteFunc?: (params: TDataGridInputCellParams) => void,
+) => {
+
+    return [
         {
             field: "name",
             headerName: "Name",
@@ -83,7 +86,12 @@ export const balanceEntryCols = (
             editable: false,
             renderCell: (params: TDataGridInputCellParams) => {
                 if (params.row.id === "total") return;
-                return createRowIcons(() => editFunc(params), () => deleteFunc(params));
+                return createRowIcons(
+                    () => editFunc(params),
+                    () => deleteFunc(params),
+                    params.row.status === "inactive" && undeleteFunc ? () => undeleteFunc(params) : undefined
+                );
             },
         }
     ];
+}

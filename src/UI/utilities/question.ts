@@ -1,6 +1,5 @@
 import swal, { SweetAlertIcon } from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import "./swalStyles.css";
 
 export const question = async (
   title: string,

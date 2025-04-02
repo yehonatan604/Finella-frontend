@@ -11,6 +11,7 @@ export const balanceEntryRows = (fetchedBalanceEntries: TBalanceEntry[]) => {
             price: bEntry.type === "income" ? bEntry.price : `-${bEntry.price}`,
             withVat: bEntry.withVat,
             notes: bEntry.notes,
+            status: bEntry.status,
         })) || [];
 
     const totalPrice = data.reduce(

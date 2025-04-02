@@ -58,6 +58,9 @@ export const createDataGridInputCell = (
       );
     }
   } else {
-    return <span>{value}</span>;
+    if (row.status === "inactive") {
+      return <s>{value}</s>;
+    }
+    return value;
   }
 };

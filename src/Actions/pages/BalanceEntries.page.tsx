@@ -7,6 +7,7 @@ import ActionButtons from "../components/ActionButtons";
 import ActionFilters from "../components/ActionFilters";
 import PlusButton from "../components/PlusButton";
 import BalanceEntryDetailsDialog from "../components/dialogs/BalanceEntryDetailsDialog";
+import ShowInactiveCheckbox from "../components/ShowInactiveCheckbox";
 
 const BalanceEntriesPage = () => {
   const {
@@ -23,6 +24,8 @@ const BalanceEntriesPage = () => {
     selectedBEntry,
     setSearch,
     filteredRows,
+    showInactive,
+    setShowInactive,
   } = useBalanceEntry(true);
 
   return (
@@ -36,6 +39,13 @@ const BalanceEntriesPage = () => {
           setPickedType={setPickedType}
           types={["income", "expense"]}
         />
+
+        <ShowInactiveCheckbox
+          showInactive={showInactive}
+          setShowInactive={setShowInactive}
+          label="Show Inactive Entries"
+        />
+
         <Box
           component={Paper}
           sx={{
@@ -74,7 +84,7 @@ const BalanceEntriesPage = () => {
                 paginationModel: { pageSize: 10 },
               },
             }}
-            pageSizeOptions={[5]}
+            pageSizeOptions={[5, 10]}
             onCellEditStart={(_, event) => {
               event.defaultMuiPrevented = true;
             }}
