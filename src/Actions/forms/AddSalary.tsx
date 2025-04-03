@@ -8,7 +8,7 @@ import {
   Paper,
 } from "@mui/material";
 import useSalary from "../hooks/useSalary";
-import Page from "../../UI/components/Page";
+import Page from "../../Common/components/Page";
 import UploadExcelDialog from "../components/dialogs/UploadExcelDialog";
 
 const AddSalary = () => {

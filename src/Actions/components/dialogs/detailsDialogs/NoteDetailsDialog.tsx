@@ -12,9 +12,9 @@ import {
 } from "@mui/material";
 import { ChangeEvent, useState } from "react";
 import { DeepPartial } from "react-hook-form";
-import { formatStringDate, formatDate } from "../../../../Core/helpers/dateHelpers";
-import { capitalizeFirstLetter } from "../../../../Core/helpers/stringHelpers";
-import CenterBox from "../../../../UI/components/CenterBox";
+import { formatStringDate, formatDate } from "../../../../Common/helpers/dateHelpers";
+import { capitalizeFirstLetter } from "../../../../Common/helpers/stringHelpers";
+import CenterBox from "../../../../Common/components/CenterBox";
 import { TNote } from "../../../types/TNote";
 import DialogXButton from "../../DialogXButton";
 import StyledTitleInput from "../../styled/StyledTitleInput";

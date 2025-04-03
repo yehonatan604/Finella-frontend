@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { ChangeEvent, useState } from "react";
-import { capitalizeFirstLetter } from "../../../../Core/helpers/stringHelpers";
+import { capitalizeFirstLetter } from "../../../../Common/helpers/stringHelpers";
 import { TSalary } from "../../../types/TSalary";
 import { TSalaryHours } from "../../../types/TSalaryHours";
 import { TWorkplace } from "../../../types/TWorkplace";

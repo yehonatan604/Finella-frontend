@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 import useAuth from "../../Auth/hooks/useAuth";
-import PageHolder from "../../UI/components/PageHolder";
+import PageHolder from "../../Common/components/PageHolder";
 
 const RouteGuard = ({ isLoggedIn = false }: { isLoggedIn?: boolean }) => {
   const { user } = useAuth();

@@ -8,7 +8,7 @@ import {
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
-import Page from "../../UI/components/Page";
+import Page from "../../Common/components/Page";
 import { useState } from "react";
 import { TTask } from "../types/TTask";
 import useToDo from "../hooks/useToDo";

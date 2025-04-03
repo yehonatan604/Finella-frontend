@@ -9,7 +9,7 @@ import {
   Paper,
 } from "@mui/material";
 import useBalanceEntry from "../hooks/useBalanceEntry";
-import Page from "../../UI/components/Page";
+import Page from "../../Common/components/Page";
 
 const AddBalanceEntry = () => {
   const { register, errors, handleSubmit, onSubmit } = useBalanceEntry();

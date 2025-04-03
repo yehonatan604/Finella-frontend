@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useCallback, useState } from "react";
-import { HTTPMethodTypes } from "../../Core/types/HTTPMethodTypes";
-import { authActions } from "../../Core/store/authSlice";
-import { TRootState } from "../../Core/store/store";
-import { sendApiRequest } from "../../Core/helpers/sendApiRequest";
+import { HTTPMethodTypes } from "../../Common/types/HTTPMethodTypes";
+import { authActions } from "../../Common/store/authSlice";
+import { TRootState } from "../../Common/store/store";
+import { sendApiRequest } from "../../Common/helpers/sendApiRequest";
 
 const useAuth = () => {
     const auth = useSelector((state: TRootState) => state.authSlice);

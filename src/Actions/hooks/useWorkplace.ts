@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { TWorkplace } from "../types/TWorkplace";
-import { HTTPMethodTypes } from "../../Core/types/HTTPMethodTypes";
-import { sendApiRequest } from "../../Core/helpers/sendApiRequest";
+import { HTTPMethodTypes } from "../../Common/types/HTTPMethodTypes";
+import { sendApiRequest } from "../../Common/helpers/sendApiRequest";
 import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
-import { toastify } from "../../UI/utilities/toast";
+import { toastify } from "../../Common/utilities/toast";
 import { workplaceCols } from "../data/workplaceCols";
 import { workplaceRows } from "../data/workplaceRows";
 import { TWorkplaceWithFormPhone } from "../types/TWorkplaceWithFormPhone";
-import { question } from "../../UI/utilities/question";
+import { question } from "../../Common/utilities/question";
 
 const useWorkplaces = () => {
     const [workplaces, setWorkplaces] = useState<TWorkplace[]>();

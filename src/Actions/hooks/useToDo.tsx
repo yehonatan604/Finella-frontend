@@ -1,16 +1,16 @@
 import { useForm } from "react-hook-form";
-import { HTTPMethodTypes } from "../../Core/types/HTTPMethodTypes";
+import { HTTPMethodTypes } from "../../Common/types/HTTPMethodTypes";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import useAuth from "../../Auth/hooks/useAuth";
-import { sendApiRequest } from "../../Core/helpers/sendApiRequest";
+import { sendApiRequest } from "../../Common/helpers/sendApiRequest";
 import { addToDoFormDefault } from "../forms/initialData/addToDoFormDefault";
 import { TToDo } from "../types/TToDo";
-import { toastify } from "../../UI/utilities/toast";
+import { toastify } from "../../Common/utilities/toast";
 import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
-import { formatDate } from "../../Core/helpers/dateHelpers";
+import { formatDate } from "../../Common/helpers/dateHelpers";
 import { todoCols } from "../data/todoCols";
 import { todoRows } from "../data/todoRows";
-import { question } from "../../UI/utilities/question";
+import { question } from "../../Common/utilities/question";
 
 const useToDo = (isTodoPage: boolean = false) => {
   const { user } = useAuth();

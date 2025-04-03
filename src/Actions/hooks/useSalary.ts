@@ -1,18 +1,18 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import useAuth from "../../Auth/hooks/useAuth";
-import { HTTPMethodTypes } from "../../Core/types/HTTPMethodTypes";
+import { HTTPMethodTypes } from "../../Common/types/HTTPMethodTypes";
 import { THoursFromExcel } from "../types/THoursFromExcel";
 import { TSalary } from "../types/TSalary";
 import { TSalaryHours } from "../types/TSalaryHours";
 import useWorkplaces from "./useWorkplace";
-import { sendApiRequest } from "../../Core/helpers/sendApiRequest";
+import { sendApiRequest } from "../../Common/helpers/sendApiRequest";
 import { addSalaryFormDefault } from "../forms/initialData/addSalaryFormDefault";
-import { toastify } from "../../UI/utilities/toast";
+import { toastify } from "../../Common/utilities/toast";
 import { salaryCols } from "../data/salaryCols";
 import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
 import { salaryRows } from "../data/salaryRows";
-import { question } from "../../UI/utilities/question";
+import { question } from "../../Common/utilities/question";
 
 const useSalary = (isSalariesPage: boolean = false) => {
     const { user } = useAuth();

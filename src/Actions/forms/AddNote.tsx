@@ -8,7 +8,7 @@ import {
   FormControlLabel,
   Divider,
 } from "@mui/material";
-import Page from "../../UI/components/Page";
+import Page from "../../Common/components/Page";
 import useNote from "../hooks/useNote";
 
 const AddNote = () => {

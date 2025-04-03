@@ -1,17 +1,17 @@
 import { useForm } from "react-hook-form";
-import { HTTPMethodTypes } from "../../Core/types/HTTPMethodTypes";
+import { HTTPMethodTypes } from "../../Common/types/HTTPMethodTypes";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import useAuth from "../../Auth/hooks/useAuth";
 import { TBalanceEntry } from "../types/TBalanceEntry";
-import { sendApiRequest } from "../../Core/helpers/sendApiRequest";
+import { sendApiRequest } from "../../Common/helpers/sendApiRequest";
 import { addBalanceEntryFormDefault } from "../forms/initialData/addBalanceEntryFormDefault";
 import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
-import { toastify } from "../../UI/utilities/toast";
-import { formatDate } from "../../Core/helpers/dateHelpers";
-import { fixPriceString } from "../../Core/helpers/stringHelpers";
+import { toastify } from "../../Common/utilities/toast";
+import { formatDate } from "../../Common/helpers/dateHelpers";
+import { fixPriceString } from "../../Common/helpers/stringHelpers";
 import { balanceEntryCols } from "../data/balanceEntryCols";
 import { balanceEntryRows } from "../data/balanceEntryRows";
-import { question } from "../../UI/utilities/question";
+import { question } from "../../Common/utilities/question";
 
 const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
     const { user } = useAuth();

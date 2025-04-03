@@ -1,4 +1,4 @@
-import { formatDate } from "../../Core/helpers/dateHelpers";
+import { formatDate } from "../../Common/helpers/dateHelpers";
 import { TToDo } from "../types/TToDo";
 
 export const todoRows = (fetchedToDos: TToDo[]) => {

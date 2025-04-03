@@ -14,7 +14,7 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
-import { capitalizeFirstLetter } from "../../../../Core/helpers/stringHelpers";
+import { capitalizeFirstLetter } from "../../../../Common/helpers/stringHelpers";
 import { TToDo } from "../../../types/TToDo";
 import DialogXButton from "../../DialogXButton";
 import StyledTitleInput from "../../styled/StyledTitleInput";

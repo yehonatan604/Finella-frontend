@@ -1,4 +1,4 @@
-import { formatDate } from "../../Core/helpers/dateHelpers";
+import { formatDate } from "../../Common/helpers/dateHelpers";
 import { TBalanceEntry } from "../types/TBalanceEntry";
 
 export const balanceEntryRows = (fetchedBalanceEntries: TBalanceEntry[]) => {

@@ -13,8 +13,8 @@ import {
   Checkbox,
 } from "@mui/material";
 import { ChangeEvent, useState } from "react";
-import { capitalizeFirstLetter } from "../../../../Core/helpers/stringHelpers";
-import CenterBox from "../../../../UI/components/CenterBox";
+import { capitalizeFirstLetter } from "../../../../Common/helpers/stringHelpers";
+import CenterBox from "../../../../Common/components/CenterBox";
 import { TBalanceEntry } from "../../../types/TBalanceEntry";
 import DialogXButton from "../../DialogXButton";
 import StyledTitleInput from "../../styled/StyledTitleInput";

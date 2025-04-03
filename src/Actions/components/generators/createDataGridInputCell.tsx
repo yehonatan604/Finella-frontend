@@ -1,6 +1,6 @@
 import { Checkbox, MenuItem, TextField } from "@mui/material";
 import { TDataGridInputCellParams } from "../../types/TDataGridInputCellParams";
-import { formatStringDate } from "../../../Core/helpers/dateHelpers";
+import { formatStringDate } from "../../../Common/helpers/dateHelpers";
 import { Box } from "@mui/system";
 
 export const createDataGridInputCell = (

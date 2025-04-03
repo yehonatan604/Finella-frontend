@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { addWorkplaceSchema } from "../validations/addWorkplace.schema";
 import { TWorkplace } from "../types/TWorkplace";
-import Page from "../../UI/components/Page";
+import Page from "../../Common/components/Page";
 import useWorkplaces from "../hooks/useWorkplace";
 import { addWorkplaceFormDefault } from "./initialData/addWorkplaceFormDefault";
 
