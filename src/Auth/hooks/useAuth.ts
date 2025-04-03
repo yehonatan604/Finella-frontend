@@ -4,13 +4,22 @@ import { HTTPMethodTypes } from "../../Common/types/HTTPMethodTypes";
 import { authActions } from "../../Common/store/authSlice";
 import { TRootState } from "../../Common/store/store";
 import { sendApiRequest } from "../../Common/helpers/sendApiRequest";
+import { socketActions } from "../../Common/store/socketSlice";
 
 const useAuth = () => {
-    const auth = useSelector((state: TRootState) => state.authSlice);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const auth = useSelector((state: TRootState) => state.authSlice);
+    const connected = useSelector((state: TRootState) => state.socketSlice.connected);
     const { POST, GET } = HTTPMethodTypes;
     const dispatch = useDispatch();
+
+    const connectSocket = useCallback(() => {
+        if (!connected) {
+            dispatch(socketActions.connectSocket());
+        }
+    }, [connected, dispatch]);
+
 
     const signup = useCallback(async (data: Record<string, unknown>) => {
         setLoading(true);
@@ -21,7 +30,6 @@ const useAuth = () => {
             const err = error as Error;
             setError(err.message);
             console.log(err);
-
         } finally {
             setLoading(false);
         }
@@ -34,6 +42,7 @@ const useAuth = () => {
             if (response) {
                 localStorage.setItem("token", response.data.token);
                 dispatch(authActions.login({ role: response.data.role.permission, user: response.data.user }));
+                connectSocket();
             }
         } catch (err) {
             const error = err as Error;
@@ -44,12 +53,7 @@ const useAuth = () => {
         } finally {
             setLoading(false);
         }
-    }, [POST, dispatch]);
-
-    const logout = useCallback(() => {
-        dispatch(authActions.logout());
-        localStorage.removeItem("token");
-    }, [dispatch]);
+    }, [POST, connectSocket, dispatch]);
 
     const loginByToken = useCallback(async (token: string) => {
         setLoading(true);
@@ -58,6 +62,7 @@ const useAuth = () => {
             const response = await sendApiRequest("/auth/" + decoded._id, GET);
             if (response) {
                 dispatch(authActions.login({ role: response.data.role.permission, user: response.data.user }));
+                connectSocket();
             }
         } catch (err) {
             const error = err as Error;
@@ -66,7 +71,13 @@ const useAuth = () => {
         } finally {
             setLoading(false);
         }
-    }, [GET, dispatch]);
+    }, [GET, connectSocket, dispatch]);
+
+    const logout = useCallback(() => {
+        dispatch(authActions.logout());
+        dispatch(socketActions.disconnectSocket());
+        localStorage.removeItem("token");
+    }, [dispatch]);
 
     return {
         user: auth.user,
