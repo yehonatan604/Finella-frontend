@@ -17,6 +17,7 @@ import ToDoPage from "../../Actions/pages/ToDo.page";
 import AddToDo from "../../Actions/forms/AddToDo";
 import NotesPage from "../../Actions/pages/Notes.page";
 import AddNote from "../../Actions/forms/AddNote";
+import NoteAutomationPage from "../../Automations/pages/NoteAutomation.page";
 
 const AppRouter = () => {
   const { loginByToken } = useAuth();
@@ -56,6 +57,10 @@ const AppRouter = () => {
         <Route path="add-workplace" index element={<AddWorkplace />} />
         <Route path="add-todo" index element={<AddToDo />} />
         <Route path="add-note" index element={<AddNote />} />
+      </Route>
+
+      <Route path="/automations" element={<RouteGuard isLoggedIn />}>
+        <Route path="note-automations" index element={<NoteAutomationPage />} />
       </Route>
     </Routes>
   );

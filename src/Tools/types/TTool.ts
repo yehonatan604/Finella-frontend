@@ -1,0 +1,1 @@
+export type TTool = "calculator" | "currency" | "weather";

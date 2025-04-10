@@ -23,8 +23,17 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import AttractionsIcon from "@mui/icons-material/Attractions";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import AutoModeIcon from "@mui/icons-material/AutoMode";
+import { useState } from "react";
+import ToolDragDialog from "../../Tools/components/dialogs/ToolDragDialog";
+import { TTool } from "../../Tools/types/TTool";
 
 const LeftNavigation = () => {
+  const [selectedTool, setSelectedTool] = useState<TTool | null>(null);
+
+  const handleToolClick = (tool: TTool) => {
+    setSelectedTool(tool);
+  };
+
   return (
     <Drawer
       variant="permanent"
@@ -118,10 +127,12 @@ const LeftNavigation = () => {
           </MenuAccordion>
 
           <MenuAccordion title="Tools" icon={<ConstructionIcon sx={{ color: "#bbb" }} />}>
-            <MenuItemWithIcon
-              title="Calculator"
-              icon={<CalculateIcon sx={{ color: "#ccc" }} />}
-            />
+            <Box onClick={() => handleToolClick("calculator")}>
+              <MenuItemWithIcon
+                title="Calculator"
+                icon={<CalculateIcon sx={{ color: "#ccc" }} />}
+              />
+            </Box>
             <MenuItemWithIcon
               title="Currency Converter"
               icon={<CurrencyExchangeIcon sx={{ color: "#ccc" }} />}
@@ -141,13 +152,21 @@ const LeftNavigation = () => {
               title="Manual Actions"
               icon={<LaunchIcon sx={{ color: "#ccc" }} />}
             />
-            <MenuItemWithIcon
-              title="Auto Messages"
-              icon={<MarkEmailReadIcon sx={{ color: "#ccc" }} />}
-            />
+            <Link to={"/automations/note-automations"}>
+              <MenuItemWithIcon
+                title="Note Automations"
+                icon={<MarkEmailReadIcon sx={{ color: "#ccc" }} />}
+              />
+            </Link>
           </MenuAccordion>
         </Box>
       </ColBox>
+      <ToolDragDialog
+        open={selectedTool !== null}
+        onClose={() => setSelectedTool(null)}
+        tool={selectedTool as TTool}
+        title={selectedTool === "calculator" ? "Calculator" : ""}
+      />
     </Drawer>
   );
 };
