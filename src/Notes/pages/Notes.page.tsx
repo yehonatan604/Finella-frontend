@@ -1,13 +1,13 @@
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Box, Paper } from "@mui/material";
 import Page from "../../Common/components/Page";
-import WorkplacesPdfDoc from "../components/WorkplacesPdfDoc";
-import ActionButtons from "../components/ActionButtons";
-import PlusButton from "../components/PlusButton";
-import ActionFilters from "../components/ActionFilters";
-import ShowInactiveCheckbox from "../components/ShowInactiveCheckbox";
+import ActionButtons from "../../Actions/components/ActionButtons";
+import ActionFilters from "../../Actions/components/ActionFilters";
+import PlusButton from "../../Actions/components/PlusButton";
+import ShowInactiveCheckbox from "../../Actions/components/ShowInactiveCheckbox";
+import WorkplacesPdfDoc from "../../Actions/components/WorkplacesPdfDoc";
+import NoteDetailsDialog from "../components/NoteDetailsDialog";
 import useNote from "../hooks/useNote";
-import NoteDetailsDialog from "../components/dialogs/detailsDialogs/NoteDetailsDialog";
 
 const NotesPage = () => {
   const {
@@ -61,7 +61,7 @@ const NotesPage = () => {
             rowCount={
               !showInactive
                 ? filteredRows.filter(
-                    (row) => (row as { status: string }).status !== "inactive"
+                    (row: { status: string }) => row.status !== "inactive"
                   ).length
                 : filteredRows.length
             }

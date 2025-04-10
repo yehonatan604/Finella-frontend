@@ -15,9 +15,9 @@ import AddSalary from "../../Actions/forms/AddSalary";
 import BalanceEntriesPage from "../../Actions/pages/BalanceEntries.page";
 import ToDoPage from "../../Actions/pages/ToDo.page";
 import AddToDo from "../../Actions/forms/AddToDo";
-import NotesPage from "../../Actions/pages/Notes.page";
-import AddNote from "../../Actions/forms/AddNote";
-import NoteAutomationPage from "../../Automations/pages/NoteAutomation.page";
+import AddNote from "../../Notes/forms/AddNote";
+import NoteAutomationPage from "../../Notes/pages/NoteAutomation.page";
+import NotesPage from "../../Notes/pages/Notes.page";
 
 const AppRouter = () => {
   const { loginByToken } = useAuth();
@@ -47,7 +47,6 @@ const AppRouter = () => {
         <Route path="balance-entries" element={<BalanceEntriesPage />} />
         <Route path="workplaces" element={<WorkplacesPage />} />
         <Route path="todos" element={<ToDoPage />} />
-        <Route path="notes" element={<NotesPage />} />
       </Route>
 
       <Route path="/actions" element={<RouteGuard isLoggedIn />}>
@@ -59,8 +58,9 @@ const AppRouter = () => {
         <Route path="add-note" index element={<AddNote />} />
       </Route>
 
-      <Route path="/automations" element={<RouteGuard isLoggedIn />}>
-        <Route path="note-automations" index element={<NoteAutomationPage />} />
+      <Route path="/notes" element={<RouteGuard isLoggedIn />}>
+        <Route index element={<NotesPage />} />
+        <Route path="note-automations" element={<NoteAutomationPage />} />
       </Route>
     </Routes>
   );

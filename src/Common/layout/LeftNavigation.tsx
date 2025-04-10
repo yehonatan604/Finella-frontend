@@ -14,15 +14,14 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import AirIcon from "@mui/icons-material/Air";
-import ScheduleIcon from "@mui/icons-material/Schedule";
-import LaunchIcon from "@mui/icons-material/Launch";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import Person2Icon from "@mui/icons-material/Person2";
 import LanguageIcon from "@mui/icons-material/Language";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AttractionsIcon from "@mui/icons-material/Attractions";
 import ConstructionIcon from "@mui/icons-material/Construction";
-import AutoModeIcon from "@mui/icons-material/AutoMode";
+import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
+import EventNoteIcon from "@mui/icons-material/EventNote";
 import { useState } from "react";
 import ToolDragDialog from "../../Tools/components/dialogs/ToolDragDialog";
 import { TTool } from "../../Tools/types/TTool";
@@ -118,10 +117,25 @@ const LeftNavigation = () => {
                 icon={<FormatListBulletedIcon sx={{ color: "#ccc" }} />}
               />
             </Link>
-            <Link to={"/data/notes"}>
+          </MenuAccordion>
+
+          <MenuAccordion title="Notes" icon={<EventNoteIcon sx={{ color: "#bbb" }} />}>
+            <Link to={"/notes"}>
               <MenuItemWithIcon
-                title="Notes"
+                title="All Notes"
                 icon={<EditNoteIcon sx={{ color: "#ccc" }} />}
+              />
+            </Link>
+            <Link to={"/notes/note-automations"}>
+              <MenuItemWithIcon
+                title="Note Automations"
+                icon={<MarkEmailReadIcon sx={{ color: "#ccc" }} />}
+              />
+            </Link>
+            <Link to={"/notes/note-automations"}>
+              <MenuItemWithIcon
+                title="Notes Board"
+                icon={<DashboardCustomizeIcon sx={{ color: "#ccc" }} />}
               />
             </Link>
           </MenuAccordion>
@@ -138,26 +152,6 @@ const LeftNavigation = () => {
               icon={<CurrencyExchangeIcon sx={{ color: "#ccc" }} />}
             />
             <MenuItemWithIcon title="Weather" icon={<AirIcon sx={{ color: "#ccc" }} />} />
-          </MenuAccordion>
-
-          <MenuAccordion
-            title="Automations"
-            icon={<AutoModeIcon sx={{ color: "#bbb" }} />}
-          >
-            <MenuItemWithIcon
-              title="Scheduled Actions"
-              icon={<ScheduleIcon sx={{ color: "#ccc" }} />}
-            />
-            <MenuItemWithIcon
-              title="Manual Actions"
-              icon={<LaunchIcon sx={{ color: "#ccc" }} />}
-            />
-            <Link to={"/automations/note-automations"}>
-              <MenuItemWithIcon
-                title="Note Automations"
-                icon={<MarkEmailReadIcon sx={{ color: "#ccc" }} />}
-              />
-            </Link>
           </MenuAccordion>
         </Box>
       </ColBox>
