@@ -30,13 +30,10 @@ const LoginPage = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        backgroundImage: "url('/images/login-bg.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
       }}
     >
       <Container
-        maxWidth="xs"
+        maxWidth="md"
         sx={{
           backdropFilter: "blur(10px)",
           backgroundColor: "background.paper",
