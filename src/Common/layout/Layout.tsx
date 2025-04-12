@@ -6,33 +6,22 @@ import TopNavigation from "./TopNavigation";
 import { ThemeProvider } from "@mui/material/styles";
 import { createTheme } from "@mui/material/styles";
 import useTheme from "../hooks/useTheme";
-
-import { PaletteMode } from "@mui/material";
-
-const darkTheme = {
-  palette: {
-    mode: "dark" as PaletteMode,
-    background: {
-      default: "#121212",
-      paper: "#1d1d1d",
-    },
-  },
-};
-const lightTheme = {
-  palette: {
-    mode: "light" as PaletteMode,
-    background: {
-      default: "#f5f5f5",
-      paper: "#ffffff",
-    },
-  },
-};
+import { lightTheme } from "../styles/themes/light.theme";
+import { darkTheme } from "../styles/themes/dark.theme";
+import { useEffect } from "react";
+import { TTheme } from "../types/TTheme";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();
-  const { mode } = useTheme();
+  const { mode, setTheme } = useTheme();
 
   const appliedTheme = createTheme(mode === "dark" ? darkTheme : lightTheme);
+
+  useEffect(() => {
+    const storageMode = localStorage.getItem("mode") || "light";
+    localStorage.setItem("mode", storageMode);
+    setTheme(storageMode as TTheme);
+  }, [setTheme]);
 
   return (
     <ThemeProvider theme={appliedTheme}>

@@ -1,7 +1,7 @@
 import { Box, Drawer, IconButton } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import HomeIcon from "@mui/icons-material/Home";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CenterBox from "../components/CenterBox";
 import ColBox from "../components/ColBox";
 import MenuAccordion from "../components/MenuAccordion";
@@ -31,6 +31,7 @@ import useTheme from "../hooks/useTheme";
 const LeftNavigation = () => {
   const [selectedTool, setSelectedTool] = useState<TTool | null>(null);
   const { mode, setTheme } = useTheme();
+  const nav = useNavigate();
 
   const handleToolClick = (tool: TTool) => {
     setSelectedTool(tool);
@@ -69,28 +70,25 @@ const LeftNavigation = () => {
             width: "15vw",
           }}
         >
-          <Link to={"/"}>
-            <HomeIcon />
-          </Link>
-          <Link to={"/"}>
+          <IconButton sx={{ color: "white" }}>
+            <HomeIcon onClick={() => nav("/")} />
+          </IconButton>
+          <IconButton sx={{ color: "white" }}>
             <Person2Icon />
-          </Link>
+          </IconButton>
           <IconButton>
-            {mode === "light" ? (
-              <LightModeRoundedIcon
-                onClick={() => setTheme("dark")}
-                sx={{ color: "#bbb" }}
-              />
+            {mode === "dark" ? (
+              <LightModeRoundedIcon onClick={() => setTheme("light")} />
             ) : (
               <DarkModeRoundedIcon
-                onClick={() => setTheme("light")}
-                sx={{ color: "#bbb" }}
+                onClick={() => setTheme("dark")}
+                sx={{ color: "white" }}
               />
             )}
           </IconButton>
-          <span>
+          <IconButton sx={{ color: "white" }}>
             <LogoutIcon />
-          </span>
+          </IconButton>
         </CenterBox>
 
         <Box
