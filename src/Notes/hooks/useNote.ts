@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { HTTPMethodTypes } from "../../Common/types/HTTPMethodTypes";
 import { sendApiRequest } from "../../Common/helpers/sendApiRequest";
-import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
 import { toastify } from "../../Common/utilities/toast";
 import { question } from "../../Common/utilities/question";
 import { TNote } from "../types/TNote";
@@ -12,12 +11,14 @@ import { formatStringDate } from "../../Common/helpers/dateHelpers";
 import { useForm } from "react-hook-form";
 import { addNoteFormDefault } from "../forms/initialData/addNoteFormDefault";
 import { useNavigate } from "react-router-dom";
+import { TDataGridInputCellParams } from "../../Actions/types/TDataGridInputCellParams";
 
 const useNote = (isNotesPage: boolean = false) => {
     const [fetchedNotes, setFetchedNotes] = useState<TNote[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
+    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [selectedNote, setSelectedNote] = useState<TNote | null>(null);
     const [search, setSearch] = useState<string>("");
     const [showInactive, setShowInactive] = useState(false);
@@ -265,10 +266,8 @@ const useNote = (isNotesPage: boolean = false) => {
     }, [fromYear, getAllNotes, isNotesPage, months, toYear]);
 
     return {
-        fetchedNotes,
         columns,
         rows,
-        getAllNotes,
         onSubmit,
         error,
         loading,
@@ -284,10 +283,11 @@ const useNote = (isNotesPage: boolean = false) => {
         handleSubmit,
         register,
         errors,
-        setError,
         setMonths,
         setFromYear,
         setToYear,
+        isAddDialogOpen,
+        setIsAddDialogOpen,
     }
 }
 

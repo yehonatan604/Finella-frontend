@@ -2,15 +2,25 @@ import { Button } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 
-const PlusButton = ({ addUrl }: { addUrl: string }) => {
+const PlusButton = ({
+  addUrl = "",
+  onClick,
+}: {
+  addUrl?: string;
+  onClick?: () => void;
+}) => {
   const nav = useNavigate();
   return (
     <Button
       variant="contained"
       color="primary"
-      onClick={() => {
-        nav(addUrl);
-      }}
+      onClick={
+        onClick
+          ? onClick
+          : () => {
+              nav(addUrl);
+            }
+      }
       sx={{
         mt: 2,
         borderRadius: "100%",

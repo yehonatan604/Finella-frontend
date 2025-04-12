@@ -1,4 +1,4 @@
-import { TDbItem } from "./TDbItem";
+import { TDbItem } from "../../Actions/types/TDbItem";
 
 export type TNote = TDbItem & {
     userId: string;
@@ -7,4 +7,5 @@ export type TNote = TDbItem & {
     date: string;
     isSticky: boolean;
     notes: string;
+    noteStatus: "PENDING" | "READ" | "ARCHIVED";
 };

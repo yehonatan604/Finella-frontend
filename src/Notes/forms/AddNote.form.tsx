@@ -4,24 +4,21 @@ import {
   TextField,
   Container,
   Checkbox,
-  Paper,
   FormControlLabel,
   Divider,
 } from "@mui/material";
-import Page from "../../Common/components/Page";
 import useNote from "../hooks/useNote";
 
-const AddNote = () => {
+const AddNoteForm = () => {
   const { register, errors, handleSubmit, onSubmit } = useNote();
 
   return (
-    <Page title="Add a Note">
+    <>
       <Container
-        maxWidth="md"
-        component={Paper}
+        maxWidth="xl"
         sx={{
-          borderRadius: 3,
-          p: 4,
+          px: 4,
+          pt: 2,
           textAlign: "center",
         }}
       >
@@ -64,9 +61,7 @@ const AddNote = () => {
             />
           </Box>
 
-          <Divider sx={{ my: 2 }} />
-
-          <Box sx={{ display: "flex", gap: 2 }}>
+          <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
             <TextField
               label="Content"
               {...register("content")}
@@ -77,9 +72,7 @@ const AddNote = () => {
             />
           </Box>
 
-          <Divider sx={{ my: 2 }} />
-
-          <Box sx={{ display: "flex", gap: 2 }}>
+          <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
             <TextField
               label="Extra notes"
               {...register("notes")}
@@ -90,6 +83,8 @@ const AddNote = () => {
               slotProps={{ inputLabel: { shrink: true } }}
             />
           </Box>
+
+          <Divider sx={{ my: 2 }} />
 
           <Box sx={{ display: "flex", gap: 2 }}>
             <Button
@@ -114,8 +109,8 @@ const AddNote = () => {
           </Box>
         </form>
       </Container>
-    </Page>
+    </>
   );
 };
 
-export default AddNote;
+export default AddNoteForm;

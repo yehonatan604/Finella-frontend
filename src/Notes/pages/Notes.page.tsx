@@ -8,6 +8,8 @@ import ShowInactiveCheckbox from "../../Actions/components/ShowInactiveCheckbox"
 import WorkplacesPdfDoc from "../../Actions/components/WorkplacesPdfDoc";
 import NoteDetailsDialog from "../components/NoteDetailsDialog";
 import useNote from "../hooks/useNote";
+import AddFormDialog from "../../Common/components/AddFormDialog";
+import AddNoteForm from "../forms/AddNote.form";
 
 const NotesPage = () => {
   const {
@@ -25,6 +27,8 @@ const NotesPage = () => {
     setMonths,
     setFromYear,
     setToYear,
+    isAddDialogOpen,
+    setIsAddDialogOpen,
   } = useNote(true);
 
   return (
@@ -61,7 +65,7 @@ const NotesPage = () => {
             rowCount={
               !showInactive
                 ? filteredRows.filter(
-                    (row: { status: string }) => row.status !== "inactive"
+                    (row: { status: string | undefined }) => row.status !== "inactive"
                   ).length
                 : filteredRows.length
             }
@@ -108,7 +112,16 @@ const NotesPage = () => {
         />
       )}
 
-      <PlusButton addUrl="/actions/add-note" />
+      {isAddDialogOpen && (
+        <AddFormDialog
+          open={isAddDialogOpen}
+          onClose={() => setIsAddDialogOpen(false)}
+          title="Add a Note"
+          formComponent={<AddNoteForm />}
+        />
+      )}
+
+      <PlusButton onClick={() => setIsAddDialogOpen(true)} />
     </>
   );
 };
