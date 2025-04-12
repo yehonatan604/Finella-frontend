@@ -1,4 +1,4 @@
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 import { Box, Paper } from "@mui/material";
 import Page from "../../Common/components/Page";
 import ActionButtons from "../../Actions/components/ActionButtons";
@@ -10,6 +10,8 @@ import NoteDetailsDialog from "../components/NoteDetailsDialog";
 import useNote from "../hooks/useNote";
 import AddFormDialog from "../../Common/components/AddFormDialog";
 import AddNoteForm from "../forms/AddNote.form";
+import useTheme from "../../Common/hooks/useTheme";
+import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 
 const NotesPage = () => {
   const {
@@ -30,6 +32,8 @@ const NotesPage = () => {
     isAddDialogOpen,
     setIsAddDialogOpen,
   } = useNote(true);
+
+  const { mode } = useTheme();
 
   return (
     <>
@@ -54,13 +58,13 @@ const NotesPage = () => {
             flexDirection: "column",
             padding: "1.5rem",
             "& .super-app-theme--header": {
-              backgroundColor: "primary.main",
+              backgroundColor: mode === "light" ? "primary.main" : "ffffff",
               color: "#fff",
               fontWeight: "bold",
             },
           }}
         >
-          <DataGrid
+          <StyledDataGrid
             rows={filteredRows}
             rowCount={
               !showInactive
@@ -71,16 +75,6 @@ const NotesPage = () => {
             }
             paginationMode="server"
             columns={columns as GridColDef[]}
-            sx={{
-              width: "60vw",
-              "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": {
-                outline: "none",
-              },
-              "& .MuiDataGrid-cell--editing": {
-                boxShadow: "none",
-                outline: "none",
-              },
-            }}
             getRowClassName={(params) =>
               params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
             }

@@ -1,4 +1,4 @@
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 import { Box, Paper } from "@mui/material";
 import Page from "../../Common/components/Page";
 import useWorkplaces from "../hooks/useWorkplace";
@@ -8,6 +8,8 @@ import PlusButton from "../components/PlusButton";
 import ActionFilters from "../components/ActionFilters";
 import ShowInactiveCheckbox from "../components/ShowInactiveCheckbox";
 import WorkplaceDetailsDialog from "../components/dialogs/detailsDialogs/WorkPlaceDetailsDialog";
+import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
+import useTheme from "../../Common/hooks/useTheme";
 
 const WorkplacesPage = () => {
   const {
@@ -23,6 +25,8 @@ const WorkplacesPage = () => {
     showInactive,
     setShowInactive,
   } = useWorkplaces();
+
+  const { mode } = useTheme();
 
   return (
     <>
@@ -42,13 +46,13 @@ const WorkplacesPage = () => {
             flexDirection: "column",
             padding: "1.5rem",
             "& .super-app-theme--header": {
-              backgroundColor: "primary.main",
+              backgroundColor: mode === "light" ? "primary.main" : "ffffff",
               color: "#fff",
               fontWeight: "bold",
             },
           }}
         >
-          <DataGrid
+          <StyledDataGrid
             rows={filteredRows}
             rowCount={
               !showInactive
@@ -59,16 +63,6 @@ const WorkplacesPage = () => {
             }
             paginationMode="server"
             columns={columns as GridColDef[]}
-            sx={{
-              width: "60vw",
-              "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": {
-                outline: "none",
-              },
-              "& .MuiDataGrid-cell--editing": {
-                boxShadow: "none",
-                outline: "none",
-              },
-            }}
             getRowClassName={(params) =>
               params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
             }

@@ -1,5 +1,4 @@
 import { Box, Drawer, IconButton } from "@mui/material";
-import { blue } from "@mui/material/colors";
 import HomeIcon from "@mui/icons-material/Home";
 import { Link, useNavigate } from "react-router-dom";
 import CenterBox from "../components/CenterBox";
@@ -36,6 +35,14 @@ const LeftNavigation = () => {
     setSelectedTool(tool);
   };
 
+  const gradientBackground =
+    mode === "dark"
+      ? "linear-gradient(180deg, #1e293b 0%, #334155 100%)"
+      : "linear-gradient(180deg, #0d47a1 0%, #1976d2 100%)";
+
+  const iconColor = mode === "dark" ? "#ccc" : "#333";
+  const sectionColor = mode === "dark" ? "#bbb" : "#444";
+
   return (
     <Drawer
       variant="permanent"
@@ -51,7 +58,7 @@ const LeftNavigation = () => {
           minHeight: "100vh",
           height: "100%",
           alignItems: "center",
-          background: `linear-gradient(180deg, ${blue[900]} 0%, ${blue[800]} 100%)`,
+          background: gradientBackground,
           maxHeight: "80vh",
           overflowY: "hidden",
         }}
@@ -98,70 +105,80 @@ const LeftNavigation = () => {
         >
           <MenuAccordion
             title="Actions"
-            icon={<AttractionsIcon sx={{ color: "#bbb" }} />}
+            icon={<AttractionsIcon sx={{ color: sectionColor }} />}
           >
             <Link to={"/data/balance-entries"}>
               <MenuItemWithIcon
                 title="Balance Entries"
-                icon={<BalanceIcon sx={{ color: "#ccc" }} />}
+                icon={<BalanceIcon sx={{ color: iconColor }} />}
               />
             </Link>
             <Link to={"/data/salaries"}>
               <MenuItemWithIcon
                 title="Salaries"
-                icon={<LocalAtmIcon sx={{ color: "#ccc" }} />}
+                icon={<LocalAtmIcon sx={{ color: iconColor }} />}
               />
             </Link>
             <Link to={"/data/workplaces"}>
               <MenuItemWithIcon
                 title="Workplaces"
-                icon={<ApartmentIcon sx={{ color: "#ccc" }} />}
+                icon={<ApartmentIcon sx={{ color: iconColor }} />}
               />
             </Link>
             <Link to={"/data/todos"}>
               <MenuItemWithIcon
                 title="Todo's"
-                icon={<FormatListBulletedIcon sx={{ color: "#ccc" }} />}
+                icon={<FormatListBulletedIcon sx={{ color: iconColor }} />}
               />
             </Link>
           </MenuAccordion>
 
-          <MenuAccordion title="Notes" icon={<EventNoteIcon sx={{ color: "#bbb" }} />}>
+          <MenuAccordion
+            title="Notes"
+            icon={<EventNoteIcon sx={{ color: sectionColor }} />}
+          >
             <Link to={"/notes"}>
               <MenuItemWithIcon
                 title="All Notes"
-                icon={<EditNoteIcon sx={{ color: "#ccc" }} />}
+                icon={<EditNoteIcon sx={{ color: iconColor }} />}
               />
             </Link>
             <Link to={"/notes/note-automations"}>
               <MenuItemWithIcon
                 title="Note Automations"
-                icon={<MarkEmailReadIcon sx={{ color: "#ccc" }} />}
+                icon={<MarkEmailReadIcon sx={{ color: iconColor }} />}
               />
             </Link>
             <Link to={"/notes/board"}>
               <MenuItemWithIcon
                 title="Notes Board"
-                icon={<DashboardCustomizeIcon sx={{ color: "#ccc" }} />}
+                icon={<DashboardCustomizeIcon sx={{ color: iconColor }} />}
               />
             </Link>
           </MenuAccordion>
 
-          <MenuAccordion title="Tools" icon={<ConstructionIcon sx={{ color: "#bbb" }} />}>
+          <MenuAccordion
+            title="Tools"
+            icon={<ConstructionIcon sx={{ color: sectionColor }} />}
+          >
             <Box onClick={() => handleToolClick("calculator")}>
               <MenuItemWithIcon
                 title="Calculator"
-                icon={<CalculateIcon sx={{ color: "#ccc" }} />}
+                icon={<CalculateIcon sx={{ color: iconColor }} />}
               />
             </Box>
             <MenuItemWithIcon
               title="Currency Converter"
-              icon={<CurrencyExchangeIcon sx={{ color: "#ccc" }} />}
+              icon={<CurrencyExchangeIcon sx={{ color: iconColor }} />}
             />
-            <MenuItemWithIcon title="Weather" icon={<AirIcon sx={{ color: "#ccc" }} />} />
+            <MenuItemWithIcon
+              title="Weather"
+              icon={<AirIcon sx={{ color: iconColor }} />}
+            />
           </MenuAccordion>
         </Box>
       </ColBox>
+
       <ToolDragDialog
         open={selectedTool !== null}
         onClose={() => setSelectedTool(null)}

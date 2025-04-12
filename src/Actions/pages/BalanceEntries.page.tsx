@@ -1,5 +1,5 @@
 import { Box, Paper } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 import Page from "../../Common/components/Page";
 import BalanceEnetriesPdfDoc from "../components/BalanceEnetriesPdfDoc";
 import useBalanceEntry from "../hooks/useBalanceEntry";
@@ -10,6 +10,8 @@ import ShowInactiveCheckbox from "../components/ShowInactiveCheckbox";
 import { useState } from "react";
 import BalanceEntriesChartsDialog from "../components/dialogs/chratDialogs/BalanceEntriesChartsDialog";
 import BalanceEntryDetailsDialog from "../components/dialogs/detailsDialogs/BalanceEntryDetailsDialog";
+import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
+import useTheme from "../../Common/hooks/useTheme";
 
 const BalanceEntriesPage = () => {
   const {
@@ -31,6 +33,7 @@ const BalanceEntriesPage = () => {
   } = useBalanceEntry(true);
 
   const [isChartsDialogOpen, setIsChartsDialogOpen] = useState(false);
+  const { mode } = useTheme();
 
   return (
     <>
@@ -57,13 +60,13 @@ const BalanceEntriesPage = () => {
             flexDirection: "column",
             padding: "1.5rem",
             "& .super-app-theme--header": {
-              backgroundColor: "primary.main",
+              backgroundColor: mode === "light" ? "primary.main" : "ffffff",
               color: "#fff",
               fontWeight: "bold",
             },
           }}
         >
-          <DataGrid
+          <StyledDataGrid
             rows={filteredRows}
             rowCount={
               !showInactive
@@ -74,16 +77,6 @@ const BalanceEntriesPage = () => {
             }
             paginationMode="server"
             columns={columns as GridColDef[]}
-            sx={{
-              width: "60vw",
-              "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": {
-                outline: "none",
-              },
-              "& .MuiDataGrid-cell--editing": {
-                boxShadow: "none",
-                outline: "none",
-              },
-            }}
             getRowClassName={(params) =>
               params.id === "total"
                 ? "total"

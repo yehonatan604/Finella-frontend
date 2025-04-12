@@ -45,7 +45,7 @@ const ActionFilters = (props: ActionFiltersProps) => {
         // add a search filter
         <TextField
           label="Search"
-          sx={{ mb: 2, width: 224, backgroundColor: "#fff" }}
+          sx={{ mb: 2, width: 224 }}
           onChange={(e) => setSearch?.(e.target.value)}
           slotProps={{
             inputLabel: {
@@ -66,7 +66,7 @@ const ActionFilters = (props: ActionFiltersProps) => {
         // add a from-year filter
         <TextField
           label="From Year"
-          sx={{ mb: 2, width: 224, backgroundColor: "#fff" }}
+          sx={{ mb: 2, width: 224 }}
           type="number"
           slotProps={{ htmlInput: { min: 1982, max: 2100 } }}
           defaultValue={new Date().getFullYear()}
@@ -78,7 +78,7 @@ const ActionFilters = (props: ActionFiltersProps) => {
         // add a to-year filter
         <TextField
           label="To Year"
-          sx={{ mb: 2, width: 224, backgroundColor: "#fff" }}
+          sx={{ mb: 2, width: 224 }}
           type="number"
           slotProps={{ htmlInput: { min: 1982, max: 2100 } }}
           defaultValue={new Date().getFullYear()}
@@ -90,7 +90,7 @@ const ActionFilters = (props: ActionFiltersProps) => {
         // add a month filter
         <TextField
           label="Months"
-          sx={{ mb: 2, width: 224, backgroundColor: "#fff" }}
+          sx={{ mb: 2, width: 224 }}
           select
           slotProps={{ select: { multiple: true } }}
           defaultValue={["all"]}
@@ -116,7 +116,7 @@ const ActionFilters = (props: ActionFiltersProps) => {
         // add a type filter
         <TextField
           label="type"
-          sx={{ mb: 2, width: 224, backgroundColor: "#fff" }}
+          sx={{ mb: 2, width: 224 }}
           select
           slotProps={{
             inputLabel: {
@@ -141,7 +141,7 @@ const ActionFilters = (props: ActionFiltersProps) => {
         // add a workplace filter
         <TextField
           label="workPlaces"
-          sx={{ mb: 2, width: 224, backgroundColor: "#fff" }}
+          sx={{ mb: 2, width: 224 }}
           select
           slotProps={{
             inputLabel: {
@@ -173,7 +173,7 @@ const ActionFilters = (props: ActionFiltersProps) => {
         // add a status filter
         <TextField
           label="Status"
-          sx={{ mb: 2, width: 224, backgroundColor: "#fff" }}
+          sx={{ mb: 2, width: 224 }}
           select
           slotProps={{
             inputLabel: {

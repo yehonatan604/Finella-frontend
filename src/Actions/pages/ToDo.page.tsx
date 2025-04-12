@@ -1,5 +1,5 @@
 import { Box, Paper } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 import Page from "../../Common/components/Page";
 import SalariesPdfDoc from "../components/SalariesPdfDoc";
 import ActionFilters from "../components/ActionFilters";
@@ -10,6 +10,8 @@ import ShowInactiveCheckbox from "../components/ShowInactiveCheckbox";
 import ToDoDetailsDialog from "../components/dialogs/detailsDialogs/ToDoDetailsDialog";
 import { useState } from "react";
 import ToDosChartsDialogDialog from "../components/dialogs/chratDialogs/ToDosChartsDialog";
+import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
+import useTheme from "../../Common/hooks/useTheme";
 
 const ToDoPage = () => {
   const {
@@ -31,6 +33,7 @@ const ToDoPage = () => {
   } = useToDo(true);
 
   const [isChartsDialogOpen, setIsChartsDialogOpen] = useState(false);
+  const { mode } = useTheme();
 
   return (
     <>
@@ -57,13 +60,13 @@ const ToDoPage = () => {
             flexDirection: "column",
             padding: "1.5rem",
             "& .super-app-theme--header": {
-              backgroundColor: "primary.main",
+              backgroundColor: mode === "light" ? "primary.main" : "ffffff",
               color: "#fff",
               fontWeight: "bold",
             },
           }}
         >
-          <DataGrid
+          <StyledDataGrid
             rows={filteredRows}
             rowCount={
               !showInactive
@@ -74,16 +77,6 @@ const ToDoPage = () => {
             }
             paginationMode="server"
             columns={columns as GridColDef[]}
-            sx={{
-              width: "60vw",
-              "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": {
-                outline: "none",
-              },
-              "& .MuiDataGrid-cell--editing": {
-                boxShadow: "none",
-                outline: "none",
-              },
-            }}
             getRowClassName={(params) =>
               params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
             }
