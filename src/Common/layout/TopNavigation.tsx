@@ -6,7 +6,11 @@ export const TopNavigation = () => {
   return (
     <AppBar
       position="fixed"
-      sx={{ backgroundColor: blue[900], height: "7vh", width: "85vw" }}
+      sx={{
+        background: `linear-gradient(90deg, ${blue[900]} 0%, ${blue[700]} 100%)`,
+        height: "7vh",
+        width: "85vw",
+      }}
     >
       <Toolbar sx={{ display: "flex", justifyContent: "space-around" }}>
         <Box>

@@ -16,7 +16,6 @@ import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import AirIcon from "@mui/icons-material/Air";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import Person2Icon from "@mui/icons-material/Person2";
-import LogoutIcon from "@mui/icons-material/Logout";
 import AttractionsIcon from "@mui/icons-material/Attractions";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
@@ -85,9 +84,6 @@ const LeftNavigation = () => {
                 sx={{ color: "white" }}
               />
             )}
-          </IconButton>
-          <IconButton sx={{ color: "white" }}>
-            <LogoutIcon />
           </IconButton>
         </CenterBox>
 
