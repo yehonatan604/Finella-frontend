@@ -9,20 +9,28 @@ const NotesBoard = () => {
   return (
     <Page title="Notes Board">
       <Box
-        display="flex"
-        justifyContent="center" // center the board itself
-        width="100%"
-        mt={2}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          mt: 2,
+          width: "100%",
+        }}
       >
         <Box
-          px={2}
           sx={{
-            display: "flex",
-            flexDirection: "row",
-            flexWrap: "wrap",
+            maxWidth: "1200px",
+            width: "100%", //
+            backgroundColor: "burlywood",
+            p: 3,
+            borderRadius: 2,
+            boxShadow: 4,
+            border: "5px groove white",
+            margin: "0 auto",
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, 250px)",
             gap: 2,
-            justifyContent: "flex-start",
-            width: "80%",
+            justifyContent: "center",
+            justifyItems: "start",
           }}
         >
           {fetchedNotes.map(
@@ -30,9 +38,8 @@ const NotesBoard = () => {
               note.status !== "inactive" && (
                 <Card
                   key={note._id}
-                  elevation={note.isSticky ? 6 : 2}
                   sx={{
-                    width: 240,
+                    width: "250px",
                     minHeight: 150,
                     position: "relative",
                     backgroundColor: note.isSticky ? "#fffbe6" : "#f9f9f9",
