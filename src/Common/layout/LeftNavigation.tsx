@@ -1,4 +1,4 @@
-import { Box, Drawer } from "@mui/material";
+import { Box, Drawer, IconButton } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import HomeIcon from "@mui/icons-material/Home";
 import { Link } from "react-router-dom";
@@ -16,18 +16,21 @@ import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import AirIcon from "@mui/icons-material/Air";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import Person2Icon from "@mui/icons-material/Person2";
-import LanguageIcon from "@mui/icons-material/Language";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AttractionsIcon from "@mui/icons-material/Attractions";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
+import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
+import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import { useState } from "react";
 import ToolDragDialog from "../../Tools/components/dialogs/ToolDragDialog";
 import { TTool } from "../../Tools/types/TTool";
+import useTheme from "../hooks/useTheme";
 
 const LeftNavigation = () => {
   const [selectedTool, setSelectedTool] = useState<TTool | null>(null);
+  const { mode, setTheme } = useTheme();
 
   const handleToolClick = (tool: TTool) => {
     setSelectedTool(tool);
@@ -72,9 +75,19 @@ const LeftNavigation = () => {
           <Link to={"/"}>
             <Person2Icon />
           </Link>
-          <span>
-            <LanguageIcon />
-          </span>
+          <IconButton>
+            {mode === "light" ? (
+              <LightModeRoundedIcon
+                onClick={() => setTheme("dark")}
+                sx={{ color: "#bbb" }}
+              />
+            ) : (
+              <DarkModeRoundedIcon
+                onClick={() => setTheme("light")}
+                sx={{ color: "#bbb" }}
+              />
+            )}
+          </IconButton>
           <span>
             <LogoutIcon />
           </span>
