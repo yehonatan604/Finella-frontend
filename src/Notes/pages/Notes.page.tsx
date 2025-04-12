@@ -98,9 +98,11 @@ const NotesPage = () => {
           />
         </Box>
       </Page>
-      <ActionButtons fileName="workplaces" rows={rows} Doc={WorkplacesPdfDoc} />
 
-      {isUpdateDialogOpen && selectedNote && (
+      <ActionButtons fileName="workplaces" rows={rows} Doc={WorkplacesPdfDoc} />
+      <PlusButton onClick={() => setIsAddDialogOpen(true)} />
+
+      {selectedNote && (
         <NoteDetailsDialog
           isOpen={isUpdateDialogOpen}
           onClose={() => setIsUpdateDialogOpen(false)}
@@ -112,16 +114,12 @@ const NotesPage = () => {
         />
       )}
 
-      {isAddDialogOpen && (
-        <AddFormDialog
-          open={isAddDialogOpen}
-          onClose={() => setIsAddDialogOpen(false)}
-          title="Add a Note"
-          formComponent={<AddNoteForm />}
-        />
-      )}
-
-      <PlusButton onClick={() => setIsAddDialogOpen(true)} />
+      <AddFormDialog
+        open={isAddDialogOpen}
+        onClose={() => setIsAddDialogOpen(false)}
+        title="Add a Note"
+        formComponent={<AddNoteForm setIsDialogOpen={setIsAddDialogOpen} />}
+      />
     </>
   );
 };

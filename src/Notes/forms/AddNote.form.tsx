@@ -8,9 +8,19 @@ import {
   Divider,
 } from "@mui/material";
 import useNote from "../hooks/useNote";
+import { TNote } from "../types/TNote";
 
-const AddNoteForm = () => {
+const AddNoteForm = ({
+  setIsDialogOpen,
+}: {
+  setIsDialogOpen: (isOpen: boolean) => void;
+}) => {
   const { register, errors, handleSubmit, onSubmit } = useNote();
+
+  const onFormSubmit = async (data: TNote) => {
+    await onSubmit(data);
+    setIsDialogOpen(false);
+  };
 
   return (
     <>
@@ -22,7 +32,7 @@ const AddNoteForm = () => {
           textAlign: "center",
         }}
       >
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onFormSubmit)}>
           <Box
             sx={{
               display: "flex",

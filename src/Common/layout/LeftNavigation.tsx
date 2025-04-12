@@ -132,7 +132,7 @@ const LeftNavigation = () => {
                 icon={<MarkEmailReadIcon sx={{ color: "#ccc" }} />}
               />
             </Link>
-            <Link to={"/notes/note-automations"}>
+            <Link to={"/notes/board"}>
               <MenuItemWithIcon
                 title="Notes Board"
                 icon={<DashboardCustomizeIcon sx={{ color: "#ccc" }} />}

@@ -10,7 +10,6 @@ import useAuth from "../../Auth/hooks/useAuth";
 import { formatStringDate } from "../../Common/helpers/dateHelpers";
 import { useForm } from "react-hook-form";
 import { addNoteFormDefault } from "../forms/initialData/addNoteFormDefault";
-import { useNavigate } from "react-router-dom";
 import { TDataGridInputCellParams } from "../../Actions/types/TDataGridInputCellParams";
 
 const useNote = (isNotesPage: boolean = false) => {
@@ -27,7 +26,6 @@ const useNote = (isNotesPage: boolean = false) => {
     const [months, setMonths] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
 
     const { user } = useAuth();
-    const nav = useNavigate();
 
     const {
         register,
@@ -54,7 +52,7 @@ const useNote = (isNotesPage: boolean = false) => {
             setError("");
             const res = await sendApiRequest("/note", HTTPMethodTypes.POST, { ...note, userId: user?._id });
             setFetchedNotes(prev => [...(prev || []), res.data]);
-            nav("/data/notes");
+
             toastify.success("Note added successfully");
         } catch (e) {
             console.log(e);
@@ -68,7 +66,7 @@ const useNote = (isNotesPage: boolean = false) => {
         } finally {
             setLoading(false);
         }
-    }, [nav, user?._id]);
+    }, [user?._id]);
 
     const onUpdate = useCallback(async (note: TNote) => {
         try {
@@ -288,6 +286,7 @@ const useNote = (isNotesPage: boolean = false) => {
         setToYear,
         isAddDialogOpen,
         setIsAddDialogOpen,
+        fetchedNotes,
     }
 }
 

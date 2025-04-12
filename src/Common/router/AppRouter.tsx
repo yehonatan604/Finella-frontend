@@ -15,9 +15,9 @@ import AddSalary from "../../Actions/forms/AddSalary";
 import BalanceEntriesPage from "../../Actions/pages/BalanceEntries.page";
 import ToDoPage from "../../Actions/pages/ToDo.page";
 import AddToDo from "../../Actions/forms/AddToDo";
-import AddNoteForm from "../../Notes/forms/AddNote.form";
 import NoteAutomationPage from "../../Notes/pages/NoteAutomation.page";
 import NotesPage from "../../Notes/pages/Notes.page";
+import NotesBoard from "../../Notes/pages/NotesBoard.page";
 
 const AppRouter = () => {
   const { loginByToken } = useAuth();
@@ -55,12 +55,12 @@ const AppRouter = () => {
         <Route path="add-vacation" element={<AddVacation />} />
         <Route path="add-workplace" index element={<AddWorkplace />} />
         <Route path="add-todo" index element={<AddToDo />} />
-        <Route path="add-note" index element={<AddNoteForm />} />
       </Route>
 
       <Route path="/notes" element={<RouteGuard isLoggedIn />}>
         <Route index element={<NotesPage />} />
         <Route path="note-automations" element={<NoteAutomationPage />} />
+        <Route path="board" element={<NotesBoard />} />
       </Route>
     </Routes>
   );
