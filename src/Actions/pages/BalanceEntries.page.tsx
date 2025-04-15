@@ -12,6 +12,7 @@ import BalanceEntriesChartsDialog from "../components/dialogs/chratDialogs/Balan
 import BalanceEntryDetailsDialog from "../components/dialogs/detailsDialogs/BalanceEntryDetailsDialog";
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import useTheme from "../../Common/hooks/useTheme";
+import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
 
 const BalanceEntriesPage = () => {
   const {
@@ -30,6 +31,10 @@ const BalanceEntriesPage = () => {
     filteredRows,
     showInactive,
     setShowInactive,
+    loading,
+    paginatedRows,
+    paginationModel,
+    setPaginationModel,
   } = useBalanceEntry(true);
 
   const [isChartsDialogOpen, setIsChartsDialogOpen] = useState(false);
@@ -67,29 +72,24 @@ const BalanceEntriesPage = () => {
           }}
         >
           <StyledDataGrid
-            rows={filteredRows}
+            rows={paginatedRows as { id: string; [key: string]: unknown }[]}
             rowCount={
               !showInactive
                 ? filteredRows.filter(
-                    (row) => (row as { status: string }).status !== "inactive"
-                  ).length - 1
-                : filteredRows.length - 1
+                    (row) => "status" in row && row.status !== "inactive"
+                  ).length
+                : filteredRows.length
             }
             paginationMode="server"
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
             columns={columns as GridColDef[]}
             getRowClassName={(params) =>
-              params.id === "total"
-                ? "total"
-                : params.indexRelativeToCurrentPage % 2 === 0
-                ? "even"
-                : "odd"
+              params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
             }
-            initialState={{
-              pagination: {
-                paginationModel: { pageSize: 10 },
-              },
-            }}
-            pageSizeOptions={[5, 10]}
+            loading={loading}
+            pageSizeOptions={pageSizeOptions}
+            disableRowSelectionOnClick
             onCellEditStart={(_, event) => {
               event.defaultMuiPrevented = true;
             }}

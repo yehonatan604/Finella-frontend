@@ -14,7 +14,7 @@ import { TDataGridInputCellParams } from "../../Actions/types/TDataGridInputCell
 import { useDispatch, useSelector } from "react-redux";
 import { TRootState } from "../../Common/store/store";
 import { entitiesActions } from "../../Common/store/entitiesSlice";
-import { defaultPageSize } from "../../Common/helpers/pageSizeOptions";
+import { defaultPageSize, paginatedRows } from "../../Common/helpers/paginationHelpers";
 
 const useNote = () => {
     const { user } = useAuth();
@@ -218,12 +218,6 @@ const useNote = () => {
         (showInactive || (row as { status: string }).status !== "inactive")
     ), [rows, search, showInactive]);
 
-    const paginatedRows = useMemo(() => {
-        const start = paginationModel.page * paginationModel.pageSize;
-        const end = start + paginationModel.pageSize;
-        return filteredRows.slice(start, end);
-    }, [filteredRows, paginationModel]);
-
     useEffect(() => {
         fetchData();
     }, [fetchData]);
@@ -253,7 +247,7 @@ const useNote = () => {
         fetchedNotes,
         paginationModel,
         setPaginationModel,
-        paginatedRows,
+        paginatedRows: paginatedRows(paginationModel, filteredRows),
     }
 }
 
