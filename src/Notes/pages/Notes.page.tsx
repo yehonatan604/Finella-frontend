@@ -39,7 +39,7 @@ const NotesPage = () => {
   const { mode } = useTheme();
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
-    pageSize: 10,
+    pageSize: 7,
   });
 
   const paginatedRows = useMemo(() => {
