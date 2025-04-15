@@ -11,11 +11,18 @@ import { formatStringDate } from "../../Common/helpers/dateHelpers";
 import { useForm } from "react-hook-form";
 import { addNoteFormDefault } from "../forms/initialData/addNoteFormDefault";
 import { TDataGridInputCellParams } from "../../Actions/types/TDataGridInputCellParams";
+import { useDispatch, useSelector } from "react-redux";
+import { TRootState } from "../../Common/store/store";
+import { entitiesActions } from "../../Common/store/entitiesSlice";
 
-const useNote = (isNotesPage: boolean = false) => {
-    const [fetchedNotes, setFetchedNotes] = useState<TNote[]>([]);
-    const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
+const useNote = () => {
+    const { user } = useAuth();
+
+    const fetchedNotes = useSelector((state: TRootState) => state.entitiesSlice.notes);
+    const error = useSelector((state: TRootState) => state.entitiesSlice.error);
+    const loading = useSelector((state: TRootState) => state.entitiesSlice.loading);
+    const dispatch = useDispatch();
+
     const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [selectedNote, setSelectedNote] = useState<TNote | null>(null);
@@ -24,8 +31,6 @@ const useNote = (isNotesPage: boolean = false) => {
     const [fromYear, setFromYear] = useState(new Date().getFullYear());
     const [toYear, setToYear] = useState(new Date().getFullYear());
     const [months, setMonths] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
-
-    const { user } = useAuth();
 
     const {
         register,
@@ -39,39 +44,39 @@ const useNote = (isNotesPage: boolean = false) => {
     const getAllNotes = useCallback(async (query: string) => {
         try {
             const response = await sendApiRequest("/note/by" + query, HTTPMethodTypes.GET);
-            setFetchedNotes(response.data);
+            dispatch(entitiesActions.setEntity({ type: "notes", data: response.data }));
         }
         catch (error) {
             console.log(error);
         }
-    }, []);
+    }, [dispatch]);
 
     const onSubmit = useCallback(async (note: TNote) => {
         try {
-            setLoading(true);
-            setError("");
+            dispatch(entitiesActions.setLoading(true));
+            dispatch(entitiesActions.setError(null));
             const res = await sendApiRequest("/note", HTTPMethodTypes.POST, { ...note, userId: user?._id });
-            setFetchedNotes(prev => [...(prev || []), res.data]);
-
+            dispatch(entitiesActions.addEntityItem({ type: "notes", item: res.data }));
+            setSelectedNote(null);
             toastify.success("Note added successfully");
         } catch (e) {
             console.log(e);
             toastify.error("Error adding Note");
 
             if (e instanceof Error) {
-                setError(e.message);
+                dispatch(entitiesActions.setError(e.message));
             } else {
-                setError(String(e));
+                dispatch(entitiesActions.setError(e as string));
             }
         } finally {
-            setLoading(false);
+            dispatch(entitiesActions.setLoading(false));
         }
-    }, [user?._id]);
+    }, [dispatch, user?._id]);
 
     const onUpdate = useCallback(async (note: TNote) => {
         try {
-            setLoading(true);
-            setError("");
+            dispatch(entitiesActions.setLoading(true));
+            dispatch(entitiesActions.setError(null));
 
             const finalNote = {
                 _id: note._id ?? (note as TNote & { id: string })["id"],
@@ -84,21 +89,17 @@ const useNote = (isNotesPage: boolean = false) => {
             };
 
             const res = await sendApiRequest(`/note`, HTTPMethodTypes.PUT, finalNote);
-
-            setFetchedNotes(prev =>
-                (prev ?? []).map(n => (n?._id === res.data._id ? res.data : n))
-            );
-
+            dispatch(entitiesActions.updateEntityItem({ type: "notes", item: res.data, id: res.data._id }));
             setSelectedNote(null);
             toastify.success("Note updated successfully");
         } catch (e) {
             console.error(e);
             toastify.error("Error updating Note");
-            setError(e instanceof Error ? e.message : String(e));
+            dispatch(entitiesActions.setError(e instanceof Error ? e.message : String(e)));
         } finally {
-            setLoading(false);
+            dispatch(entitiesActions.setLoading(false));
         }
-    }, [user?._id]);
+    }, [user?._id, dispatch]);
 
 
     const onCellUpdate = useMemo(
@@ -145,35 +146,22 @@ const useNote = (isNotesPage: boolean = false) => {
                     "Are you sure you want to undelete this Note?",
                     "warning",
                     async () => {
-                        setLoading(true);
-                        setError(null);
+                        dispatch(entitiesActions.setLoading(true));
+                        dispatch(entitiesActions.setError(null));
                         await sendApiRequest(`/note/undelete/${id}`, HTTPMethodTypes.PATCH);
-                        setFetchedNotes((prev) => {
-                            const note = prev?.find((n) => n._id === id);
-                            if (!note) return prev;
-                            const fixedWorkNote = {
-                                ...note,
-                                status: "active",
-                            };
-                            return prev?.map((n) => (n._id === id ? fixedWorkNote : n));
-                        });
+                        dispatch(entitiesActions.undeleteEntityItem({ type: "notes", id }));
                         toastify.success("Note undeleted successfully");
                     }
                 );
-            } catch (error) {
-                console.log(error);
+            } catch (e) {
+                dispatch(entitiesActions.setError(e instanceof Error ? e.message : String(e)));
                 toastify.error("Error undeleting Note");
-
-                if (error instanceof Error) {
-                    setError(error.message);
-                } else {
-                    setError(error as string);
-                }
+                console.error(e);
             } finally {
-                setLoading(false);
+                dispatch(entitiesActions.setLoading(false));
             }
         },
-        []
+        [dispatch]
     );
 
     const onDelete = useCallback(
@@ -184,35 +172,23 @@ const useNote = (isNotesPage: boolean = false) => {
                     "Are you sure you want to delete this Note?",
                     "warning",
                     async () => {
-                        setLoading(true);
-                        setError(null);
+                        dispatch(entitiesActions.setLoading(true));
+                        dispatch(entitiesActions.setError(null));
                         await sendApiRequest(`/note/${id}`, HTTPMethodTypes.DELETE);
-                        setFetchedNotes((prev) => {
-                            const note = prev?.find((n) => n._id === id);
-                            if (!note) return prev;
-                            const fixedNote = {
-                                ...note,
-                                status: "inactive",
-                            };
-                            return prev?.map((n) => (n._id === id ? fixedNote : n));
-                        });
+                        dispatch(entitiesActions.removeEntityItem({ type: "notes", id }));
+                        setSelectedNote(null);
                         toastify.success("Note deleted successfully");
                     }
                 );
-            } catch (error) {
-                console.log(error);
+            } catch (e) {
+                dispatch(entitiesActions.setError(e instanceof Error ? e.message : String(e)));
                 toastify.error("Error deleting Note");
-
-                if (error instanceof Error) {
-                    setError(error.message);
-                } else {
-                    setError(error as string);
-                }
+                console.error(e);
             } finally {
-                setLoading(false);
+                dispatch(entitiesActions.setLoading(false));
             }
         },
-        []
+        [dispatch]
     );
 
     const columns = useMemo(
@@ -240,7 +216,7 @@ const useNote = (isNotesPage: boolean = false) => {
     );
 
     useEffect(() => {
-        if (!isNotesPage) return;
+        if (fetchedNotes) return;
         const fetchData = async () => {
             const queryParams = new URLSearchParams();
 
@@ -261,7 +237,7 @@ const useNote = (isNotesPage: boolean = false) => {
         };
 
         fetchData();
-    }, [fromYear, getAllNotes, isNotesPage, months, toYear]);
+    }, [fetchedNotes, fromYear, getAllNotes, months, toYear]);
 
     return {
         columns,

@@ -31,7 +31,9 @@ const NotesPage = () => {
     setToYear,
     isAddDialogOpen,
     setIsAddDialogOpen,
-  } = useNote(true);
+    loading,
+    error,
+  } = useNote();
 
   const { mode } = useTheme();
 
@@ -83,6 +85,7 @@ const NotesPage = () => {
                 paginationModel: { pageSize: 10 },
               },
             }}
+            loading={loading && !error}
             pageSizeOptions={[5, 10]}
             disableRowSelectionOnClick
             onCellEditStart={(_, event) => {

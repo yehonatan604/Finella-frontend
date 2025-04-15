@@ -6,9 +6,8 @@ import { TNote } from "../../Notes/types/TNote";
 import { TToDo } from "../../Actions/types/TToDo";
 import { TNoteAutomation } from "../../Notes/types/TNoteAutomation";
 import { TDbItem } from "../../Actions/types/TDbItem";
+import { TEntityType, TEntity } from "../types/TEntity";
 
-export type TEntityType = "balanceEntries" | "salaries" | "workplaces" | "notes" | "noteAutomations" | "todos";
-export type TEntity = TBalanceEntry | TSalary | TWorkplace | TNote | TNoteAutomation | TToDo;
 export type TEntitiesState = {
     balanceEntries: TBalanceEntry[] | null;
     salaries: TSalary[] | null;
@@ -75,10 +74,28 @@ const entitiesSlice = createSlice({
             state,
             action: PayloadAction<{ type: TEntityType; id: string }>
         ) => {
+            // set status to "inactive" 
             const { type, id } = action.payload;
             const list = state[type];
             if (list) {
-                state[type] = (list as TEntity[]).filter((i: TDbItem) => i._id !== id) as never;
+                const index = (list as TEntity[]).findIndex((i: TDbItem) => i._id === id);
+                if (index !== -1) {
+                    (list as TEntity[])[index].status = "inactive";
+                }
+            }
+        },
+
+        undeleteEntityItem: (
+            state,
+            action: PayloadAction<{ type: TEntityType; id: string }>
+        ) => {
+            const { type, id } = action.payload;
+            const list = state[type];
+            if (list) {
+                const index = (list as TEntity[]).findIndex((i: TDbItem) => i._id === id);
+                if (index !== -1) {
+                    (list as TEntity[])[index].status = "active";
+                }
             }
         },
 
