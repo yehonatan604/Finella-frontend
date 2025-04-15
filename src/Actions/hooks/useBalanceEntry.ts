@@ -17,7 +17,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { entitiesActions } from "../../Common/store/entitiesSlice";
 import { defaultPageSize, paginatedRows } from "../../Common/helpers/paginationHelpers";
 
-const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
+const useBalanceEntry = () => {
     const { user } = useAuth();
     const fetchedBalanceEntries = useSelector((state: TRootState) => state.entitiesSlice.balanceEntries);
     const loading = useSelector((state: TRootState) => state.entitiesSlice.loading);
@@ -231,7 +231,6 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
     });
 
     useEffect(() => {
-        if (!isBalanceEntryPage) return;
         const fetchData = async () => {
             const queryParams = new URLSearchParams();
 
@@ -256,7 +255,7 @@ const useBalanceEntry = (isBalanceEntryPage: boolean = false) => {
         };
 
         fetchData();
-    }, [fromYear, toYear, months, pickedType, isBalanceEntryPage, getBalanceEntries]);
+    }, [fromYear, toYear, months, pickedType, getBalanceEntries]);
 
     return {
         register,

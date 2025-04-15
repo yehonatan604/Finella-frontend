@@ -35,7 +35,7 @@ const BalanceEntriesPage = () => {
     paginatedRows,
     paginationModel,
     setPaginationModel,
-  } = useBalanceEntry(true);
+  } = useBalanceEntry();
 
   const [isChartsDialogOpen, setIsChartsDialogOpen] = useState(false);
   const { mode } = useTheme();
