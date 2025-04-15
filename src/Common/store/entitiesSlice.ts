@@ -43,6 +43,7 @@ const entitiesSlice = createSlice({
         ) => {
             const { type, data } = action.payload;
             state[type] = data as never;
+            state.loading = false;
         },
 
         addEntityItem: (
@@ -54,6 +55,7 @@ const entitiesSlice = createSlice({
             if (list) {
                 (list as TEntity[]).push(item);
             }
+            state.loading = false;
         },
 
         updateEntityItem: (
@@ -68,6 +70,7 @@ const entitiesSlice = createSlice({
                     (list as TEntity[])[index] = item;
                 }
             }
+            state.loading = false;
         },
 
         removeEntityItem: (
@@ -83,6 +86,7 @@ const entitiesSlice = createSlice({
                     (list as TEntity[])[index].status = "inactive";
                 }
             }
+            state.loading = false;
         },
 
         undeleteEntityItem: (
@@ -97,6 +101,7 @@ const entitiesSlice = createSlice({
                     (list as TEntity[])[index].status = "active";
                 }
             }
+            state.loading = false;
         },
 
         clearEntities: (state) => {

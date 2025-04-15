@@ -44,11 +44,15 @@ const useNote = () => {
 
     const getAllNotes = useCallback(async (query: string) => {
         try {
+            dispatch(entitiesActions.setLoading(true));
+            dispatch(entitiesActions.setError(null));
             const response = await sendApiRequest("/note/by" + query, HTTPMethodTypes.GET);
             dispatch(entitiesActions.setEntity({ type: "notes", data: response.data }));
         }
-        catch (error) {
-            console.log(error);
+        catch (e) {
+            console.error(e);
+            toastify.error("Error updating Note");
+            dispatch(entitiesActions.setError(e instanceof Error ? e.message : String(e)));
         }
     }, [dispatch]);
 
@@ -61,16 +65,9 @@ const useNote = () => {
             setSelectedNote(null);
             toastify.success("Note added successfully");
         } catch (e) {
-            console.log(e);
-            toastify.error("Error adding Note");
-
-            if (e instanceof Error) {
-                dispatch(entitiesActions.setError(e.message));
-            } else {
-                dispatch(entitiesActions.setError(e as string));
-            }
-        } finally {
-            dispatch(entitiesActions.setLoading(false));
+            console.error(e);
+            toastify.error("Error updating Note");
+            dispatch(entitiesActions.setError(e instanceof Error ? e.message : String(e)));
         }
     }, [dispatch, user?._id]);
 
@@ -97,14 +94,12 @@ const useNote = () => {
             console.error(e);
             toastify.error("Error updating Note");
             dispatch(entitiesActions.setError(e instanceof Error ? e.message : String(e)));
-        } finally {
-            dispatch(entitiesActions.setLoading(false));
         }
     }, [user?._id, dispatch]);
 
 
     const onCellUpdate = useMemo(
-        () => (row: TNote & { id: string | undefined }) => {
+        () => async (row: TNote & { id: string | undefined }) => {
             const fetchedRow = fetchedNotes?.find(workplace => workplace._id === row.id);
 
             const fields = [
@@ -133,7 +128,7 @@ const useNote = () => {
             );
 
             if (!isEqual) {
-                onUpdate(row as unknown as TNote);
+                await onUpdate(row as unknown as TNote);
             }
         },
         [onUpdate, fetchedNotes]
@@ -158,8 +153,6 @@ const useNote = () => {
                 dispatch(entitiesActions.setError(e instanceof Error ? e.message : String(e)));
                 toastify.error("Error undeleting Note");
                 console.error(e);
-            } finally {
-                dispatch(entitiesActions.setLoading(false));
             }
         },
         [dispatch]
@@ -185,8 +178,6 @@ const useNote = () => {
                 dispatch(entitiesActions.setError(e instanceof Error ? e.message : String(e)));
                 toastify.error("Error deleting Note");
                 console.error(e);
-            } finally {
-                dispatch(entitiesActions.setLoading(false));
             }
         },
         [dispatch]
