@@ -86,7 +86,11 @@ const BalanceEntriesPage = () => {
             onPaginationModelChange={setPaginationModel}
             columns={columns as GridColDef[]}
             getRowClassName={(params) =>
-              params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
+              params.id === "total"
+                ? "total"
+                : params.indexRelativeToCurrentPage % 2 === 0
+                ? "even"
+                : "odd"
             }
             loading={loading}
             pageSizeOptions={pageSizeOptions}
