@@ -11,12 +11,18 @@ import { formatDate } from "../../Common/helpers/dateHelpers";
 import { todoCols } from "../data/todoCols";
 import { todoRows } from "../data/todoRows";
 import { question } from "../../Common/utilities/question";
+import { TRootState } from "../../Common/store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { entitiesActions } from "../../Common/store/entitiesSlice";
+import { defaultPageSize, paginatedRows } from "../../Common/helpers/paginationHelpers";
 
 const useToDo = (isTodoPage: boolean = false) => {
   const { user } = useAuth();
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [fetchedToDos, setFetchedTodos] = useState<TToDo[]>([]);
+
+  const fetchedToDos = useSelector((state: TRootState) => state.entitiesSlice.todos);
+  const loading = useSelector((state: TRootState) => state.entitiesSlice.loading);
+  const dispatch = useDispatch();
+
   const [fromYear, setFromYear] = useState(new Date().getFullYear());
   const [toYear, setToYear] = useState(new Date().getFullYear());
   const [months, setMonths] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
@@ -25,6 +31,10 @@ const useToDo = (isTodoPage: boolean = false) => {
   const [selectedToDo, setSelectedToDo] = useState<TToDo | null>(null);
   const [search, setSearch] = useState<string>("");
   const [showInactive, setShowInactive] = useState(false);
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: defaultPageSize,
+  });
 
   const {
     register,
@@ -35,41 +45,38 @@ const useToDo = (isTodoPage: boolean = false) => {
     defaultValues: addToDoFormDefault,
   });
 
-  const getToDos = useCallback(async (query: string) => {
-    try {
-      const response = await sendApiRequest("/todo/by" + query, HTTPMethodTypes.GET);
-      setFetchedTodos(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  const getToDos = useCallback(
+    async (query: string) => {
+      try {
+        dispatch(entitiesActions.setLoading(true));
+        const response = await sendApiRequest("/todo/by" + query, HTTPMethodTypes.GET);
+        dispatch(entitiesActions.setEntity({ type: "todos", data: response.data }));
+      } catch (error) {
+        console.log(error);
+        toastify.error("Error fetching ToDos");
+      }
+    },
+    [dispatch]
+  );
 
   const onUpdate = useCallback(
     async (data: TToDo) => {
       try {
-        setLoading(true);
-        setError(null);
+        dispatch(entitiesActions.setLoading(true));
         await sendApiRequest(`/todo`, HTTPMethodTypes.PUT, {
           ...data,
           userId: user?._id,
         });
-        setFetchedTodos((prev) =>
-          prev.map((todo) => (todo._id === data._id ? data : todo))
+        dispatch(
+          entitiesActions.updateEntityItem({ type: "todos", item: data, id: data._id! })
         );
         toastify.success("ToDo updated successfully");
       } catch (error) {
         console.log(error);
-
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError(error as string);
-        }
-      } finally {
-        setLoading(false);
+        toastify.error("Error updating ToDo");
       }
     },
-    [user?._id]
+    [user?._id, dispatch]
   );
 
   const onCellUpdate = useMemo(
@@ -79,7 +86,7 @@ const useToDo = (isTodoPage: boolean = false) => {
           id: string | undefined;
         }
       ) => {
-        const fetchedRow = fetchedToDos.find((toDo) => toDo._id === row.id);
+        const fetchedRow = fetchedToDos?.find((toDo) => toDo._id === row.id);
 
         const fields = [
           "name",
@@ -134,37 +141,20 @@ const useToDo = (isTodoPage: boolean = false) => {
           "Are you sure you want to undelete this Todo?",
           "warning",
           async () => {
-            setLoading(true);
-            setError(null);
+            dispatch(entitiesActions.setLoading(true));
             await sendApiRequest(`/todo/undelete/${id}`, HTTPMethodTypes.PATCH, {
               userId: user?._id,
             });
-            setFetchedTodos((prev) => {
-              const todo = prev.find((td) => td._id === id);
-              if (!todo) return prev;
-              const fixedTodo = {
-                ...todo,
-                status: "active",
-              };
-              return prev.map((td) => (td._id === id ? fixedTodo : td));
-            });
+            dispatch(entitiesActions.undeleteEntityItem({ type: "todos", id }));
             toastify.success("ToDo undeleted successfully");
           }
         );
       } catch (error) {
         console.log(error);
         toastify.error("Error undeleting ToDo");
-
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError(error as string);
-        }
-      } finally {
-        setLoading(false);
       }
     },
-    [user?._id]
+    [user?._id, dispatch]
   );
 
   const onDelete = useCallback(
@@ -175,66 +165,47 @@ const useToDo = (isTodoPage: boolean = false) => {
           "Are you sure you want to delete this ToDo?",
           "warning",
           async () => {
-            setLoading(true);
-            setError(null);
+            dispatch(entitiesActions.setLoading(true));
             await sendApiRequest(`/todo/${id}`, HTTPMethodTypes.DELETE, {
               userId: user?._id,
             });
-            setFetchedTodos((prev) => {
-              const todo = prev.find((td) => td._id === id);
-              if (!todo) return prev;
-              const fixedTodo = {
-                ...todo,
-                status: "inactive",
-              };
-              return prev.map((td) => (td._id === id ? fixedTodo : td));
-            });
+            dispatch(entitiesActions.removeEntityItem({ type: "todos", id }));
             toastify.success("ToDo deleted successfully");
           }
         );
       } catch (error) {
         console.log(error);
         toastify.error("Error deleting Salary");
-
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError(error as string);
-        }
-      } finally {
-        setLoading(false);
       }
     },
-    [user?._id]
+    [user?._id, dispatch]
   );
 
-  const onSubmit = async (data: TToDo) => {
-    try {
-      setLoading(true);
-      setError(null);
-      if (data.tasks?.[0]?.name === "") {
-        delete data.tasks;
+  const onSubmit = useCallback(
+    async (data: TToDo) => {
+      try {
+        dispatch(entitiesActions.setLoading(true));
+        if (data.tasks?.[0]?.name === "") {
+          delete data.tasks;
+        }
+        await sendApiRequest(`/todo`, HTTPMethodTypes.POST, {
+          ...data,
+          userId: user?._id,
+        });
+      } catch (error) {
+        console.log(error);
+        toastify.error("Error adding ToDo");
       }
-      await sendApiRequest(`/todo`, HTTPMethodTypes.POST, { ...data, userId: user?._id });
-    } catch (error) {
-      console.log(error);
-
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError(error as string);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [user?._id, dispatch]
+  );
 
   const columns = useMemo(
     () =>
       todoCols(
         onCellUpdate,
         (params: TDataGridInputCellParams) => {
-          setSelectedToDo(fetchedToDos.find((todo) => todo._id === params.id) ?? null);
+          setSelectedToDo(fetchedToDos?.find((todo) => todo._id === params.id) ?? null);
           setIsToDoDetailsDialogOpen(true);
         },
         (params: TDataGridInputCellParams) => {
@@ -245,7 +216,7 @@ const useToDo = (isTodoPage: boolean = false) => {
     [onCellUpdate, fetchedToDos, onDelete, onUndelete]
   );
 
-  const rows = useMemo(() => todoRows(fetchedToDos), [fetchedToDos]);
+  const rows = useMemo(() => todoRows(fetchedToDos ?? []), [fetchedToDos]);
 
   const filteredRows = rows.filter(
     (row) =>
@@ -286,7 +257,6 @@ const useToDo = (isTodoPage: boolean = false) => {
     handleSubmit,
     onSubmit,
     onUpdate,
-    error,
     errors,
     loading,
     columns,
@@ -309,6 +279,9 @@ const useToDo = (isTodoPage: boolean = false) => {
     filteredRows,
     showInactive,
     setShowInactive,
+    paginationModel,
+    setPaginationModel,
+    paginatedRows: paginatedRows(paginationModel, filteredRows),
   };
 };
 
