@@ -10,6 +10,7 @@ import ShowInactiveCheckbox from "../components/ShowInactiveCheckbox";
 import WorkplaceDetailsDialog from "../components/dialogs/detailsDialogs/WorkPlaceDetailsDialog";
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import useTheme from "../../Common/hooks/useTheme";
+import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
 
 const WorkplacesPage = () => {
   const {
@@ -24,6 +25,10 @@ const WorkplacesPage = () => {
     filteredRows,
     showInactive,
     setShowInactive,
+    loading,
+    paginatedRows,
+    paginationModel,
+    setPaginationModel,
   } = useWorkplaces();
 
   const { mode } = useTheme();
@@ -53,25 +58,23 @@ const WorkplacesPage = () => {
           }}
         >
           <StyledDataGrid
-            rows={filteredRows}
+            rows={paginatedRows as { id: string; [key: string]: unknown }[]}
             rowCount={
               !showInactive
                 ? filteredRows.filter(
-                    (row) => (row as { status: string }).status !== "inactive"
+                    (row: { status: string | undefined }) => row.status !== "inactive"
                   ).length
                 : filteredRows.length
             }
             paginationMode="server"
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
             columns={columns as GridColDef[]}
             getRowClassName={(params) =>
               params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
             }
-            initialState={{
-              pagination: {
-                paginationModel: { pageSize: 10 },
-              },
-            }}
-            pageSizeOptions={[5, 10]}
+            loading={loading}
+            pageSizeOptions={pageSizeOptions}
             disableRowSelectionOnClick
             onCellEditStart={(_, event) => {
               event.defaultMuiPrevented = true;

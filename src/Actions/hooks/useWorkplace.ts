@@ -8,59 +8,51 @@ import { workplaceCols } from "../data/workplaceCols";
 import { workplaceRows } from "../data/workplaceRows";
 import { TWorkplaceWithFormPhone } from "../types/TWorkplaceWithFormPhone";
 import { question } from "../../Common/utilities/question";
+import { useDispatch, useSelector } from "react-redux";
+import { TRootState } from "../../Common/store/store";
+import { entitiesActions } from "../../Common/store/entitiesSlice";
+import { defaultPageSize, paginatedRows } from "../../Common/helpers/paginationHelpers";
 
 const useWorkplaces = () => {
-    const [workplaces, setWorkplaces] = useState<TWorkplace[]>();
-    const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
+    const workplaces = useSelector((state: TRootState) => state.entitiesSlice.workplaces);
+    const loading = useSelector((state: TRootState) => state.entitiesSlice.loading);
+    const dispatch = useDispatch();
+
     const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
     const [selectedWorkplace, setSelectedWorkplace] = useState<TWorkplace | null>(null);
     const [search, setSearch] = useState<string>("");
     const [showInactive, setShowInactive] = useState(false);
+    const [paginationModel, setPaginationModel] = useState({
+        page: 0,
+        pageSize: defaultPageSize,
+    });
 
     const getAllWorkplaces = useCallback(async () => {
         try {
-            setLoading(true);
-            setError("");
-
+            dispatch(entitiesActions.setLoading(true));
             const res = await sendApiRequest("/work-place", HTTPMethodTypes.GET);
-            setWorkplaces(res.data);
+            dispatch(entitiesActions.setEntity({ type: "workplaces", data: res.data }));
         } catch (e) {
-            if (e instanceof Error) {
-                setError(e.message);
-            } else {
-                setError(String(e));
-            }
-        } finally {
-            setLoading(false);
+            console.log(e);
+            toastify.error("Error fetching workplaces");
         }
-    }, []);
+    }, [dispatch]);
 
     const add = useCallback(async (workplace: TWorkplace) => {
         try {
-            setLoading(true);
-            setError("");
+            dispatch(entitiesActions.setLoading(true));
             const res = await sendApiRequest("/work-place", HTTPMethodTypes.POST, workplace);
-            setWorkplaces(prev => [...(prev || []), res.data]);
+            dispatch(entitiesActions.addEntityItem({ type: "workplaces", item: res.data }));
             toastify.success("Workplace added successfully");
         } catch (e) {
             console.log(e);
             toastify.error("Error adding workplace");
-
-            if (e instanceof Error) {
-                setError(e.message);
-            } else {
-                setError(String(e));
-            }
-        } finally {
-            setLoading(false);
         }
-    }, []);
+    }, [dispatch]);
 
     const onUpdate = useCallback(async (workplace: TWorkplace) => {
         try {
-            setLoading(true);
-            setError("");
+            dispatch(entitiesActions.setLoading(true));
 
             const finalWorlpace = {
                 _id: workplace._id ? workplace._id : (workplace as TWorkplace & { id: string })["id"],
@@ -83,23 +75,15 @@ const useWorkplaces = () => {
             }
 
             const res = await sendApiRequest(`/work-place`, HTTPMethodTypes.PUT, finalWorlpace);
-            setWorkplaces(prev => prev?.map(w => w._id === res.data._id ? res.data : w) || []);
+            dispatch(entitiesActions.updateEntityItem({ type: "workplaces", item: res.data, id: finalWorlpace._id }));
             setSelectedWorkplace(null);
             toastify.success("Workplace updated successfully");
         }
         catch (e) {
             console.log(e);
             toastify.error("Error updating workplace");
-            if (e instanceof Error) {
-                setError(e.message);
-            } else {
-                setError(String(e));
-            }
         }
-        finally {
-            setLoading(false);
-        }
-    }, []);
+    }, [dispatch]);
 
     const onCellUpdate = useMemo(
         () => (row: TWorkplace & { id: string | undefined }) => {
@@ -151,35 +135,18 @@ const useWorkplaces = () => {
                     "Are you sure you want to undelete this WorkPlace?",
                     "warning",
                     async () => {
-                        setLoading(true);
-                        setError(null);
+                        dispatch(entitiesActions.setLoading(true));
                         await sendApiRequest(`/work-place/undelete/${id}`, HTTPMethodTypes.PATCH);
-                        setWorkplaces((prev) => {
-                            const workplace = prev?.find((wp) => wp._id === id);
-                            if (!workplace) return prev;
-                            const fixedWorkPlace = {
-                                ...workplace,
-                                status: "active",
-                            };
-                            return prev?.map((wp) => (wp._id === id ? fixedWorkPlace : wp));
-                        });
+                        dispatch(entitiesActions.undeleteEntityItem({ type: "workplaces", id }));
                         toastify.success("WorkPlace undeleted successfully");
                     }
                 );
             } catch (error) {
                 console.log(error);
                 toastify.error("Error undeleting WorkPlace");
-
-                if (error instanceof Error) {
-                    setError(error.message);
-                } else {
-                    setError(error as string);
-                }
-            } finally {
-                setLoading(false);
             }
         },
-        []
+        [dispatch]
     );
 
     const onDelete = useCallback(
@@ -190,35 +157,18 @@ const useWorkplaces = () => {
                     "Are you sure you want to delete this WorkPlace?",
                     "warning",
                     async () => {
-                        setLoading(true);
-                        setError(null);
+                        dispatch(entitiesActions.setLoading(true));
                         await sendApiRequest(`/work-place/${id}`, HTTPMethodTypes.DELETE);
-                        setWorkplaces((prev) => {
-                            const workPlace = prev?.find((wp) => wp._id === id);
-                            if (!workPlace) return prev;
-                            const fixedTodo = {
-                                ...workPlace,
-                                status: "inactive",
-                            };
-                            return prev?.map((wp) => (wp._id === id ? fixedTodo : wp));
-                        });
+                        dispatch(entitiesActions.removeEntityItem({ type: "workplaces", id }));
                         toastify.success("WorkPlace deleted successfully");
                     }
                 );
             } catch (error) {
                 console.log(error);
                 toastify.error("Error deleting WorkPlace");
-
-                if (error instanceof Error) {
-                    setError(error.message);
-                } else {
-                    setError(error as string);
-                }
-            } finally {
-                setLoading(false);
             }
         },
-        []
+        [dispatch]
     );
 
     const columns = useMemo(
@@ -246,8 +196,10 @@ const useWorkplaces = () => {
     );
 
     useEffect(() => {
-        getAllWorkplaces();
-    }, [getAllWorkplaces]);
+        if (!workplaces) {
+            getAllWorkplaces();
+        }
+    }, [getAllWorkplaces, workplaces]);
 
     return {
         workplaces,
@@ -255,7 +207,6 @@ const useWorkplaces = () => {
         rows,
         getAllWorkplaces,
         add,
-        error,
         loading,
         isUpdateDialogOpen,
         setIsUpdateDialogOpen,
@@ -266,6 +217,9 @@ const useWorkplaces = () => {
         filteredRows,
         setShowInactive,
         showInactive,
+        paginationModel,
+        setPaginationModel,
+        paginatedRows: paginatedRows(paginationModel, filteredRows),
     }
 }
 
