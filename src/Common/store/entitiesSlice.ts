@@ -16,7 +16,6 @@ export type TEntitiesState = {
     noteAutomations: TNoteAutomation[] | null;
     todos: TToDo[] | null;
     loading: boolean;
-    error: string | null;
 };
 
 const initialState: TEntitiesState = {
@@ -27,7 +26,6 @@ const initialState: TEntitiesState = {
     noteAutomations: null,
     todos: null,
     loading: false,
-    error: null,
 };
 
 const entitiesSlice = createSlice({
@@ -116,12 +114,6 @@ const entitiesSlice = createSlice({
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.loading = action.payload;
         },
-        setError: (state, action: PayloadAction<string | null>) => {
-            state.error = action.payload;
-        },
-        clearError: (state) => {
-            state.error = null;
-        }
     },
 });
 

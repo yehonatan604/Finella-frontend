@@ -14,12 +14,12 @@ import { TDataGridInputCellParams } from "../../Actions/types/TDataGridInputCell
 import { useDispatch, useSelector } from "react-redux";
 import { TRootState } from "../../Common/store/store";
 import { entitiesActions } from "../../Common/store/entitiesSlice";
+import { defaultPageSize } from "../../Common/helpers/pageSizeOptions";
 
 const useNote = () => {
     const { user } = useAuth();
 
     const fetchedNotes = useSelector((state: TRootState) => state.entitiesSlice.notes);
-    const error = useSelector((state: TRootState) => state.entitiesSlice.error);
     const loading = useSelector((state: TRootState) => state.entitiesSlice.loading);
     const dispatch = useDispatch();
 
@@ -32,6 +32,10 @@ const useNote = () => {
     const [fromYear, setFromYear] = useState(new Date().getFullYear());
     const [toYear, setToYear] = useState(new Date().getFullYear());
     const [months, setMonths] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+    const [paginationModel, setPaginationModel] = useState({
+        page: 0,
+        pageSize: defaultPageSize,
+    });
 
     const {
         register,
@@ -45,21 +49,18 @@ const useNote = () => {
     const getAllNotes = useCallback(async (query: string) => {
         try {
             dispatch(entitiesActions.setLoading(true));
-            dispatch(entitiesActions.setError(null));
             const response = await sendApiRequest("/note/by" + query, HTTPMethodTypes.GET);
             dispatch(entitiesActions.setEntity({ type: "notes", data: response.data }));
         }
         catch (e) {
             console.error(e);
             toastify.error("Error updating Note");
-            dispatch(entitiesActions.setError(e instanceof Error ? e.message : String(e)));
         }
     }, [dispatch]);
 
     const onSubmit = useCallback(async (note: TNote) => {
         try {
             dispatch(entitiesActions.setLoading(true));
-            dispatch(entitiesActions.setError(null));
             const res = await sendApiRequest("/note", HTTPMethodTypes.POST, { ...note, userId: user?._id });
             dispatch(entitiesActions.addEntityItem({ type: "notes", item: res.data }));
             setSelectedNote(null);
@@ -67,14 +68,12 @@ const useNote = () => {
         } catch (e) {
             console.error(e);
             toastify.error("Error updating Note");
-            dispatch(entitiesActions.setError(e instanceof Error ? e.message : String(e)));
         }
     }, [dispatch, user?._id]);
 
     const onUpdate = useCallback(async (note: TNote) => {
         try {
             dispatch(entitiesActions.setLoading(true));
-            dispatch(entitiesActions.setError(null));
 
             const finalNote = {
                 _id: note._id ?? (note as TNote & { id: string })["id"],
@@ -93,7 +92,6 @@ const useNote = () => {
         } catch (e) {
             console.error(e);
             toastify.error("Error updating Note");
-            dispatch(entitiesActions.setError(e instanceof Error ? e.message : String(e)));
         }
     }, [user?._id, dispatch]);
 
@@ -143,14 +141,12 @@ const useNote = () => {
                     "warning",
                     async () => {
                         dispatch(entitiesActions.setLoading(true));
-                        dispatch(entitiesActions.setError(null));
                         await sendApiRequest(`/note/undelete/${id}`, HTTPMethodTypes.PATCH);
                         dispatch(entitiesActions.undeleteEntityItem({ type: "notes", id }));
                         toastify.success("Note undeleted successfully");
                     }
                 );
             } catch (e) {
-                dispatch(entitiesActions.setError(e instanceof Error ? e.message : String(e)));
                 toastify.error("Error undeleting Note");
                 console.error(e);
             }
@@ -167,7 +163,6 @@ const useNote = () => {
                     "warning",
                     async () => {
                         dispatch(entitiesActions.setLoading(true));
-                        dispatch(entitiesActions.setError(null));
                         await sendApiRequest(`/note/${id}`, HTTPMethodTypes.DELETE);
                         dispatch(entitiesActions.removeEntityItem({ type: "notes", id }));
                         setSelectedNote(null);
@@ -175,13 +170,29 @@ const useNote = () => {
                     }
                 );
             } catch (e) {
-                dispatch(entitiesActions.setError(e instanceof Error ? e.message : String(e)));
                 toastify.error("Error deleting Note");
                 console.error(e);
             }
         },
         [dispatch]
     );
+
+    const fetchData = useCallback(async () => {
+        const queryParams = new URLSearchParams();
+
+        if (fromYear) queryParams.append("fromYear", fromYear.toString());
+        if (toYear) queryParams.append("toYear", toYear.toString());
+        if (months.length > 0 && months.length < 12) {
+            queryParams.append("months", months.join(","));
+        }
+
+        const queryString = queryParams.toString();
+
+        if (queryString === lastFetchedQuery && fetchedNotes) return;
+
+        await getAllNotes(`?${queryString}`);
+        setLastFetchedQuery(queryString);
+    }, [fromYear, toYear, months, lastFetchedQuery, fetchedNotes, getAllNotes]);
 
     const columns = useMemo(
         () => noteCols(
@@ -202,28 +213,16 @@ const useNote = () => {
 
     const rows = useMemo(() => noteRows(fetchedNotes || []), [fetchedNotes]);
 
-    const filteredRows = rows.filter((row) =>
+    const filteredRows = useMemo(() => rows.filter((row) =>
         JSON.stringify(row).toLowerCase().includes(search.toLowerCase()) &&
         (showInactive || (row as { status: string }).status !== "inactive")
-    );
+    ), [rows, search, showInactive]);
 
-    const fetchData = useCallback(async () => {
-        const queryParams = new URLSearchParams();
-
-        if (fromYear) queryParams.append("fromYear", fromYear.toString());
-        if (toYear) queryParams.append("toYear", toYear.toString());
-        if (months.length > 0 && months.length < 12) {
-            queryParams.append("months", months.join(","));
-        }
-
-        const queryString = queryParams.toString();
-
-        if (queryString === lastFetchedQuery && fetchedNotes) return;
-
-        await getAllNotes(`?${queryString}`);
-        setLastFetchedQuery(queryString);
-    }, [fromYear, toYear, months, lastFetchedQuery, fetchedNotes, getAllNotes]);
-
+    const paginatedRows = useMemo(() => {
+        const start = paginationModel.page * paginationModel.pageSize;
+        const end = start + paginationModel.pageSize;
+        return filteredRows.slice(start, end);
+    }, [filteredRows, paginationModel]);
 
     useEffect(() => {
         fetchData();
@@ -233,7 +232,6 @@ const useNote = () => {
         columns,
         rows,
         onSubmit,
-        error,
         loading,
         isUpdateDialogOpen,
         setIsUpdateDialogOpen,
@@ -253,6 +251,9 @@ const useNote = () => {
         isAddDialogOpen,
         setIsAddDialogOpen,
         fetchedNotes,
+        paginationModel,
+        setPaginationModel,
+        paginatedRows,
     }
 }
 

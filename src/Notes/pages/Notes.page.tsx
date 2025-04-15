@@ -12,9 +12,10 @@ import AddFormDialog from "../../Common/components/AddFormDialog";
 import AddNoteForm from "../forms/AddNote.form";
 import useTheme from "../../Common/hooks/useTheme";
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
-import { useMemo, useState } from "react";
+import { pageSizeOptions } from "../../Common/helpers/pageSizeOptions";
 
 const NotesPage = () => {
+  const { mode } = useTheme();
   const {
     columns,
     rows,
@@ -33,20 +34,10 @@ const NotesPage = () => {
     isAddDialogOpen,
     setIsAddDialogOpen,
     loading,
-    error,
+    paginatedRows,
+    paginationModel,
+    setPaginationModel,
   } = useNote();
-
-  const { mode } = useTheme();
-  const [paginationModel, setPaginationModel] = useState({
-    page: 0,
-    pageSize: 7,
-  });
-
-  const paginatedRows = useMemo(() => {
-    const start = paginationModel.page * paginationModel.pageSize;
-    const end = start + paginationModel.pageSize;
-    return filteredRows.slice(start, end);
-  }, [filteredRows, paginationModel]);
 
   return (
     <>
@@ -93,13 +84,8 @@ const NotesPage = () => {
             getRowClassName={(params) =>
               params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
             }
-            initialState={{
-              pagination: {
-                paginationModel: { pageSize: 10 },
-              },
-            }}
-            loading={loading && !error}
-            pageSizeOptions={[5, 10]}
+            loading={loading}
+            pageSizeOptions={pageSizeOptions}
             disableRowSelectionOnClick
             onCellEditStart={(_, event) => {
               event.defaultMuiPrevented = true;
