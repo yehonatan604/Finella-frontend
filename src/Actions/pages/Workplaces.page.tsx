@@ -11,6 +11,7 @@ import WorkplaceDetailsDialog from "../components/dialogs/detailsDialogs/WorkPla
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import useTheme from "../../Common/hooks/useTheme";
 import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
+import { TDataGridRow } from "../../Common/types/TDataGridRow";
 
 const WorkplacesPage = () => {
   const {
@@ -58,7 +59,7 @@ const WorkplacesPage = () => {
           }}
         >
           <StyledDataGrid
-            rows={paginatedRows as { id: string; [key: string]: unknown }[]}
+            rows={paginatedRows as TDataGridRow[]}
             rowCount={
               !showInactive
                 ? filteredRows.filter(

@@ -13,6 +13,7 @@ import BalanceEntryDetailsDialog from "../components/dialogs/detailsDialogs/Bala
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import useTheme from "../../Common/hooks/useTheme";
 import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
+import { TDataGridRow } from "../../Common/types/TDataGridRow";
 
 const BalanceEntriesPage = () => {
   const {
@@ -72,7 +73,7 @@ const BalanceEntriesPage = () => {
           }}
         >
           <StyledDataGrid
-            rows={paginatedRows as { id: string; [key: string]: unknown }[]}
+            rows={paginatedRows as TDataGridRow[]}
             rowCount={
               !showInactive
                 ? filteredRows.filter(

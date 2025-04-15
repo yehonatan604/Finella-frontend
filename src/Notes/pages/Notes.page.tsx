@@ -13,6 +13,7 @@ import AddNoteForm from "../forms/AddNote.form";
 import useTheme from "../../Common/hooks/useTheme";
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
+import { TDataGridRow } from "../../Common/types/TDataGridRow";
 
 const NotesPage = () => {
   const { mode } = useTheme();
@@ -69,7 +70,7 @@ const NotesPage = () => {
           }}
         >
           <StyledDataGrid
-            rows={paginatedRows as { id: string; [key: string]: unknown }[]}
+            rows={paginatedRows as TDataGridRow[]}
             rowCount={
               !showInactive
                 ? filteredRows.filter(

@@ -13,6 +13,7 @@ import ToDosChartsDialogDialog from "../components/dialogs/chratDialogs/ToDosCha
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import useTheme from "../../Common/hooks/useTheme";
 import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
+import { TDataGridRow } from "../../Common/types/TDataGridRow";
 
 const ToDoPage = () => {
   const {
@@ -72,7 +73,7 @@ const ToDoPage = () => {
           }}
         >
           <StyledDataGrid
-            rows={paginatedRows as { id: string; [key: string]: unknown }[]}
+            rows={paginatedRows as TDataGridRow[]}
             rowCount={
               !showInactive
                 ? filteredRows.filter(
