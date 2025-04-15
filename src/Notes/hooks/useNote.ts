@@ -23,6 +23,7 @@ const useNote = () => {
     const loading = useSelector((state: TRootState) => state.entitiesSlice.loading);
     const dispatch = useDispatch();
 
+    const [lastFetchedQuery, setLastFetchedQuery] = useState<string | null>(null);
     const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
     const [selectedNote, setSelectedNote] = useState<TNote | null>(null);
@@ -215,29 +216,27 @@ const useNote = () => {
         (showInactive || (row as { status: string }).status !== "inactive")
     );
 
+    const fetchData = useCallback(async () => {
+        const queryParams = new URLSearchParams();
+
+        if (fromYear) queryParams.append("fromYear", fromYear.toString());
+        if (toYear) queryParams.append("toYear", toYear.toString());
+        if (months.length > 0 && months.length < 12) {
+            queryParams.append("months", months.join(","));
+        }
+
+        const queryString = queryParams.toString();
+
+        if (queryString === lastFetchedQuery && fetchedNotes) return;
+
+        await getAllNotes(`?${queryString}`);
+        setLastFetchedQuery(queryString);
+    }, [fromYear, toYear, months, lastFetchedQuery, fetchedNotes, getAllNotes]);
+
+
     useEffect(() => {
-        if (fetchedNotes) return;
-        const fetchData = async () => {
-            const queryParams = new URLSearchParams();
-
-            if (fromYear) {
-                queryParams.append("fromYear", fromYear.toString());
-            }
-
-            if (toYear) {
-                queryParams.append("toYear", toYear.toString());
-            }
-
-            if (months.length > 0 && months.length < 12) {
-                queryParams.append("months", months.join(","));
-            }
-
-            const queryString = queryParams.toString();
-            await getAllNotes(`?${queryString}`);
-        };
-
         fetchData();
-    }, [fetchedNotes, fromYear, getAllNotes, months, toYear]);
+    }, [fetchData]);
 
     return {
         columns,

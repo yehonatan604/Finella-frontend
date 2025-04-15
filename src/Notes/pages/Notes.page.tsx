@@ -12,6 +12,7 @@ import AddFormDialog from "../../Common/components/AddFormDialog";
 import AddNoteForm from "../forms/AddNote.form";
 import useTheme from "../../Common/hooks/useTheme";
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
+import { useMemo, useState } from "react";
 
 const NotesPage = () => {
   const {
@@ -36,6 +37,16 @@ const NotesPage = () => {
   } = useNote();
 
   const { mode } = useTheme();
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 10,
+  });
+
+  const paginatedRows = useMemo(() => {
+    const start = paginationModel.page * paginationModel.pageSize;
+    const end = start + paginationModel.pageSize;
+    return filteredRows.slice(start, end);
+  }, [filteredRows, paginationModel]);
 
   return (
     <>
@@ -67,7 +78,7 @@ const NotesPage = () => {
           }}
         >
           <StyledDataGrid
-            rows={filteredRows}
+            rows={paginatedRows}
             rowCount={
               !showInactive
                 ? filteredRows.filter(
@@ -76,6 +87,8 @@ const NotesPage = () => {
                 : filteredRows.length
             }
             paginationMode="server"
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
             columns={columns as GridColDef[]}
             getRowClassName={(params) =>
               params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
