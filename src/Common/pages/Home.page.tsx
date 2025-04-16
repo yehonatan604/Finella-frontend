@@ -2,7 +2,7 @@ import { Box, Button, Typography, Container, Stack, Fade } from "@mui/material";
 import { Task, Paid, NotificationsActive, Lock } from "@mui/icons-material";
 import useAuth from "../../Auth/hooks/useAuth";
 import { Link } from "react-router-dom";
-import logo from "../../Assets/images/logo.png";
+import logo from "../../Assets/images/logo-big.png";
 
 const HomePage = () => {
   const { user } = useAuth();
@@ -16,8 +16,7 @@ const HomePage = () => {
           alignItems: "start",
           justifyContent: "start",
           color: "text.primary",
-          px: 3,
-          pb: 6,
+          py: 6,
         }}
       >
         <Container maxWidth="md" sx={{ textAlign: "center" }}>
@@ -25,8 +24,9 @@ const HomePage = () => {
             src={logo}
             alt="Finella Logo"
             style={{
-              width: "300px",
+              width: "20vw",
               filter: "drop-shadow(0 0 6px rgba(255,255,255,0.5))",
+              marginBottom: "6vh",
             }}
           />
 
