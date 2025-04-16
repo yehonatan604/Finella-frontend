@@ -1,6 +1,7 @@
 import { TDbItem } from "./TDbItem";
 
 export type TWorkplace = TDbItem & {
+    userId: string;
     name: string;
     email?: string;
     address?: {

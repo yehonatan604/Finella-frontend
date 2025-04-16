@@ -33,7 +33,7 @@ const NotesBoard = () => {
             justifyItems: "start",
           }}
         >
-          {fetchedNotes.map(
+          {fetchedNotes?.map(
             (note) =>
               note.status !== "inactive" && (
                 <Card

@@ -12,8 +12,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { TRootState } from "../../Core/store/store";
 import { entitiesActions } from "../../Core/store/entitiesSlice";
 import { defaultPageSize, paginatedRows } from "../../Common/helpers/paginationHelpers";
+import useAuth from "../../Auth/hooks/useAuth";
 
 const useWorkplaces = () => {
+    const { user } = useAuth();
     const workplaces = useSelector((state: TRootState) => state.entitiesSlice.workplaces);
     const loading = useSelector((state: TRootState) => state.entitiesSlice.loading);
     const dispatch = useDispatch();
@@ -41,14 +43,17 @@ const useWorkplaces = () => {
     const add = useCallback(async (workplace: TWorkplace) => {
         try {
             dispatch(entitiesActions.setLoading(true));
-            const res = await sendApiRequest("/work-place", HTTPMethodTypes.POST, workplace);
+            const res = await sendApiRequest("/work-place", HTTPMethodTypes.POST, {
+                ...workplace,
+                userId: user?._id,
+            });
             dispatch(entitiesActions.addEntityItem({ type: "workplaces", item: res.data }));
             toastify.success("Workplace added successfully");
         } catch (e) {
             console.log(e);
             toastify.error("Error adding workplace");
         }
-    }, [dispatch]);
+    }, [dispatch, user?._id]);
 
     const onUpdate = useCallback(async (workplace: TWorkplace) => {
         try {

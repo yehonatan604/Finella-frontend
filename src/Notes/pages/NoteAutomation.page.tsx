@@ -28,6 +28,7 @@ const NoteAutomationPage = () => {
       ...prev,
       {
         _id: `temp-${Date.now()}`, // a unique temp ID
+        userId: user?._id || "",
         noteId: "",
         dateTime: new Date().toISOString().slice(0, 16),
         repeat: "none",
@@ -36,7 +37,7 @@ const NoteAutomationPage = () => {
         status: "active",
       },
     ]);
-  }, []);
+  }, [user?._id]);
 
   useEffect(() => {
     const fetchNoteAutomations = async () => {
