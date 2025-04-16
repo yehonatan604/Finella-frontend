@@ -9,8 +9,8 @@ import { workplaceRows } from "../data/workplaceRows";
 import { TWorkplaceWithFormPhone } from "../types/TWorkplaceWithFormPhone";
 import { question } from "../../Common/utilities/question";
 import { useDispatch, useSelector } from "react-redux";
-import { TRootState } from "../../Common/store/store";
-import { entitiesActions } from "../../Common/store/entitiesSlice";
+import { TRootState } from "../../Core/store/store";
+import { entitiesActions } from "../../Core/store/entitiesSlice";
 import { defaultPageSize, paginatedRows } from "../../Common/helpers/paginationHelpers";
 
 const useWorkplaces = () => {

@@ -15,8 +15,10 @@ import {
 import { TNoteAutomation } from "../types/TNoteAutomation";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { TNote } from "../types/TNote";
+import useAuth from "../../Auth/hooks/useAuth";
 
 const NoteAutomationPage = () => {
+  const { user } = useAuth();
   const [noteAutomations, setNoteAutomations] = useState<TNoteAutomation[]>([]);
   const [allNotes, setAllNotes] = useState<TNote[]>([]);
   const [showAddNoteDialog, setShowAddNoteDialog] = useState(false);
@@ -60,8 +62,11 @@ const NoteAutomationPage = () => {
     try {
       noteAutomations.forEach(async (automation) => {
         if (automation._id?.startsWith("temp-")) {
-          delete automation._id;
-          await sendApiRequest("/note-automations", HTTPMethodTypes.POST, automation);
+          delete automation._id; // Remove the temp ID
+          await sendApiRequest("/note-automations", HTTPMethodTypes.POST, {
+            ...automation,
+            userId: user?._id,
+          });
         } else {
           await sendApiRequest(`/note-automations`, HTTPMethodTypes.PUT, automation);
         }
@@ -69,7 +74,7 @@ const NoteAutomationPage = () => {
     } catch (error) {
       console.error("Error saving changes:", error);
     }
-  }, [noteAutomations]);
+  }, [noteAutomations, user?._id]);
 
   return (
     <Page title="Note Automations">

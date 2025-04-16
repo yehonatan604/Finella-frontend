@@ -1,8 +1,8 @@
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import Layout from "./Common/layout/Layout";
-import store from "./Common/store/store";
-import AppRouter from "./Common/router/AppRouter";
+import store from "./Core/store/store";
+import AppRouter from "./Core/router/AppRouter";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "sweetalert2/src/sweetalert2.scss";

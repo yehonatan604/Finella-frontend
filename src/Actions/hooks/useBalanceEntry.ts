@@ -12,9 +12,9 @@ import { fixPriceString } from "../../Common/helpers/stringHelpers";
 import { balanceEntryCols } from "../data/balanceEntryCols";
 import { balanceEntryRows } from "../data/balanceEntryRows";
 import { question } from "../../Common/utilities/question";
-import { TRootState } from "../../Common/store/store";
+import { TRootState } from "../../Core/store/store";
 import { useSelector, useDispatch } from "react-redux";
-import { entitiesActions } from "../../Common/store/entitiesSlice";
+import { entitiesActions } from "../../Core/store/entitiesSlice";
 import { defaultPageSize, paginatedRows } from "../../Common/helpers/paginationHelpers";
 
 const useBalanceEntry = () => {

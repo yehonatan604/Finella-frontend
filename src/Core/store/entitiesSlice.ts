@@ -6,7 +6,7 @@ import { TNote } from "../../Notes/types/TNote";
 import { TToDo } from "../../Actions/types/TToDo";
 import { TNoteAutomation } from "../../Notes/types/TNoteAutomation";
 import { TDbItem } from "../../Actions/types/TDbItem";
-import { TEntityType, TEntity } from "../types/TEntity";
+import { TEntityType, TEntity } from "../../Common/types/TEntity";
 
 export type TEntitiesState = {
     balanceEntries: TBalanceEntry[] | null;

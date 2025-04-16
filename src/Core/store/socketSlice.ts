@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { io, Socket } from "socket.io-client";
 import { WritableDraft } from "immer";
-import { alert } from "../utilities/alert";
+import { alert } from "../../Common/utilities/alert";
 
 type TSocketState = {
     socket: Socket | null;
@@ -19,19 +19,19 @@ const socketSlice = createSlice({
     reducers: {
         connectSocket: (state) => {
             if (!state.socket) {
-                const socket = io("http://localhost:4387");
+                const token = localStorage.getItem("token");
+                if (!token) return;
+
+                const socket = io("http://localhost:4387", {
+                    auth: { token },
+                });
+
                 state.socket = socket as unknown as WritableDraft<Socket>;
                 state.connected = true;
 
                 socket.on("connect", () => {
                     console.log("🟢 Socket connected:", socket.id);
                 });
-
-                const token = localStorage.getItem("token");
-                if (token) {
-                    const { _id } = JSON.parse(atob(token.split(".")[1]));
-                    socket.emit("register-user", _id);
-                }
 
                 socket.on("user-registered", (id) => {
                     console.log("✅ User registered on socket, user:", id);
@@ -43,11 +43,11 @@ const socketSlice = createSlice({
                 });
 
                 socket.on("note-automation-triggered", (args) => {
-                    console.log("🔔 Note Automation Triggered:", args);
-                    alert("Note Automation Triggered",
-                        `Note Automation Triggered for note: ${args.noteId} automationId: ${args.automationId}, msg: ${args.msg}`,
-                        "warning",
-                    );
+                    alert(args.title, args.content, "warning");
+                });
+
+                socket.on("connect_error", (err) => {
+                    console.error("❌ Socket connection error:", err.message);
                 });
             }
         },

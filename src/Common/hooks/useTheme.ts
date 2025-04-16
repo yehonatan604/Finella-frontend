@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
-import { TRootState } from "../store/store";
-import { themeActions, TThemState } from "../store/themeSlice";
+import { TRootState } from "../../Core/store/store";
+import { themeActions, TThemState } from "../../Core/store/themeSlice";
 import { TTheme } from "../types/TTheme";
 
 const useTheme = () => {

@@ -11,9 +11,9 @@ import { formatDate } from "../../Common/helpers/dateHelpers";
 import { todoCols } from "../data/todoCols";
 import { todoRows } from "../data/todoRows";
 import { question } from "../../Common/utilities/question";
-import { TRootState } from "../../Common/store/store";
+import { TRootState } from "../../Core/store/store";
 import { useDispatch, useSelector } from "react-redux";
-import { entitiesActions } from "../../Common/store/entitiesSlice";
+import { entitiesActions } from "../../Core/store/entitiesSlice";
 import { defaultPageSize, paginatedRows } from "../../Common/helpers/paginationHelpers";
 
 const useToDo = (isTodoPage: boolean = false) => {

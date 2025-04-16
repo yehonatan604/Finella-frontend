@@ -12,8 +12,8 @@ import { useForm } from "react-hook-form";
 import { addNoteFormDefault } from "../forms/initialData/addNoteFormDefault";
 import { TDataGridInputCellParams } from "../../Actions/types/TDataGridInputCellParams";
 import { useDispatch, useSelector } from "react-redux";
-import { TRootState } from "../../Common/store/store";
-import { entitiesActions } from "../../Common/store/entitiesSlice";
+import { TRootState } from "../../Core/store/store";
+import { entitiesActions } from "../../Core/store/entitiesSlice";
 import { defaultPageSize, paginatedRows } from "../../Common/helpers/paginationHelpers";
 
 const useNote = (isPage?: boolean) => {
