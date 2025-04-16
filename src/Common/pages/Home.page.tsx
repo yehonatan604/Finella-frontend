@@ -3,6 +3,7 @@ import { Task, Paid, NotificationsActive, Lock } from "@mui/icons-material";
 import useAuth from "../../Auth/hooks/useAuth";
 import { Link } from "react-router-dom";
 import logo from "../../Assets/images/logo-big.png";
+import FeatureBox from "../components/FeatureBox";
 
 const HomePage = () => {
   const { user } = useAuth();
@@ -50,22 +51,22 @@ const HomePage = () => {
             flexWrap="wrap"
             mb={5}
           >
-            <Feature
+            <FeatureBox
               icon={<Task fontSize="large" />}
               label="Task Management"
               description="Stay on top of your daily work with smart task tracking."
             />
-            <Feature
+            <FeatureBox
               icon={<Paid fontSize="large" />}
               label="Financial Tracking"
               description="Monitor income, salaries, and balance effortlessly."
             />
-            <Feature
+            <FeatureBox
               icon={<NotificationsActive fontSize="large" />}
               label="Note Automations"
               description="Automated note reminders, just when you need them."
             />
-            <Feature
+            <FeatureBox
               icon={<Lock fontSize="large" />}
               label="Secure Access"
               description="Your data stays yours — encrypted and protected."
@@ -102,40 +103,5 @@ const HomePage = () => {
     </Box>
   );
 };
-
-// Small reusable feature box
-const Feature = ({
-  icon,
-  label,
-  description,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  description: string;
-}) => (
-  <Box
-    sx={{
-      textAlign: "center",
-      maxWidth: 200,
-      px: 2,
-      py: 1,
-      transition: "all 0.3s",
-      "&:hover": {
-        transform: "translateY(-4px)",
-        color: "primary.main",
-      },
-    }}
-  >
-    <Box color="primary.main" mb={1}>
-      {icon}
-    </Box>
-    <Typography variant="subtitle1" fontWeight={600}>
-      {label}
-    </Typography>
-    <Typography variant="body2" color="text.secondary">
-      {description}
-    </Typography>
-  </Box>
-);
 
 export default HomePage;
