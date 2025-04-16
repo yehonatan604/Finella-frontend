@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import useNoteAutomation from "../hooks/useNoteAutomation";
+import { DateTime } from "luxon";
 
 const NoteAutomationPage = () => {
   const {
@@ -93,7 +94,13 @@ const NoteAutomationPage = () => {
                   fullWidth
                   label="Date & Time"
                   type="datetime-local"
-                  value={automation.dateTime}
+                  value={
+                    automation.dateTime
+                      ? DateTime.fromISO(automation.dateTime, {
+                          zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                        }).toFormat("yyyy-MM-dd'T'HH:mm")
+                      : ""
+                  }
                   slotProps={{
                     inputLabel: {
                       shrink: true,
@@ -101,10 +108,17 @@ const NoteAutomationPage = () => {
                   }}
                   sx={{ minWidth: 200 }}
                   onChange={(e) => {
+                    const newLocal = DateTime.fromISO(e.target.value, {
+                      zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    });
+
+                    const utcString =
+                      newLocal.toUTC().toISO({ suppressMilliseconds: true }) || "";
+
                     setNoteAutomations((prev) =>
                       prev.map((note) =>
                         note._id === automation._id
-                          ? { ...note, dateTime: e.target.value }
+                          ? { ...note, dateTime: utcString }
                           : note
                       )
                     );

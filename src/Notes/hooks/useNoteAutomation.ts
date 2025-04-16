@@ -4,6 +4,7 @@ import { sendApiRequest } from "../../Common/helpers/sendApiRequest";
 import { HTTPMethodTypes } from "../../Common/types/HTTPMethodTypes";
 import { TNote } from "../types/TNote";
 import { TNoteAutomation } from "../types/TNoteAutomation";
+import { DateTime } from "luxon";
 
 const useNoteAutomation = () => {
     const { user } = useAuth();
@@ -12,13 +13,16 @@ const useNoteAutomation = () => {
     const [showAddNoteDialog, setShowAddNoteDialog] = useState(false);
 
     const addNoteAutomation = useCallback(() => {
+        const now = DateTime.local().startOf("minute");
+        const nowUTC = now.toUTC().toISO({ suppressMilliseconds: true }) || "";
+
         setNoteAutomations((prev) => [
             ...prev,
             {
-                _id: `temp-${Date.now()}`, // a unique temp ID
+                _id: `temp-${Date.now()}`,
                 userId: user?._id || "",
                 noteId: "",
-                dateTime: new Date().toISOString().slice(0, 16),
+                dateTime: nowUTC,
                 repeat: "none",
                 notes: "",
                 lastTriggeredAt: null,
@@ -50,14 +54,23 @@ const useNoteAutomation = () => {
     const handleSaveChanges = useCallback(async () => {
         try {
             noteAutomations.forEach(async (automation) => {
+                const converted = {
+                    ...automation,
+                    dateTime: DateTime.fromISO(automation.dateTime, {
+                        zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    })
+                        .toUTC()
+                        .toISO({ suppressMilliseconds: true }) || automation.dateTime,
+                };
+
                 if (automation._id?.startsWith("temp-")) {
-                    delete automation._id; // Remove the temp ID
+                    delete converted._id;
                     await sendApiRequest("/note-automations", HTTPMethodTypes.POST, {
-                        ...automation,
+                        ...converted,
                         userId: user?._id,
                     });
                 } else {
-                    await sendApiRequest(`/note-automations`, HTTPMethodTypes.PUT, automation);
+                    await sendApiRequest(`/note-automations`, HTTPMethodTypes.PUT, converted);
                 }
             });
         } catch (error) {
@@ -73,7 +86,7 @@ const useNoteAutomation = () => {
         addNoteAutomation,
         handleSaveChanges,
         setNoteAutomations,
-    }
-}
+    };
+};
 
 export default useNoteAutomation;

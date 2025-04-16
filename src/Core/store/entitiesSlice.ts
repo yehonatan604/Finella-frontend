@@ -75,7 +75,6 @@ const entitiesSlice = createSlice({
             state,
             action: PayloadAction<{ type: TEntityType; id: string }>
         ) => {
-            // set status to "inactive" 
             const { type, id } = action.payload;
             const list = state[type];
             if (list) {
