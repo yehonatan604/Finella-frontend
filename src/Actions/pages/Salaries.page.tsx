@@ -12,6 +12,8 @@ import SalariesChartsDialog from "../components/dialogs/chratDialogs/SalariesCha
 import SalaryDetailsDialog from "../components/dialogs/detailsDialogs/SalaryDetailsDialog";
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import useTheme from "../../Common/hooks/useTheme";
+import { TDataGridRow } from "../../Common/types/TDataGridRow";
+import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
 
 const SalariesPage = () => {
   const {
@@ -31,6 +33,10 @@ const SalariesPage = () => {
     filteredRows,
     showInactive,
     setShowInactive,
+    loading,
+    paginatedRows,
+    paginationModel,
+    setPaginationModel,
   } = useSalary(true);
 
   const [isChartsDialogOpen, setIsChartsDialogOpen] = useState(false);
@@ -45,7 +51,7 @@ const SalariesPage = () => {
           setToYear={setToYear}
           setMonths={setMonths}
           setPickedWorkplaces={setPickedWorkplaces}
-          workplaces={workplaces}
+          workplaces={workplaces!}
         />
         <ShowInactiveCheckbox
           showInactive={showInactive}
@@ -66,15 +72,17 @@ const SalariesPage = () => {
           }}
         >
           <StyledDataGrid
-            rows={filteredRows}
+            rows={paginatedRows as TDataGridRow[]}
             rowCount={
               !showInactive
                 ? filteredRows.filter(
-                    (row) => (row as { status: string }).status !== "inactive"
-                  ).length - 1
-                : filteredRows.length - 1
+                    (row) => "status" in row && row.status !== "inactive"
+                  ).length
+                : filteredRows.length
             }
             paginationMode="server"
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
             columns={columns as GridColDef[]}
             getRowClassName={(params) =>
               params.id === "total"
@@ -83,12 +91,9 @@ const SalariesPage = () => {
                 ? "even"
                 : "odd"
             }
-            initialState={{
-              pagination: {
-                paginationModel: { pageSize: 10 },
-              },
-            }}
-            pageSizeOptions={[5, 10]}
+            loading={loading}
+            pageSizeOptions={pageSizeOptions}
+            disableRowSelectionOnClick
             onCellEditStart={(_, event) => {
               event.defaultMuiPrevented = true;
             }}

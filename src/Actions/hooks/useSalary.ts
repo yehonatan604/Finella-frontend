@@ -13,13 +13,21 @@ import { salaryCols } from "../data/salaryCols";
 import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
 import { salaryRows } from "../data/salaryRows";
 import { question } from "../../Common/utilities/question";
+import { useDispatch, useSelector } from "react-redux";
+import { TRootState } from "../../Common/store/store";
+import { entitiesActions } from "../../Common/store/entitiesSlice";
+import { defaultPageSize, paginatedRows } from "../../Common/helpers/paginationHelpers";
 
-const useSalary = (isSalariesPage: boolean = false) => {
+const useSalary = (isPage?: boolean) => {
     const { user } = useAuth();
     const { workplaces, getAllWorkplaces } = useWorkplaces();
+
+    const fetchedSalaries = useSelector((state: TRootState) => state.entitiesSlice.salaries);
+    const loading = useSelector((state: TRootState) => state.entitiesSlice.loading);
+    const dispatch = useDispatch();
+
     const [salaryHours, setSalaryHours] = useState<TSalaryHours[]>([]);
     const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
-    const [fetchedSalaries, setFetchedSalaries] = useState<TSalary[]>([]);
     const [fromYear, setFromYear] = useState(new Date().getFullYear());
     const [toYear, setToYear] = useState(new Date().getFullYear());
     const [months, setMonths] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
@@ -28,12 +36,14 @@ const useSalary = (isSalariesPage: boolean = false) => {
             ?.map((workplace) => workplace._id)
             .filter((id): id is string => id !== undefined) || []
     );
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const [selectedSalary, setSelectedSalary] = useState<TSalary | null>(null);
     const [isSalaryDetailsDialogOpen, setIsSalaryDetailsDialogOpen] = useState(false);
     const [search, setSearch] = useState<string>("");
     const [showInactive, setShowInactive] = useState(false);
+    const [paginationModel, setPaginationModel] = useState({
+        page: 0,
+        pageSize: defaultPageSize,
+    });
 
     const addNewSalaryHour = useCallback(() => {
         setSalaryHours((prev) => {
@@ -96,13 +106,15 @@ const useSalary = (isSalariesPage: boolean = false) => {
 
     const getSalaries = useCallback(async (query: string) => {
         try {
+            dispatch(entitiesActions.setLoading(true));
             const response = await sendApiRequest("/salary/by" + query, HTTPMethodTypes.GET);
-            setFetchedSalaries(response.data);
+            dispatch(entitiesActions.setEntity({ type: "salaries", data: response.data }));
         }
         catch (error) {
             console.log(error);
+            toastify.error("Error fetching salaries");
         }
-    }, []);
+    }, [dispatch]);
 
     const calcTotalHours = useCallback((hours: TSalaryHours[]) => {
         return hours.reduce((acc, curr) => {
@@ -127,8 +139,7 @@ const useSalary = (isSalariesPage: boolean = false) => {
     const onUpdate = useCallback(
         async (data: TSalary) => {
             try {
-                setLoading(true);
-                setError(null);
+                dispatch(entitiesActions.setLoading(true));
 
                 data.hours.forEach((hour) => {
                     delete hour._id;
@@ -136,32 +147,14 @@ const useSalary = (isSalariesPage: boolean = false) => {
 
                 await sendApiRequest(`/salary`, HTTPMethodTypes.PUT, data);
 
-                setFetchedSalaries((prev) =>
-                    prev.map((entry) => {
-                        if (entry._id === data._id) {
-                            return {
-                                ...entry,
-                                ...data,
-                            };
-                        }
-                        return entry;
-                    })
-                );
+                dispatch(entitiesActions.updateEntityItem({ type: "salaries", item: data, id: data._id! }));
                 toastify.success("Balance Entry updated successfully");
             } catch (error) {
                 console.log(error);
                 toastify.error("Error updating Balance Entry");
-
-                if (error instanceof Error) {
-                    setError(error.message);
-                } else {
-                    setError(error as string);
-                }
-            } finally {
-                setLoading(false);
             }
         },
-        []
+        [dispatch]
     );
 
     const onCellUpdate = useMemo(
@@ -176,7 +169,7 @@ const useSalary = (isSalariesPage: boolean = false) => {
                     "total sum": number | undefined;
                 }
             ) => {
-                const fetchedRow = fetchedSalaries.find((bEntry) => bEntry._id === row.id);
+                const fetchedRow = fetchedSalaries?.find((bEntry) => bEntry._id === row.id);
 
                 const changedFetchedRow = {
                     workplace: fetchedRow?.workPlaceId || "",
@@ -221,34 +214,17 @@ const useSalary = (isSalariesPage: boolean = false) => {
                     "Are you sure you want to delete this Salary?",
                     "warning",
                     async () => {
-                        setLoading(true);
-                        setError(null);
+                        dispatch(entitiesActions.setLoading(true));
                         await sendApiRequest(`/salary/${id}`, HTTPMethodTypes.DELETE, { userId: user?._id });
-                        setFetchedSalaries((prev) => {
-                            const salary = prev.find((sal) => sal._id === id);
-                            if (!salary) return prev;
-                            const fixedSalary = {
-                                ...salary,
-                                status: "inactive"
-                            };
-                            return prev.map((sal) => (sal._id === id ? fixedSalary : sal));
-                        });
+                        dispatch(entitiesActions.removeEntityItem({ type: "salaries", id }));
                         toastify.success("Salary deleted successfully");
                     }
                 );
             } catch (error) {
                 console.log(error);
                 toastify.error("Error deleting Salary");
-
-                if (error instanceof Error) {
-                    setError(error.message);
-                } else {
-                    setError(error as string);
-                }
-            } finally {
-                setLoading(false);
             }
-        }, [user?._id]);
+        }, [user?._id, dispatch]);
 
     const onUndelete = useCallback(
         async (id: string) => {
@@ -258,35 +234,18 @@ const useSalary = (isSalariesPage: boolean = false) => {
                     "Are you sure you want to undelete this Salary?",
                     "warning",
                     async () => {
-                        setLoading(true);
-                        setError(null);
+                        dispatch(entitiesActions.setLoading(true));
                         await sendApiRequest(`/salary/undelete/${id}`, HTTPMethodTypes.PATCH, { userId: user?._id });
-                        setFetchedSalaries((prev) => {
-                            const salary = prev.find((sal) => sal._id === id);
-                            if (!salary) return prev;
-                            const fixedSalary = {
-                                ...salary,
-                                status: "active"
-                            };
-                            return prev.map((sal) => (sal._id === id ? fixedSalary : sal));
-                        });
+                        dispatch(entitiesActions.undeleteEntityItem({ type: "salaries", id }));
                         toastify.success("Salary undeleted successfully");
                     }
                 );
             } catch (error) {
                 console.log(error);
                 toastify.error("Error undeleting Salary");
-
-                if (error instanceof Error) {
-                    setError(error.message);
-                } else {
-                    setError(error as string);
-                }
-            } finally {
-                setLoading(false);
             }
         },
-        [user?._id]
+        [user?._id, dispatch]
     );
 
     const columns = useMemo(
@@ -295,7 +254,7 @@ const useSalary = (isSalariesPage: boolean = false) => {
             onCellUpdate,
             (params: TDataGridInputCellParams) => {
                 setSelectedSalary(
-                    fetchedSalaries.find((salary) => salary._id === params.row.id) || null
+                    fetchedSalaries?.find((salary) => salary._id === params.row.id) || null
                 );
                 setIsSalaryDetailsDialogOpen(true);
             },
@@ -305,7 +264,7 @@ const useSalary = (isSalariesPage: boolean = false) => {
     );
 
     const rows = useMemo(() => salaryRows(
-        fetchedSalaries,
+        fetchedSalaries ?? [],
         workplaces!,
         calcTotalHours,
         calcTotalSum
@@ -319,7 +278,7 @@ const useSalary = (isSalariesPage: boolean = false) => {
     useEffect(() => {
         getAllWorkplaces();
 
-        if (isSalariesPage) {
+        if (isPage) {
             const fetchData = async () => {
                 const queryParams = new URLSearchParams();
 
@@ -345,7 +304,7 @@ const useSalary = (isSalariesPage: boolean = false) => {
 
             fetchData();
         }
-    }, [fromYear, getAllWorkplaces, getSalaries, isSalariesPage, months, pickedWorkplaces, toYear]);
+    }, [fromYear, getAllWorkplaces, getSalaries, isPage, months, pickedWorkplaces, toYear]);
 
     return {
         addNewSalaryHour,
@@ -365,7 +324,6 @@ const useSalary = (isSalariesPage: boolean = false) => {
         setToYear,
         setMonths,
         setPickedWorkplaces,
-        error,
         loading,
         fetchedSalaries,
         onUpdate,
@@ -377,6 +335,9 @@ const useSalary = (isSalariesPage: boolean = false) => {
         filteredRows,
         showInactive,
         setShowInactive,
+        paginationModel,
+        setPaginationModel,
+        paginatedRows: paginatedRows(paginationModel, filteredRows),
     };
 };
 

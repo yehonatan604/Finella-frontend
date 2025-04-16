@@ -38,7 +38,7 @@ const NotesPage = () => {
     paginatedRows,
     paginationModel,
     setPaginationModel,
-  } = useNote();
+  } = useNote(true);
 
   return (
     <>

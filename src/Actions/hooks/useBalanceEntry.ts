@@ -197,6 +197,7 @@ const useBalanceEntry = () => {
 
     const getBalanceEntries = useCallback(async (query: string) => {
         try {
+            dispatch(entitiesActions.setLoading(true));
             const response = await sendApiRequest("/balance-entry/by" + query, HTTPMethodTypes.GET);
             dispatch(entitiesActions.setEntity({ type: "balanceEntries", data: response.data }));
         }

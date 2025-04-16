@@ -16,7 +16,7 @@ import { TRootState } from "../../Common/store/store";
 import { entitiesActions } from "../../Common/store/entitiesSlice";
 import { defaultPageSize, paginatedRows } from "../../Common/helpers/paginationHelpers";
 
-const useNote = () => {
+const useNote = (isPage?: boolean) => {
     const { user } = useAuth();
 
     const fetchedNotes = useSelector((state: TRootState) => state.entitiesSlice.notes);
@@ -177,23 +177,6 @@ const useNote = () => {
         [dispatch]
     );
 
-    const fetchData = useCallback(async () => {
-        const queryParams = new URLSearchParams();
-
-        if (fromYear) queryParams.append("fromYear", fromYear.toString());
-        if (toYear) queryParams.append("toYear", toYear.toString());
-        if (months.length > 0 && months.length < 12) {
-            queryParams.append("months", months.join(","));
-        }
-
-        const queryString = queryParams.toString();
-
-        if (queryString === lastFetchedQuery && fetchedNotes) return;
-
-        await getAllNotes(`?${queryString}`);
-        setLastFetchedQuery(queryString);
-    }, [fromYear, toYear, months, lastFetchedQuery, fetchedNotes, getAllNotes]);
-
     const columns = useMemo(
         () => noteCols(
             onCellUpdate,
@@ -219,8 +202,26 @@ const useNote = () => {
     ), [rows, search, showInactive]);
 
     useEffect(() => {
+        if (!isPage) return;
+
+        const fetchData = async () => {
+            const queryParams = new URLSearchParams();
+
+            if (fromYear) queryParams.append("fromYear", fromYear.toString());
+            if (toYear) queryParams.append("toYear", toYear.toString());
+            if (months.length > 0 && months.length < 12) {
+                queryParams.append("months", months.join(","));
+            }
+
+            const queryString = queryParams.toString();
+
+            if (queryString === lastFetchedQuery) return;
+
+            await getAllNotes(`?${queryString}`);
+            setLastFetchedQuery(queryString);
+        };
         fetchData();
-    }, [fetchData]);
+    }, [fromYear, getAllNotes, lastFetchedQuery, months, toYear, isPage]);
 
     return {
         columns,
