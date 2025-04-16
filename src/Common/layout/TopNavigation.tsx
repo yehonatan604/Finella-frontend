@@ -41,13 +41,16 @@ export const TopNavigation = () => {
           sx={{
             position: "absolute",
             right: "2rem",
-            top: ".8rem",
+            top: "-1.8rem",
           }}
         >
           <img
             src={logoImg}
             alt="Logo"
-            style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+            style={{
+              width: "8rem",
+              objectFit: "cover",
+            }}
           />
         </Box>
       </Toolbar>
