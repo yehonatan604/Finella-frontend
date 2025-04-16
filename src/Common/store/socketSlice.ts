@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { io, Socket } from "socket.io-client";
 import { WritableDraft } from "immer";
+import { alert } from "../utilities/alert";
 
 type TSocketState = {
     socket: Socket | null;
@@ -39,6 +40,14 @@ const socketSlice = createSlice({
                 socket.on("disconnect", () => {
                     console.log("🔴 Socket disconnected");
                     state.connected = false;
+                });
+
+                socket.on("note-automation-triggered", (args) => {
+                    console.log("🔔 Note Automation Triggered:", args);
+                    alert("Note Automation Triggered",
+                        `Note Automation Triggered for note: ${args.noteId} automationId: ${args.automationId}, msg: ${args.msg}`,
+                        "warning",
+                    );
                 });
             }
         },

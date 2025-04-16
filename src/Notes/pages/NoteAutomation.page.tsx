@@ -56,6 +56,21 @@ const NoteAutomationPage = () => {
     fetchNoteAutomations();
   }, []);
 
+  const handleSaveChanges = useCallback(async () => {
+    try {
+      noteAutomations.forEach(async (automation) => {
+        if (automation._id?.startsWith("temp-")) {
+          delete automation._id;
+          await sendApiRequest("/note-automations", HTTPMethodTypes.POST, automation);
+        } else {
+          await sendApiRequest(`/note-automations`, HTTPMethodTypes.PUT, automation);
+        }
+      });
+    } catch (error) {
+      console.error("Error saving changes:", error);
+    }
+  }, [noteAutomations]);
+
   return (
     <Page title="Note Automations">
       {noteAutomations.length > 0 && (
@@ -259,7 +274,7 @@ const NoteAutomationPage = () => {
           width: "61vw",
         }}
       >
-        <Button variant="contained" color="success" onClick={() => {}}>
+        <Button variant="contained" color="success" onClick={handleSaveChanges}>
           Save Changes
         </Button>
         <Button variant="contained" color="primary" onClick={addNoteAutomation}>
