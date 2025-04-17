@@ -17,11 +17,15 @@ export const createDataGridInputCell = (
       return (
         <TextField
           select
-          defaultValue={value}
+          value={value}
           variant="outlined"
           size="small"
           sx={{ pt: 0.5 }}
           onBlur={(event) => {
+            const updatedRow = { ...row, [field]: event.target.value };
+            processRowOnCellUpdate(updatedRow as never);
+          }}
+          onChange={(event) => {
             const updatedRow = { ...row, [field]: event.target.value };
             processRowOnCellUpdate(updatedRow as never);
           }}

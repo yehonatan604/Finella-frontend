@@ -113,6 +113,26 @@ const entitiesSlice = createSlice({
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.loading = action.payload;
         },
+
+        markNoteAsRead: (
+            state,
+            action: PayloadAction<{ id: string }>
+        ) => {
+            const note: TNote = state.notes?.find(n => n._id === action.payload.id) as TNote;
+            if (note) {
+                note.noteStatus = "READ";
+            }
+        },
+
+        markTodAsFailed: (
+            state,
+            action: PayloadAction<{ id: string }>
+        ) => {
+            const todo: TToDo = state.todos?.find(n => n._id === action.payload.id) as TToDo;
+            if (todo) {
+                todo.status = "FAILED";
+            }
+        }
     },
 });
 

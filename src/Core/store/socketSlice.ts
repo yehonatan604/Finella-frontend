@@ -41,6 +41,10 @@ const socketSlice = createSlice({
                 alertEvents.forEach((event) => {
                     socket.on(event, (args) => {
                         alert(args.title, args.content, "info");
+
+                        if (args.id) {
+                            socket.emit("note-read", { id: args.id });
+                        }
                     });
                 });
 
