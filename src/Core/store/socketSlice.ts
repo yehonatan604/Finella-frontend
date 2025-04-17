@@ -30,7 +30,7 @@ const socketSlice = createSlice({
                 state.connected = true;
 
                 const connectionEvents = ["connect", "disconnect"];
-                const automationEvents = ["note-automation-triggered", "todo-failed"];
+                const alertEvents = ["note-automation-triggered", "todo-failed"];
 
                 connectionEvents.forEach((event) => {
                     socket.on(event, () => {
@@ -38,7 +38,7 @@ const socketSlice = createSlice({
                     });
                 });
 
-                automationEvents.forEach((event) => {
+                alertEvents.forEach((event) => {
                     socket.on(event, (args) => {
                         alert(args.title, args.content, "info");
                     });
