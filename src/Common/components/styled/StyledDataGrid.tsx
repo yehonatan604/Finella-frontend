@@ -35,11 +35,6 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => {
       color: isDark ? "#bbdefb" : "inherit",
     },
 
-    // Icons
-    "& .MuiSvgIcon-root": {
-      color: isDark ? "#90caf9" : "inherit",
-    },
-
     // Remove outlines
     "& .MuiDataGrid-cell:focus, & .MuiDataGrid-cell:focus-within": {
       outline: "none",

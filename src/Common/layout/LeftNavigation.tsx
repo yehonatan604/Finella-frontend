@@ -1,4 +1,4 @@
-import { Box, Drawer, IconButton } from "@mui/material";
+import { Box, Drawer, IconButton, Menu, MenuItem } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import { Link, useNavigate } from "react-router-dom";
 import CenterBox from "../components/CenterBox";
@@ -25,10 +25,22 @@ import { useState } from "react";
 import ToolDragDialog from "../../Tools/components/dialogs/ToolDragDialog";
 import { TTool } from "../../Tools/types/TTool";
 import useTheme from "../hooks/useTheme";
+import useAuth from "../../Auth/hooks/useAuth";
 
 const LeftNavigation = () => {
   const [selectedTool, setSelectedTool] = useState<TTool | null>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
   const { mode, setTheme } = useTheme();
+  const { logout } = useAuth();
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   const nav = useNavigate();
 
   const handleToolClick = (tool: TTool) => {
@@ -40,8 +52,8 @@ const LeftNavigation = () => {
       ? "linear-gradient(180deg, #1e293b 0%, #334155 100%)"
       : "linear-gradient(180deg, #0d47a1 0%, #1976d2 100%)";
 
-  const iconColor = mode === "dark" ? "#ccc" : "#333";
-  const sectionColor = mode === "dark" ? "#bbb" : "#444";
+  const iconColor = "#ccc";
+  const sectionColor = "#bbb";
 
   return (
     <Drawer
@@ -79,9 +91,34 @@ const LeftNavigation = () => {
           <IconButton sx={{ color: "white" }}>
             <HomeIcon onClick={() => nav("/")} />
           </IconButton>
-          <IconButton sx={{ color: "white" }}>
+          <IconButton sx={{ color: "white" }} onClick={handleClick}>
             <Person2Icon />
           </IconButton>
+
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+          >
+            <MenuItem onClick={handleClose}>Profile</MenuItem>
+            <MenuItem
+              onClick={() => {
+                logout();
+                handleClose();
+              }}
+            >
+              Logout
+            </MenuItem>
+          </Menu>
+
           <IconButton>
             {mode === "dark" ? (
               <LightModeRoundedIcon onClick={() => setTheme("light")} />

@@ -2,11 +2,15 @@ import { Box, Button, Typography, Container, Stack, Fade } from "@mui/material";
 import { Task, Paid, NotificationsActive, Lock } from "@mui/icons-material";
 import useAuth from "../../Auth/hooks/useAuth";
 import { Link } from "react-router-dom";
-import logo from "../../Assets/images/logo-big.png";
+import logoWhite from "../../Assets/images/logo-big-white.png";
+import logoBlue from "../../Assets/images/logo-big-navy.png";
 import FeatureBox from "../components/FeatureBox";
+import useTheme from "../hooks/useTheme";
 
 const HomePage = () => {
   const { user } = useAuth();
+  const { mode } = useTheme();
+  const logoImg = mode === "light" ? logoBlue : logoWhite;
 
   return !user ? (
     <Fade in timeout={1000}>
@@ -22,12 +26,11 @@ const HomePage = () => {
       >
         <Container maxWidth="md" sx={{ textAlign: "center" }}>
           <img
-            src={logo}
+            src={logoImg}
             alt="Finella Logo"
             style={{
-              width: "20vw",
+              width: "15rem",
               filter: "drop-shadow(0 0 6px rgba(255,255,255,0.5))",
-              marginBottom: "6vh",
             }}
           />
 

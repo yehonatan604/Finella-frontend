@@ -3,6 +3,7 @@ import { Paper, Typography, Box } from "@mui/material";
 import { toolsList } from "../../helpers/ToolsList";
 import { TTool } from "../../types/TTool";
 import DialogXButton from "../../../Actions/components/DialogXButton";
+import useTheme from "../../../Common/hooks/useTheme";
 
 type ToolDragDialogProps = {
   open: boolean;
@@ -12,6 +13,7 @@ type ToolDragDialogProps = {
 };
 
 const ToolDragDialog = ({ open, onClose, tool, title }: ToolDragDialogProps) => {
+  const { mode } = useTheme();
   const [position, setPosition] = useState({ x: 100, y: 100 });
   const ref = useRef<HTMLDivElement>(null);
   const posOffset = useRef({ x: 0, y: 0 });
@@ -49,7 +51,8 @@ const ToolDragDialog = ({ open, onClose, tool, title }: ToolDragDialogProps) => 
         top: position.y,
         left: position.x,
         zIndex: 2000,
-        backgroundColor: "#fff",
+        border: `1px solid ${mode === "dark" ? "rgba(255, 255, 255, 0.1)" : "silver"}`,
+        backgroundColor: "background.paper",
         borderRadius: 2,
         overflow: "hidden",
       }}
@@ -72,7 +75,7 @@ const ToolDragDialog = ({ open, onClose, tool, title }: ToolDragDialogProps) => 
         <DialogXButton onClose={onClose} />
       </Box>
 
-      <Box sx={{ p: 2 }}>{toolsList[tool]}</Box>
+      <Box>{toolsList[tool]}</Box>
     </Paper>
   );
 };

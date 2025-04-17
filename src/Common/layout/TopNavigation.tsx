@@ -1,5 +1,5 @@
-import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
-import logoImg from "../../Assets/images/logo.png";
+import { AppBar, Toolbar } from "@mui/material";
+import logoImg from "../../Assets/images/logo-BIG.png";
 import useTheme from "../hooks/useTheme";
 
 export const TopNavigation = () => {
@@ -21,38 +21,15 @@ export const TopNavigation = () => {
         boxShadow: mode === "dark" ? "0 2px 4px rgba(0,0,0,0.3)" : undefined,
       }}
     >
-      <Toolbar sx={{ display: "flex", justifyContent: "space-around" }}>
-        <Box>
-          <Typography
-            component={Button}
-            color="inherit"
-            variant="h5"
-            sx={{
-              textTransform: "capitalize",
-              color: "white",
-              fontWeight: "bold",
-            }}
-          >
-            Personal Manager
-          </Typography>
-        </Box>
-
-        <Box
-          sx={{
-            position: "absolute",
-            right: "2rem",
-            top: "-1.8rem",
+      <Toolbar sx={{ display: "flex", justifyContent: "center" }}>
+        <img
+          src={logoImg}
+          alt="Logo"
+          style={{
+            width: "8rem",
+            objectFit: "cover",
           }}
-        >
-          <img
-            src={logoImg}
-            alt="Logo"
-            style={{
-              width: "8rem",
-              objectFit: "cover",
-            }}
-          />
-        </Box>
+        />
       </Toolbar>
     </AppBar>
   );

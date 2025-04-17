@@ -44,8 +44,16 @@ const Calculator = () => {
   ];
 
   return (
-    <Box sx={{ p: 2 }}>
-      <Paper sx={{ p: 3, width: 320, borderRadius: 4 }}>
+    <Box>
+      <Paper
+        sx={{
+          p: 3,
+          width: 320,
+          borderRadius: 0,
+          borderEndEndRadius: 2,
+          borderEndStartRadius: 2,
+        }}
+      >
         <Box
           sx={{
             backgroundColor: "#f0f0f0",

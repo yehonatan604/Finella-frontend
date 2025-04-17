@@ -83,7 +83,7 @@ export const darkTheme = createTheme({
         MuiButton: {
             styleOverrides: {
                 root: {
-                    borderRadius: 8,
+                    borderRadius: 4,
                     fontWeight: 500,
                 },
                 containedPrimary: {
