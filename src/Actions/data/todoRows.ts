@@ -1,4 +1,4 @@
-import { formatDate } from "../../Common/helpers/dateHelpers";
+import { formatDateLuxon } from "../../Common/helpers/dateHelpers";
 import { TToDo } from "../types/TToDo";
 
 export const todoRows = (fetchedToDos: TToDo[]) => {
@@ -7,8 +7,8 @@ export const todoRows = (fetchedToDos: TToDo[]) => {
             id: todo._id,
             name: todo.name,
             description: todo.description,
-            startDate: formatDate(todo.startDate),
-            endDate: formatDate(todo.endDate),
+            startDate: formatDateLuxon(todo.startDate),
+            endDate: formatDateLuxon(todo.endDate),
             toDoStatus: todo.toDoStatus,
             tasks: todo.tasks?.length,
             status: todo.status,

@@ -7,7 +7,7 @@ import { addToDoFormDefault } from "../forms/initialData/addToDoFormDefault";
 import { TToDo } from "../types/TToDo";
 import { toastify } from "../../Common/utilities/toast";
 import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
-import { formatDate } from "../../Common/helpers/dateHelpers";
+import { parseToUTCISO, formatDateLuxon } from "../../Common/helpers/dateHelpers";
 import { todoCols } from "../data/todoCols";
 import { todoRows } from "../data/todoRows";
 import { question } from "../../Common/utilities/question";
@@ -40,6 +40,7 @@ const useToDo = (isTodoPage: boolean = false) => {
     register,
     formState: { errors },
     handleSubmit,
+    watch,
   } = useForm<TToDo>({
     mode: "onChange",
     defaultValues: addToDoFormDefault,
@@ -99,8 +100,8 @@ const useToDo = (isTodoPage: boolean = false) => {
         const normalizeRow = (row: Partial<TToDo>) => ({
           name: row?.name,
           description: row?.description,
-          startDate: formatDate(row?.startDate),
-          endDate: formatDate(row?.endDate),
+          startDate: formatDateLuxon(row?.startDate),
+          endDate: formatDateLuxon(row?.endDate),
           toDoStatus: row?.toDoStatus,
         });
 
@@ -119,15 +120,12 @@ const useToDo = (isTodoPage: boolean = false) => {
           tasks: fetchedRow?.tasks,
           name: row.name ?? fetchedRow?.name ?? "",
           description: row?.description ?? fetchedRow?.description ?? "",
-          startDate: new Date(
-            (row.startDate ?? fetchedRow?.startDate ?? "").split("/").reverse().join("-")
-          ),
-          endDate: new Date(
-            (row.endDate ?? fetchedRow?.endDate ?? "").split("/").reverse().join("-")
-          ),
+          startDate: parseToUTCISO(row.startDate),
+          endDate: parseToUTCISO(row.endDate),
           toDoStatus: row.toDoStatus ?? fetchedRow?.toDoStatus ?? "PENDING",
           notes: row.notes ?? fetchedRow?.notes ?? "",
         };
+
         onUpdate(finalRow as unknown as TToDo);
       },
     [fetchedToDos, onUpdate]
@@ -188,10 +186,15 @@ const useToDo = (isTodoPage: boolean = false) => {
         if (data.tasks?.[0]?.name === "") {
           delete data.tasks;
         }
-        await sendApiRequest(`/todo`, HTTPMethodTypes.POST, {
+
+        const payload = {
           ...data,
           userId: user?._id,
-        });
+          startDate: parseToUTCISO(data.startDate),
+          endDate: parseToUTCISO(data.endDate),
+        };
+
+        await sendApiRequest(`/todo`, HTTPMethodTypes.POST, payload);
       } catch (error) {
         console.log(error);
         toastify.error("Error adding ToDo");
@@ -257,6 +260,7 @@ const useToDo = (isTodoPage: boolean = false) => {
     handleSubmit,
     onSubmit,
     onUpdate,
+    watch,
     errors,
     loading,
     columns,

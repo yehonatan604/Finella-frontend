@@ -1,7 +1,7 @@
 import { Checkbox, MenuItem, TextField } from "@mui/material";
 import { TDataGridInputCellParams } from "../../types/TDataGridInputCellParams";
-import { formatStringDate } from "../../../Common/helpers/dateHelpers";
 import { Box } from "@mui/system";
+import { DateTime } from "luxon";
 
 export const createDataGridInputCell = (
   params: TDataGridInputCellParams,
@@ -37,12 +37,28 @@ export const createDataGridInputCell = (
       return (
         <TextField
           type={type}
-          defaultValue={type === "date" ? formatStringDate(String(value)) : value}
+          defaultValue={
+            type === "date"
+              ? DateTime.fromISO(String(value)).toFormat("yyyy-MM-dd")
+              : value
+          }
           variant="outlined"
           size="small"
           sx={{ pt: 0.5 }}
           onBlur={(event) => {
-            const updatedRow = { ...row, [field]: event.target.value };
+            const updatedRow = {
+              ...row,
+              [field]:
+                type === "date"
+                  ? DateTime.fromISO(event.target.value, {
+                      zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                    })
+                      .toUTC()
+                      .toISO()
+                  : event.target.value,
+            };
+            console.log(updatedRow);
+
             processRowOnCellUpdate(updatedRow as never);
           }}
           onKeyDown={(event) => {

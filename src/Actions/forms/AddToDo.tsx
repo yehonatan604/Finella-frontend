@@ -12,9 +12,10 @@ import Page from "../../Common/components/Page";
 import { useState } from "react";
 import { TTask } from "../types/TTask";
 import useToDo from "../hooks/useToDo";
+import { DateTime } from "luxon";
 
 const AddToDo = () => {
-  const { register, errors, handleSubmit, onSubmit } = useToDo();
+  const { register, errors, handleSubmit, onSubmit, watch } = useToDo();
   const [withTasks, setWithTasks] = useState(true);
   const [tasks, setTasks] = useState<TTask[]>([
     {
@@ -53,13 +54,16 @@ const AddToDo = () => {
               {...register("startDate")}
               type="date"
               fullWidth
+              defaultValue={
+                watch().startDate
+                  ? DateTime.fromISO(watch().startDate)
+                      .setZone(Intl.DateTimeFormat().resolvedOptions().timeZone)
+                      .toFormat("yyyy-MM-dd")
+                  : undefined
+              }
               sx={{ mb: 2 }}
               color={errors.startDate ? "error" : "primary"}
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
+              slotProps={{ inputLabel: { shrink: true } }}
             />
 
             <TextField
@@ -67,13 +71,16 @@ const AddToDo = () => {
               {...register("endDate")}
               type="date"
               fullWidth
+              defaultValue={
+                watch().endDate
+                  ? DateTime.fromISO(watch().endDate)
+                      .setZone(Intl.DateTimeFormat().resolvedOptions().timeZone)
+                      .toFormat("yyyy-MM-dd")
+                  : undefined
+              }
               sx={{ mb: 2 }}
               color={errors.endDate ? "error" : "primary"}
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
+              slotProps={{ inputLabel: { shrink: true } }}
             />
           </Box>
 

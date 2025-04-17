@@ -38,7 +38,7 @@ const socketSlice = createSlice({
                 });
 
                 socket.on("note-automation-triggered", (args) => {
-                    alert(args.title, args.content, "warning");
+                    alert(args.title, args.content, "info");
                 });
 
                 socket.on("connect_error", (err) => {
