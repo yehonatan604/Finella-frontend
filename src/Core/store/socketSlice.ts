@@ -29,18 +29,12 @@ const socketSlice = createSlice({
                 state.socket = socket as unknown as WritableDraft<Socket>;
                 state.connected = true;
 
-                // Now move listeners OUTSIDE of reducer to avoid stale proxy issues
                 socket.on("connect", () => {
-                    console.log("🟢 Socket connected:", socket.id);
-                });
-
-                socket.on("user-registered", (id) => {
-                    console.log("✅ User registered on socket, user:", id);
+                    console.log("🟢 connected");
                 });
 
                 socket.on("disconnect", () => {
-                    console.log("🔴 Socket disconnected");
-                    // Don't touch Redux state here!
+                    console.log("🔴 disconnected");
                 });
 
                 socket.on("note-automation-triggered", (args) => {
@@ -48,7 +42,7 @@ const socketSlice = createSlice({
                 });
 
                 socket.on("connect_error", (err) => {
-                    console.error("❌ Socket connection error:", err.message);
+                    console.error("❌ connection error:", err.message);
                 });
             }
         },
