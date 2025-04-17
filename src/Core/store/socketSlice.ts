@@ -29,16 +29,19 @@ const socketSlice = createSlice({
                 state.socket = socket as unknown as WritableDraft<Socket>;
                 state.connected = true;
 
-                socket.on("connect", () => {
-                    console.log("🟢 connected");
+                const connectionEvents = ["connect", "disconnect"];
+                const automationEvents = ["note-automation-triggered", "todo-failed"];
+
+                connectionEvents.forEach((event) => {
+                    socket.on(event, () => {
+                        console.log(`${event === "connect" ? "✅" : "❌"} ${event}ed`);
+                    });
                 });
 
-                socket.on("disconnect", () => {
-                    console.log("🔴 disconnected");
-                });
-
-                socket.on("note-automation-triggered", (args) => {
-                    alert(args.title, args.content, "info");
+                automationEvents.forEach((event) => {
+                    socket.on(event, (args) => {
+                        alert(args.title, args.content, "info");
+                    });
                 });
 
                 socket.on("connect_error", (err) => {
