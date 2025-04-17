@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { HTTPMethodTypes } from "../../Common/types/HTTPMethodTypes";
 import { authActions } from "../../Core/store/authSlice";
 import { TRootState } from "../../Core/store/store";
@@ -10,16 +10,8 @@ const useAuth = () => {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const auth = useSelector((state: TRootState) => state.authSlice);
-    const connected = useSelector((state: TRootState) => state.socketSlice.connected);
     const { POST, GET } = HTTPMethodTypes;
     const dispatch = useDispatch();
-
-    const connectSocket = useCallback(() => {
-        if (!connected) {
-            dispatch(socketActions.connectSocket());
-        }
-    }, [connected, dispatch]);
-
 
     const signup = useCallback(async (data: Record<string, unknown>) => {
         setLoading(true);
@@ -42,7 +34,6 @@ const useAuth = () => {
             if (response) {
                 localStorage.setItem("token", response.data.token);
                 dispatch(authActions.login({ role: response.data.role.permission, user: response.data.user }));
-                connectSocket();
             }
         } catch (err) {
             const error = err as Error;
@@ -53,7 +44,7 @@ const useAuth = () => {
         } finally {
             setLoading(false);
         }
-    }, [POST, connectSocket, dispatch]);
+    }, [POST, dispatch]);
 
     const loginByToken = useCallback(async (token: string) => {
         setLoading(true);
@@ -62,7 +53,6 @@ const useAuth = () => {
             const response = await sendApiRequest("/auth/" + decoded._id, GET);
             if (response) {
                 dispatch(authActions.login({ role: response.data.role.permission, user: response.data.user }));
-                connectSocket();
             }
         } catch (err) {
             const error = err as Error;
@@ -71,13 +61,20 @@ const useAuth = () => {
         } finally {
             setLoading(false);
         }
-    }, [GET, connectSocket, dispatch]);
+    }, [GET, dispatch]);
 
     const logout = useCallback(() => {
         dispatch(authActions.logout());
-        dispatch(socketActions.disconnectSocket());
         localStorage.removeItem("token");
     }, [dispatch]);
+
+    useEffect(() => {
+        if (auth.user) {
+            dispatch(socketActions.connectSocket());
+        } else {
+            dispatch(socketActions.disconnectSocket());
+        }
+    }, [auth.user, dispatch]);
 
     return {
         user: auth.user,
