@@ -23,7 +23,6 @@ import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import { useState } from "react";
 import ToolDragDialog from "../../Tools/components/dialogs/ToolDragDialog";
-import { TTool } from "../../Tools/types/TTool";
 import useTheme from "../hooks/useTheme";
 import useAuth from "../../Auth/hooks/useAuth";
 import { useDispatch, useSelector } from "react-redux";
@@ -33,7 +32,10 @@ import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrow
 import { themeActions } from "../../Core/store/themeSlice";
 
 const LeftNavigation = () => {
-  const [selectedTool, setSelectedTool] = useState<TTool | null>(null);
+  const [toolModals, setToolModals] = useState({
+    calculator: false,
+    currency: false,
+  });
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { mode, setTheme } = useTheme();
   const { logout } = useAuth();
@@ -52,8 +54,8 @@ const LeftNavigation = () => {
   };
   const nav = useNavigate();
 
-  const handleToolClick = (tool: TTool) => {
-    setSelectedTool(tool);
+  const handleToolClick = (tool: keyof typeof toolModals) => {
+    setToolModals((prev) => ({ ...prev, [tool]: !prev[tool] }));
   };
 
   const gradientBackground =
@@ -235,10 +237,12 @@ const LeftNavigation = () => {
                     icon={<CalculateIcon sx={{ color: iconColor }} />}
                   />
                 </Box>
-                <MenuItemWithIcon
-                  title="Currency Converter"
-                  icon={<CurrencyExchangeIcon sx={{ color: iconColor }} />}
-                />
+                <Box onClick={() => handleToolClick("currency")}>
+                  <MenuItemWithIcon
+                    title="Currency Converter"
+                    icon={<CurrencyExchangeIcon sx={{ color: iconColor }} />}
+                  />
+                </Box>
                 <MenuItemWithIcon
                   title="Weather"
                   icon={<AirIcon sx={{ color: iconColor }} />}
@@ -248,10 +252,16 @@ const LeftNavigation = () => {
           </ColBox>
 
           <ToolDragDialog
-            open={selectedTool !== null}
-            onClose={() => setSelectedTool(null)}
-            tool={selectedTool as TTool}
-            title={selectedTool === "calculator" ? "Calculator" : ""}
+            open={toolModals.calculator}
+            onClose={() => handleToolClick("calculator")}
+            tool={"calculator"}
+            title={"Calculator"}
+          />
+          <ToolDragDialog
+            open={toolModals.currency}
+            onClose={() => handleToolClick("currency")}
+            tool={"currency"}
+            title={"Currency Converter"}
           />
         </Box>
       </Drawer>
