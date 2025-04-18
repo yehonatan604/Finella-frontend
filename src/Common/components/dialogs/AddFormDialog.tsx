@@ -1,6 +1,6 @@
 import { JSX } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
-import DialogXButton from "../../Actions/components/DialogXButton";
+import DialogXButton from "./DialogXButton";
 
 type AddFormDialogProps = {
   open: boolean;

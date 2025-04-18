@@ -15,7 +15,7 @@ import { DeepPartial } from "react-hook-form";
 import { capitalizeFirstLetter } from "../../../../Common/helpers/stringHelpers";
 import CenterBox from "../../../../Common/components/CenterBox";
 import { TWorkplace } from "../../../types/TWorkplace";
-import DialogXButton from "../../DialogXButton";
+import DialogXButton from "../../../../Common/components/dialogs/DialogXButton";
 import StyledTitleInput from "../../styled/StyledTitleInput";
 
 type WorkplaceDetailsDialogProps = {

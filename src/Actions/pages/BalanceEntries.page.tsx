@@ -3,10 +3,10 @@ import { GridColDef } from "@mui/x-data-grid";
 import Page from "../../Common/components/Page";
 import BalanceEnetriesPdfDoc from "../components/BalanceEnetriesPdfDoc";
 import useBalanceEntry from "../hooks/useBalanceEntry";
-import ActionButtons from "../components/ActionButtons";
-import ActionFilters from "../components/ActionFilters";
-import PlusButton from "../components/PlusButton";
-import ShowInactiveCheckbox from "../components/ShowInactiveCheckbox";
+import PageButtons from "../../Common/components/PageButtons";
+import PageFilters from "../../Common/components/PageFilters";
+import PlusButton from "../../Common/components/PlusButton";
+import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
 import { useState } from "react";
 import BalanceEntriesChartsDialog from "../components/dialogs/chratDialogs/BalanceEntriesChartsDialog";
 import BalanceEntryDetailsDialog from "../components/dialogs/detailsDialogs/BalanceEntryDetailsDialog";
@@ -44,7 +44,7 @@ const BalanceEntriesPage = () => {
   return (
     <>
       <Page title="Balance Entries">
-        <ActionFilters
+        <PageFilters
           setSearch={setSearch}
           setFromYear={setFromYear}
           setToYear={setToYear}
@@ -102,7 +102,7 @@ const BalanceEntriesPage = () => {
           />
         </Box>
       </Page>
-      <ActionButtons
+      <PageButtons
         fileName="BalanceEntries"
         rows={rows}
         Doc={BalanceEnetriesPdfDoc}

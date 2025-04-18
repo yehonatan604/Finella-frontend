@@ -1,19 +1,19 @@
 import { Button } from "@mui/material";
 import { Box } from "@mui/system";
-import { exportDataToExcel } from "../helpers/exportDataToExcel";
-import { exportDataToPDF } from "../helpers/exportDataToPDF";
+import { exportDataToExcel } from "../../Actions/helpers/exportDataToExcel";
+import { exportDataToPDF } from "../../Actions/helpers/exportDataToPDF";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 
-type DocProps = {
+type PageButtonsProps = {
   fileName: string;
   rows: Record<string, unknown>[];
   Doc: React.FC<{ rows: Record<string, unknown>[] }>;
   openCharts?: () => void;
 };
 
-const ActionButtons = (props: DocProps) => {
+const PageButtons = (props: PageButtonsProps) => {
   const { fileName, rows, Doc, openCharts } = props;
   return (
     <Box sx={{ display: "flex", flexDirection: "row" }}>
@@ -58,4 +58,4 @@ const ActionButtons = (props: DocProps) => {
   );
 };
 
-export default ActionButtons;
+export default PageButtons;

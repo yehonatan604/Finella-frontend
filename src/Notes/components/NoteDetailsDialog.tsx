@@ -15,7 +15,7 @@ import { DeepPartial } from "react-hook-form";
 import { formatStringDate, formatDate } from "../../Common/helpers/dateHelpers";
 import { capitalizeFirstLetter } from "../../Common/helpers/stringHelpers";
 import CenterBox from "../../Common/components/CenterBox";
-import DialogXButton from "../../Actions/components/DialogXButton";
+import DialogXButton from "../../Common/components/dialogs/DialogXButton";
 import StyledTitleInput from "../../Actions/components/styled/StyledTitleInput";
 import { TNote } from "../types/TNote";
 

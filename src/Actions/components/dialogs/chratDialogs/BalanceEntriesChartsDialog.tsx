@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { LineChart } from "@mui/x-charts/LineChart";
-import DialogXButton from "../../DialogXButton";
+import DialogXButton from "../../../../Common/components/dialogs/DialogXButton";
 import html2canvas from "html2canvas";
 import { useRef, useState } from "react";
 import {

@@ -2,11 +2,11 @@ import { Box, Paper } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import Page from "../../Common/components/Page";
 import SalariesPdfDoc from "../components/SalariesPdfDoc";
-import ActionFilters from "../components/ActionFilters";
-import ActionButtons from "../components/ActionButtons";
+import PageFilters from "../../Common/components/PageFilters";
+import PageButtons from "../../Common/components/PageButtons";
 import useToDo from "../hooks/useToDo";
-import PlusButton from "../components/PlusButton";
-import ShowInactiveCheckbox from "../components/ShowInactiveCheckbox";
+import PlusButton from "../../Common/components/PlusButton";
+import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
 import ToDoDetailsDialog from "../components/dialogs/detailsDialogs/ToDoDetailsDialog";
 import { useState } from "react";
 import ToDosChartsDialogDialog from "../components/dialogs/chratDialogs/ToDosChartsDialog";
@@ -44,7 +44,7 @@ const ToDoPage = () => {
   return (
     <>
       <Page title="To Do's">
-        <ActionFilters
+        <PageFilters
           setSearch={setSearch}
           setFromYear={setFromYear}
           setToYear={setToYear}
@@ -99,7 +99,7 @@ const ToDoPage = () => {
         </Box>
       </Page>
 
-      <ActionButtons
+      <PageButtons
         fileName="ToDo"
         rows={rows}
         Doc={SalariesPdfDoc}

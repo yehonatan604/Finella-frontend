@@ -3,10 +3,10 @@ import useSalary from "../hooks/useSalary";
 import { GridColDef } from "@mui/x-data-grid";
 import Page from "../../Common/components/Page";
 import SalariesPdfDoc from "../components/SalariesPdfDoc";
-import ActionFilters from "../components/ActionFilters";
-import ActionButtons from "../components/ActionButtons";
-import PlusButton from "../components/PlusButton";
-import ShowInactiveCheckbox from "../components/ShowInactiveCheckbox";
+import PageFilters from "../../Common/components/PageFilters";
+import PageButtons from "../../Common/components/PageButtons";
+import PlusButton from "../../Common/components/PlusButton";
+import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
 import { useState } from "react";
 import SalariesChartsDialog from "../components/dialogs/chratDialogs/SalariesChartsDialog";
 import SalaryDetailsDialog from "../components/dialogs/detailsDialogs/SalaryDetailsDialog";
@@ -45,7 +45,7 @@ const SalariesPage = () => {
   return (
     <>
       <Page title="Salaries">
-        <ActionFilters
+        <PageFilters
           setSearch={setSearch}
           setFromYear={setFromYear}
           setToYear={setToYear}
@@ -101,7 +101,7 @@ const SalariesPage = () => {
           />
         </Box>
       </Page>
-      <ActionButtons
+      <PageButtons
         fileName="Salaries"
         rows={rows}
         Doc={SalariesPdfDoc}

@@ -1,14 +1,14 @@
 import { GridColDef } from "@mui/x-data-grid";
 import { Box, Paper } from "@mui/material";
 import Page from "../../Common/components/Page";
-import ActionButtons from "../../Actions/components/ActionButtons";
-import ActionFilters from "../../Actions/components/ActionFilters";
-import PlusButton from "../../Actions/components/PlusButton";
-import ShowInactiveCheckbox from "../../Actions/components/ShowInactiveCheckbox";
+import PageButtons from "../../Common/components/PageButtons";
+import PageFilters from "../../Common/components/PageFilters";
+import PlusButton from "../../Common/components/PlusButton";
+import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
 import WorkplacesPdfDoc from "../../Actions/components/WorkplacesPdfDoc";
 import NoteDetailsDialog from "../components/NoteDetailsDialog";
 import useNote from "../hooks/useNote";
-import AddFormDialog from "../../Common/components/AddFormDialog";
+import AddFormDialog from "../../Common/components/dialogs/AddFormDialog";
 import AddNoteForm from "../forms/AddNote.form";
 import useTheme from "../../Common/hooks/useTheme";
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
@@ -43,7 +43,7 @@ const NotesPage = () => {
   return (
     <>
       <Page title="Notes">
-        <ActionFilters
+        <PageFilters
           setSearch={setSearch}
           setMonths={setMonths}
           setFromYear={setFromYear}
@@ -96,7 +96,7 @@ const NotesPage = () => {
         </Box>
       </Page>
 
-      <ActionButtons fileName="workplaces" rows={rows} Doc={WorkplacesPdfDoc} />
+      <PageButtons fileName="workplaces" rows={rows} Doc={WorkplacesPdfDoc} />
       <PlusButton onClick={() => setIsAddDialogOpen(true)} />
 
       {selectedNote && (

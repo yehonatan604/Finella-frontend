@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { Paper, Typography, Box } from "@mui/material";
 import { toolsList } from "../../helpers/ToolsList";
 import { TTool } from "../../types/TTool";
-import DialogXButton from "../../../Actions/components/DialogXButton";
+import DialogXButton from "../../../Common/components/dialogs/DialogXButton";
 import useTheme from "../../../Common/hooks/useTheme";
 
 type ToolDragDialogProps = {

@@ -15,7 +15,7 @@ import { capitalizeFirstLetter } from "../../../../Common/helpers/stringHelpers"
 import { TSalary } from "../../../types/TSalary";
 import { TSalaryHours } from "../../../types/TSalaryHours";
 import { TWorkplace } from "../../../types/TWorkplace";
-import DialogXButton from "../../DialogXButton";
+import DialogXButton from "../../../../Common/components/dialogs/DialogXButton";
 
 type SalaryDetailsDialogProps = {
   isOpen: boolean;

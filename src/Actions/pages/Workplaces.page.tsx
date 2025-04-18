@@ -3,10 +3,10 @@ import { Box, Paper } from "@mui/material";
 import Page from "../../Common/components/Page";
 import useWorkplaces from "../hooks/useWorkplace";
 import WorkplacesPdfDoc from "../components/WorkplacesPdfDoc";
-import ActionButtons from "../components/ActionButtons";
-import PlusButton from "../components/PlusButton";
-import ActionFilters from "../components/ActionFilters";
-import ShowInactiveCheckbox from "../components/ShowInactiveCheckbox";
+import PageButtons from "../../Common/components/PageButtons";
+import PlusButton from "../../Common/components/PlusButton";
+import PageFilters from "../../Common/components/PageFilters";
+import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
 import WorkplaceDetailsDialog from "../components/dialogs/detailsDialogs/WorkPlaceDetailsDialog";
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import useTheme from "../../Common/hooks/useTheme";
@@ -37,7 +37,7 @@ const WorkplacesPage = () => {
   return (
     <>
       <Page title="Workplaces">
-        <ActionFilters setSearch={setSearch} />
+        <PageFilters setSearch={setSearch} />
 
         <ShowInactiveCheckbox
           showInactive={showInactive}
@@ -84,7 +84,7 @@ const WorkplacesPage = () => {
           />
         </Box>
       </Page>
-      <ActionButtons fileName="workplaces" rows={rows} Doc={WorkplacesPdfDoc} />
+      <PageButtons fileName="workplaces" rows={rows} Doc={WorkplacesPdfDoc} />
 
       {isUpdateDialogOpen && selectedWorkplace && (
         <WorkplaceDetailsDialog

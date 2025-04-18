@@ -1,5 +1,5 @@
-import { createDataGridInputCell } from "../components/generators/createDataGridInputCell";
-import { createRowIcons } from "../components/generators/createRowIcons";
+import { createDataGridInputCell } from "../../Common/components/generators/createDataGridInputCell";
+import { createRowIcons } from "../../Common/components/generators/createRowIcons";
 import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
 import { TSalary } from "../types/TSalary";
 import { TWorkplace } from "../types/TWorkplace";

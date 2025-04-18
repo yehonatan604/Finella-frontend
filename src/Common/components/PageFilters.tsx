@@ -1,10 +1,10 @@
 import { TextField, MenuItem } from "@mui/material";
 import { Box } from "@mui/system";
-import { TWorkplace } from "../types/TWorkplace";
+import { TWorkplace } from "../../Actions/types/TWorkplace";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 
-type ActionFiltersProps = {
+type PageFiltersProps = {
   setSearch: (search: string) => void;
   setFromYear?: (year: number) => void;
   setToYear?: (year: number) => void;
@@ -18,7 +18,7 @@ type ActionFiltersProps = {
   statusTypes?: string[];
 };
 
-const ActionFilters = (props: ActionFiltersProps) => {
+const PageFilters = (props: PageFiltersProps) => {
   const {
     setSearch,
     setFromYear,
@@ -197,4 +197,4 @@ const ActionFilters = (props: ActionFiltersProps) => {
   );
 };
 
-export default ActionFilters;
+export default PageFilters;

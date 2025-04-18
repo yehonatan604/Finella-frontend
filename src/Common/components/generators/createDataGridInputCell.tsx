@@ -1,5 +1,5 @@
 import { Checkbox, MenuItem, TextField } from "@mui/material";
-import { TDataGridInputCellParams } from "../../types/TDataGridInputCellParams";
+import { TDataGridInputCellParams } from "../../../Actions/types/TDataGridInputCellParams";
 import { Box } from "@mui/system";
 import { DateTime } from "luxon";
 
