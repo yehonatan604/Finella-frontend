@@ -50,7 +50,6 @@ const WorkplacesPage = () => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            padding: "1.5rem",
             "& .super-app-theme--header": {
               backgroundColor: mode === "light" ? "primary.main" : "ffffff",
               color: "#fff",

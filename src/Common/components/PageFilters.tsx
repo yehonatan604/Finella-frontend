@@ -3,6 +3,7 @@ import { Box } from "@mui/system";
 import { TWorkplace } from "../../Actions/types/TWorkplace";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
+import useTheme from "../hooks/useTheme";
 
 type PageFiltersProps = {
   setSearch: (search: string) => void;
@@ -31,6 +32,9 @@ const PageFilters = (props: PageFiltersProps) => {
     statusTypes,
     setPickedStatus,
   } = props;
+  const { mode } = useTheme();
+  const bgColor = mode === "dark" ? "transparent" : "white";
+
   return (
     <Box
       sx={{
@@ -45,7 +49,8 @@ const PageFilters = (props: PageFiltersProps) => {
         // add a search filter
         <TextField
           label="Search"
-          sx={{ mb: 2, width: 224 }}
+          sx={{ mb: 2, width: 224, backgroundColor: bgColor }}
+          size="small"
           onChange={(e) => setSearch?.(e.target.value)}
           slotProps={{
             inputLabel: {
@@ -66,7 +71,8 @@ const PageFilters = (props: PageFiltersProps) => {
         // add a from-year filter
         <TextField
           label="From Year"
-          sx={{ mb: 2, width: 224 }}
+          sx={{ mb: 2, width: 224, backgroundColor: bgColor }}
+          size="small"
           type="number"
           slotProps={{ htmlInput: { min: 1982, max: 2100 } }}
           defaultValue={new Date().getFullYear()}
@@ -78,7 +84,8 @@ const PageFilters = (props: PageFiltersProps) => {
         // add a to-year filter
         <TextField
           label="To Year"
-          sx={{ mb: 2, width: 224 }}
+          sx={{ mb: 2, width: 224, backgroundColor: bgColor }}
+          size="small"
           type="number"
           slotProps={{ htmlInput: { min: 1982, max: 2100 } }}
           defaultValue={new Date().getFullYear()}
@@ -90,7 +97,8 @@ const PageFilters = (props: PageFiltersProps) => {
         // add a month filter
         <TextField
           label="Months"
-          sx={{ mb: 2, width: 224 }}
+          sx={{ mb: 2, width: 224, backgroundColor: bgColor }}
+          size="small"
           select
           slotProps={{ select: { multiple: true } }}
           defaultValue={["all"]}
@@ -116,7 +124,8 @@ const PageFilters = (props: PageFiltersProps) => {
         // add a type filter
         <TextField
           label="type"
-          sx={{ mb: 2, width: 224 }}
+          size="small"
+          sx={{ mb: 2, width: 224, backgroundColor: bgColor }}
           select
           slotProps={{
             inputLabel: {
@@ -141,7 +150,8 @@ const PageFilters = (props: PageFiltersProps) => {
         // add a workplace filter
         <TextField
           label="workPlaces"
-          sx={{ mb: 2, width: 224 }}
+          sx={{ mb: 2, width: 224, backgroundColor: bgColor }}
+          size="small"
           select
           slotProps={{
             inputLabel: {
@@ -173,7 +183,8 @@ const PageFilters = (props: PageFiltersProps) => {
         // add a status filter
         <TextField
           label="Status"
-          sx={{ mb: 2, width: 224 }}
+          sx={{ mb: 2, width: 224, backgroundColor: bgColor }}
+          size="small"
           select
           slotProps={{
             inputLabel: {

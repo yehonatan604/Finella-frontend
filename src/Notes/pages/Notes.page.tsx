@@ -59,40 +59,45 @@ const NotesPage = () => {
         <Box
           component={Paper}
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            padding: "1.5rem",
-            "& .super-app-theme--header": {
-              backgroundColor: mode === "light" ? "primary.main" : "ffffff",
-              color: "#fff",
-              fontWeight: "bold",
-            },
+            overflow: "auto",
           }}
         >
-          <StyledDataGrid
-            rows={paginatedRows as TDataGridRow[]}
-            rowCount={
-              !showInactive
-                ? filteredRows.filter(
-                    (row: { status: string | undefined }) => row.status !== "inactive"
-                  ).length
-                : filteredRows.length
-            }
-            paginationMode="server"
-            paginationModel={paginationModel}
-            onPaginationModelChange={setPaginationModel}
-            columns={columns as GridColDef[]}
-            getRowClassName={(params) =>
-              params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
-            }
-            loading={loading}
-            pageSizeOptions={pageSizeOptions}
-            disableRowSelectionOnClick
-            onCellEditStart={(_, event) => {
-              event.defaultMuiPrevented = true;
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              "& .super-app-theme--header": {
+                backgroundColor: mode === "light" ? "primary.main" : "ffffff",
+                color: "#fff",
+                fontWeight: "bold",
+              },
             }}
-            isRowSelectable={() => false}
-          />
+          >
+            <StyledDataGrid
+              rows={paginatedRows as TDataGridRow[]}
+              rowCount={
+                !showInactive
+                  ? filteredRows.filter(
+                      (row: { status: string | undefined }) => row.status !== "inactive"
+                    ).length
+                  : filteredRows.length
+              }
+              paginationMode="server"
+              paginationModel={paginationModel}
+              onPaginationModelChange={setPaginationModel}
+              columns={columns as GridColDef[]}
+              getRowClassName={(params) =>
+                params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
+              }
+              loading={loading}
+              pageSizeOptions={pageSizeOptions}
+              disableRowSelectionOnClick
+              onCellEditStart={(_, event) => {
+                event.defaultMuiPrevented = true;
+              }}
+              isRowSelectable={() => false}
+            />
+          </Box>
         </Box>
       </Page>
 

@@ -20,9 +20,7 @@ const Page = ({
         flexDirection: "column",
         alignItems: "center",
         width,
-        maxHeight: "75vh",
-        overflow: "auto",
-        pb: 5,
+        maxHeight: "80vh",
       }}
     >
       {children}

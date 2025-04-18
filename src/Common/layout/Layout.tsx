@@ -2,7 +2,6 @@ import { Box } from "@mui/system";
 import { blue } from "@mui/material/colors";
 import useAuth from "../../Auth/hooks/useAuth";
 import LeftNavigation from "./LeftNavigation";
-import TopNavigation from "./TopNavigation";
 import { ThemeProvider } from "@mui/material/styles";
 import { createTheme } from "@mui/material/styles";
 import useTheme from "../hooks/useTheme";
@@ -26,14 +25,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <ThemeProvider theme={appliedTheme}>
       <Box sx={{ height: "100vh" }}>
-        {user && (
-          <Box sx={{ display: "flex" }}>
-            <LeftNavigation />
-            <Box sx={{ width: "85%", marginLeft: "15%", height: "7vh" }}>
-              <TopNavigation />
-            </Box>
-          </Box>
-        )}
+        {user && <LeftNavigation />}
         <Box
           component={"main"}
           sx={{
@@ -43,7 +35,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 ? blue[50]
                 : "linear-gradient(125deg, #0f172a 75%, #334155 105%)",
             p: 3,
-            height: user ? "93vh" : "100vh",
+            height: "100vh",
             overflow: "hidden",
           }}
         >

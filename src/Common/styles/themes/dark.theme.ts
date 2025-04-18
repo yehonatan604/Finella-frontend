@@ -120,19 +120,5 @@ export const darkTheme = createTheme({
                 },
             },
         },
-        MuiDrawer: {
-            styleOverrides: {
-                paper: {
-                    background: `linear-gradient(180deg, ${blue[900]} 0%, ${blue[800]} 100%)`,
-                },
-            },
-        },
-        MuiAppBar: {
-            styleOverrides: {
-                root: {
-                    background: `linear-gradient(90deg, ${blue[900]} 0%, ${blue[700]} 100%)`,
-                },
-            },
-        },
     },
 });
