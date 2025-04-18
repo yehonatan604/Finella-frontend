@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     mode: "light",
+    isLeftNavOpen: true,
 }
 
 const themeSlice = createSlice({
@@ -14,6 +15,10 @@ const themeSlice = createSlice({
 
         resetTheme: (state) => {
             state.mode = initialState.mode;
+        },
+
+        toggleLeftNav: (state) => {
+            state.isLeftNavOpen = !state.isLeftNavOpen;
         },
     },
 });

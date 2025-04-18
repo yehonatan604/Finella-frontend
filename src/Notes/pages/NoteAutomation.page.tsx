@@ -34,7 +34,6 @@ const NoteAutomationPage = () => {
           gap={2}
           p={2}
           sx={{
-            width: "60vw",
             maxHeight: "80vh",
             overflowY: "scroll",
           }}
@@ -235,9 +234,8 @@ const NoteAutomationPage = () => {
           display: "flex",
           justifyContent: noteAutomations.length > 0 ? "flex-start" : "center",
           gap: 2,
-          mt: 2,
           p: 2,
-          width: "61vw",
+          width: "1070px",
         }}
       >
         <Button variant="contained" color="success" onClick={handleSaveChanges}>

@@ -26,13 +26,22 @@ import ToolDragDialog from "../../Tools/components/dialogs/ToolDragDialog";
 import { TTool } from "../../Tools/types/TTool";
 import useTheme from "../hooks/useTheme";
 import useAuth from "../../Auth/hooks/useAuth";
+import { useDispatch, useSelector } from "react-redux";
+import { TRootState } from "../../Core/store/store";
+import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
+import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
+import { themeActions } from "../../Core/store/themeSlice";
 
 const LeftNavigation = () => {
   const [selectedTool, setSelectedTool] = useState<TTool | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
   const { mode, setTheme } = useTheme();
   const { logout } = useAuth();
+  const open = Boolean(anchorEl);
+  const isLeftNavOpen = useSelector(
+    (state: TRootState) => state.themeSlice.isLeftNavOpen
+  );
+  const dispatch = useDispatch();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -56,173 +65,197 @@ const LeftNavigation = () => {
   const sectionColor = "#bbb";
 
   return (
-    <Drawer
-      variant="permanent"
-      sx={{
-        "& .MuiDrawer-paper": {
-          border: "none",
-        },
-      }}
-    >
-      <ColBox
+    <>
+      <IconButton
+        onClick={() => dispatch(themeActions.toggleLeftNav())}
         sx={{
-          width: "15vw",
-          minHeight: "100vh",
-          height: "100%",
-          alignItems: "center",
-          background: gradientBackground,
-          maxHeight: "80vh",
-          overflowY: "hidden",
+          position: "fixed",
+          bottom: 16,
+          left: {
+            xs: isLeftNavOpen ? "50vw" : 0,
+            md: isLeftNavOpen ? "15vw" : 0,
+          },
+          zIndex: 1300,
+          color: mode === "dark" ? "white" : "black",
+          transition: "left 0.5s ease-in-out",
+          "&:hover": {
+            backgroundColor: mode === "dark" ? "#1e293b" : "#1976d2",
+          },
         }}
       >
-        <CenterBox
-          sx={{
-            height: "7vh",
-            backgroundColor: "transparent",
-            flexDirection: "row",
-            justifyContent: "space-evenly",
-            alignItems: "center",
-            color: "white",
-            position: "fixed",
-            top: 0,
-            width: "15vw",
-          }}
-        >
-          <IconButton sx={{ color: "white" }}>
-            <HomeIcon onClick={() => nav("/")} />
-          </IconButton>
-          <IconButton sx={{ color: "white" }} onClick={handleClick}>
-            <Person2Icon />
-          </IconButton>
-
-          <Menu
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "left",
-            }}
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "left",
-            }}
-          >
-            <MenuItem onClick={handleClose}>Profile</MenuItem>
-            <MenuItem
-              onClick={() => {
-                logout();
-                handleClose();
-              }}
-            >
-              Logout
-            </MenuItem>
-          </Menu>
-
-          <IconButton>
-            {mode === "dark" ? (
-              <LightModeRoundedIcon onClick={() => setTheme("light")} />
-            ) : (
-              <DarkModeRoundedIcon
-                onClick={() => setTheme("dark")}
-                sx={{ color: "white" }}
-              />
-            )}
-          </IconButton>
-        </CenterBox>
-
+        {isLeftNavOpen ? (
+          <KeyboardDoubleArrowLeftIcon />
+        ) : (
+          <KeyboardDoubleArrowRightIcon />
+        )}
+      </IconButton>
+      <Drawer variant="permanent" open>
         <Box
           sx={{
-            pb: 2,
-            mt: "7vh",
-            mx: "auto",
-            width: "15vw",
-            overflowY: "auto",
+            width: isLeftNavOpen ? { xs: "50vw", md: "15vw" } : 0,
+            transition: "width 0.5s ease-in-out",
+            overflowX: "hidden",
           }}
         >
-          <MenuAccordion
-            title="Actions"
-            icon={<AttractionsIcon sx={{ color: sectionColor }} />}
+          <ColBox
+            sx={{
+              width: "100%",
+              minHeight: "100vh",
+              background: gradientBackground,
+              transition: "opacity 0.4s ease",
+              opacity: isLeftNavOpen ? 1 : 0,
+            }}
           >
-            <Link to={"/data/balance-entries"}>
-              <MenuItemWithIcon
-                title="Balance Entries"
-                icon={<BalanceIcon sx={{ color: iconColor }} />}
-              />
-            </Link>
-            <Link to={"/data/salaries"}>
-              <MenuItemWithIcon
-                title="Salaries"
-                icon={<LocalAtmIcon sx={{ color: iconColor }} />}
-              />
-            </Link>
-            <Link to={"/data/workplaces"}>
-              <MenuItemWithIcon
-                title="Workplaces"
-                icon={<ApartmentIcon sx={{ color: iconColor }} />}
-              />
-            </Link>
-            <Link to={"/data/todos"}>
-              <MenuItemWithIcon
-                title="Todo's"
-                icon={<FormatListBulletedIcon sx={{ color: iconColor }} />}
-              />
-            </Link>
-          </MenuAccordion>
+            <CenterBox
+              sx={{
+                height: "7vh",
+                backgroundColor: "transparent",
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                color: "white",
+                width: "inherit",
+              }}
+            >
+              <IconButton sx={{ color: "white" }}>
+                <HomeIcon onClick={() => nav("/")} />
+              </IconButton>
+              <IconButton sx={{ color: "white" }} onClick={handleClick}>
+                <Person2Icon />
+              </IconButton>
 
-          <MenuAccordion
-            title="Notes"
-            icon={<EventNoteIcon sx={{ color: sectionColor }} />}
-          >
-            <Link to={"/notes"}>
-              <MenuItemWithIcon
-                title="All Notes"
-                icon={<EditNoteIcon sx={{ color: iconColor }} />}
-              />
-            </Link>
-            <Link to={"/notes/note-automations"}>
-              <MenuItemWithIcon
-                title="Note Automations"
-                icon={<MarkEmailReadIcon sx={{ color: iconColor }} />}
-              />
-            </Link>
-            <Link to={"/notes/board"}>
-              <MenuItemWithIcon
-                title="Notes Board"
-                icon={<DashboardCustomizeIcon sx={{ color: iconColor }} />}
-              />
-            </Link>
-          </MenuAccordion>
+              <Menu
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+              >
+                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    logout();
+                    handleClose();
+                  }}
+                >
+                  Logout
+                </MenuItem>
+              </Menu>
 
-          <MenuAccordion
-            title="Tools"
-            icon={<ConstructionIcon sx={{ color: sectionColor }} />}
-          >
-            <Box onClick={() => handleToolClick("calculator")}>
-              <MenuItemWithIcon
-                title="Calculator"
-                icon={<CalculateIcon sx={{ color: iconColor }} />}
-              />
+              <IconButton>
+                {mode === "dark" ? (
+                  <LightModeRoundedIcon onClick={() => setTheme("light")} />
+                ) : (
+                  <DarkModeRoundedIcon
+                    onClick={() => setTheme("dark")}
+                    sx={{ color: "white" }}
+                  />
+                )}
+              </IconButton>
+            </CenterBox>
+
+            <Box
+              sx={{
+                pb: 2,
+                mx: "auto",
+                width: "inherit",
+                overflowY: "auto",
+                overflowX: "hidden",
+                transition: "opacity 0.4s ease",
+                opacity: isLeftNavOpen ? 1 : 0,
+              }}
+            >
+              <MenuAccordion
+                title="Actions"
+                icon={<AttractionsIcon sx={{ color: sectionColor }} />}
+              >
+                <Link to={"/data/balance-entries"}>
+                  <MenuItemWithIcon
+                    title="Balance Entries"
+                    icon={<BalanceIcon sx={{ color: iconColor }} />}
+                  />
+                </Link>
+                <Link to={"/data/salaries"}>
+                  <MenuItemWithIcon
+                    title="Salaries"
+                    icon={<LocalAtmIcon sx={{ color: iconColor }} />}
+                  />
+                </Link>
+                <Link to={"/data/workplaces"}>
+                  <MenuItemWithIcon
+                    title="Workplaces"
+                    icon={<ApartmentIcon sx={{ color: iconColor }} />}
+                  />
+                </Link>
+                <Link to={"/data/todos"}>
+                  <MenuItemWithIcon
+                    title="Todo's"
+                    icon={<FormatListBulletedIcon sx={{ color: iconColor }} />}
+                  />
+                </Link>
+              </MenuAccordion>
+
+              <MenuAccordion
+                title="Notes"
+                icon={<EventNoteIcon sx={{ color: sectionColor }} />}
+              >
+                <Link to={"/notes"}>
+                  <MenuItemWithIcon
+                    title="All Notes"
+                    icon={<EditNoteIcon sx={{ color: iconColor }} />}
+                  />
+                </Link>
+                <Link to={"/notes/note-automations"}>
+                  <MenuItemWithIcon
+                    title="Note Automations"
+                    icon={<MarkEmailReadIcon sx={{ color: iconColor }} />}
+                  />
+                </Link>
+                <Link to={"/notes/board"}>
+                  <MenuItemWithIcon
+                    title="Notes Board"
+                    icon={<DashboardCustomizeIcon sx={{ color: iconColor }} />}
+                  />
+                </Link>
+              </MenuAccordion>
+
+              <MenuAccordion
+                title="Tools"
+                icon={<ConstructionIcon sx={{ color: sectionColor }} />}
+              >
+                <Box onClick={() => handleToolClick("calculator")}>
+                  <MenuItemWithIcon
+                    title="Calculator"
+                    icon={<CalculateIcon sx={{ color: iconColor }} />}
+                  />
+                </Box>
+                <MenuItemWithIcon
+                  title="Currency Converter"
+                  icon={<CurrencyExchangeIcon sx={{ color: iconColor }} />}
+                />
+                <MenuItemWithIcon
+                  title="Weather"
+                  icon={<AirIcon sx={{ color: iconColor }} />}
+                />
+              </MenuAccordion>
             </Box>
-            <MenuItemWithIcon
-              title="Currency Converter"
-              icon={<CurrencyExchangeIcon sx={{ color: iconColor }} />}
-            />
-            <MenuItemWithIcon
-              title="Weather"
-              icon={<AirIcon sx={{ color: iconColor }} />}
-            />
-          </MenuAccordion>
-        </Box>
-      </ColBox>
+          </ColBox>
 
-      <ToolDragDialog
-        open={selectedTool !== null}
-        onClose={() => setSelectedTool(null)}
-        tool={selectedTool as TTool}
-        title={selectedTool === "calculator" ? "Calculator" : ""}
-      />
-    </Drawer>
+          <ToolDragDialog
+            open={selectedTool !== null}
+            onClose={() => setSelectedTool(null)}
+            tool={selectedTool as TTool}
+            title={selectedTool === "calculator" ? "Calculator" : ""}
+          />
+        </Box>
+      </Drawer>
+    </>
   );
 };
 
