@@ -18,6 +18,7 @@ import CenterBox from "../../Common/components/CenterBox";
 import DialogXButton from "../../Common/components/dialogs/DialogXButton";
 import StyledTitleInput from "../../Actions/components/styled/StyledTitleInput";
 import { TNote } from "../types/TNote";
+import useTheme from "../../Common/hooks/useTheme";
 
 type NoteDetailsDialogProps = {
   isOpen: boolean;
@@ -33,6 +34,7 @@ const NoteDetailsDialog = ({
   onSubmit,
 }: NoteDetailsDialogProps) => {
   const [data, setData] = useState<TNote | DeepPartial<TNote>>(note);
+  const { mode } = useTheme();
 
   const handleChanges = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -81,6 +83,7 @@ const NoteDetailsDialog = ({
           <CenterBox sx={{ flexDirection: "row", gap: 2, flexWrap: "wrap" }}>
             <TextField
               type="date"
+              className={mode === "dark" ? "dark" : ""}
               name="date"
               label="Date"
               value={formatStringDate(formatDate(data.date!))}

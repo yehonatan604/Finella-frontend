@@ -11,3 +11,14 @@
   font-weight: 600;
   font-size: 1.2em;
 }
+
+.dark ::-webkit-calendar-picker-indicator {
+  filter: invert(100%) brightness(95%) contrast(100%);
+  transition: filter 0.4s ease-in-out;
+  -webkit-transition: filter 0.4s ease-in-out;
+}
+
+::-webkit-calendar-picker-indicator {
+  transition: filter 0.4s ease-in-out;
+  -webkit-transition: filter 0.4s ease-in-out;
+}

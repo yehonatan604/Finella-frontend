@@ -12,6 +12,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import useNoteAutomation from "../hooks/useNoteAutomation";
 import { DateTime } from "luxon";
+import useTheme from "../../Common/hooks/useTheme";
 
 const NoteAutomationPage = () => {
   const {
@@ -23,6 +24,7 @@ const NoteAutomationPage = () => {
     handleSaveChanges,
     setNoteAutomations,
   } = useNoteAutomation();
+  const { mode } = useTheme();
 
   return (
     <Page title="Note Automations">
@@ -35,7 +37,7 @@ const NoteAutomationPage = () => {
           p={2}
           sx={{
             maxHeight: "80vh",
-            overflowY: "scroll",
+            overflowY: "auto",
           }}
         >
           {noteAutomations.map((automation, index) => (
@@ -91,6 +93,7 @@ const NoteAutomationPage = () => {
                 <TextField
                   size="small"
                   fullWidth
+                  className={mode === "dark" ? "dark" : ""}
                   label="Date & Time"
                   type="datetime-local"
                   value={

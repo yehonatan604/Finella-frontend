@@ -18,6 +18,7 @@ import { capitalizeFirstLetter } from "../../../../Common/helpers/stringHelpers"
 import { TToDo } from "../../../types/TToDo";
 import DialogXButton from "../../../../Common/components/dialogs/DialogXButton";
 import StyledTitleInput from "../../styled/StyledTitleInput";
+import useTheme from "../../../../Common/hooks/useTheme";
 
 type ToDoDetailsDialogProps = {
   isOpen: boolean;
@@ -35,6 +36,7 @@ const ToDoDetailsDialog = ({
   const [data, setData] = useState<TToDo>(toDo);
   const [withTasks, setWithTasks] = useState(true);
   const [editingTaskIndex, setEditingTaskIndex] = useState<number | null>(null);
+  const { mode } = useTheme();
 
   const handlChanges = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -109,6 +111,7 @@ const ToDoDetailsDialog = ({
               <Typography>Start Date:</Typography>
               <TextField
                 type="date"
+                className={mode === "dark" ? "dark" : ""}
                 name="startDate"
                 value={
                   data.startDate
@@ -124,6 +127,7 @@ const ToDoDetailsDialog = ({
               <Typography>End Date:</Typography>
               <TextField
                 type="date"
+                className={mode === "dark" ? "dark" : ""}
                 name="endDate"
                 value={
                   data.endDate ? new Date(data.endDate).toISOString().split("T")[0] : ""

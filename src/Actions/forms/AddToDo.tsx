@@ -13,8 +13,10 @@ import { useState } from "react";
 import { TTask } from "../types/TTask";
 import useToDo from "../hooks/useToDo";
 import { DateTime } from "luxon";
+import useTheme from "../../Common/hooks/useTheme";
 
 const AddToDo = () => {
+  const { mode } = useTheme();
   const { register, errors, handleSubmit, onSubmit, watch } = useToDo();
   const [withTasks, setWithTasks] = useState(true);
   const [tasks, setTasks] = useState<TTask[]>([
@@ -53,6 +55,7 @@ const AddToDo = () => {
               label="Start Date"
               {...register("startDate")}
               type="date"
+              className={mode === "dark" ? "dark" : ""}
               fullWidth
               defaultValue={
                 watch().startDate
@@ -70,6 +73,7 @@ const AddToDo = () => {
               label="End Date"
               {...register("endDate")}
               type="date"
+              className={mode === "dark" ? "dark" : ""}
               fullWidth
               defaultValue={
                 watch().endDate

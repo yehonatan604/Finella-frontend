@@ -18,6 +18,7 @@ import CenterBox from "../../../../Common/components/CenterBox";
 import { TBalanceEntry } from "../../../types/TBalanceEntry";
 import DialogXButton from "../../../../Common/components/dialogs/DialogXButton";
 import StyledTitleInput from "../../styled/StyledTitleInput";
+import useTheme from "../../../../Common/hooks/useTheme";
 
 type BalanceEntriesDetailsDialogProps = {
   isOpen: boolean;
@@ -33,6 +34,7 @@ const BalanceEntryDetailsDialog = ({
   onSubmit,
 }: BalanceEntriesDetailsDialogProps) => {
   const [data, setData] = useState<TBalanceEntry>(bEntry);
+  const { mode } = useTheme();
 
   const handlChanges = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -85,6 +87,7 @@ const BalanceEntryDetailsDialog = ({
               <Typography>Start Date:</Typography>
               <TextField
                 type="date"
+                className={mode === "dark" ? "dark" : ""}
                 name="date"
                 value={data.date ? new Date(data.date).toISOString().split("T")[0] : ""}
                 size="small"

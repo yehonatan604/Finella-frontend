@@ -17,6 +17,7 @@ import CenterBox from "../../../../Common/components/CenterBox";
 import { TWorkplace } from "../../../types/TWorkplace";
 import DialogXButton from "../../../../Common/components/dialogs/DialogXButton";
 import StyledTitleInput from "../../styled/StyledTitleInput";
+import useTheme from "../../../../Common/hooks/useTheme";
 
 type WorkplaceDetailsDialogProps = {
   isOpen: boolean;
@@ -32,6 +33,7 @@ const WorkplaceDetailsDialog = ({
   onSubmit,
 }: WorkplaceDetailsDialogProps) => {
   const [data, setData] = useState<TWorkplace | DeepPartial<TWorkplace>>(workplace);
+  const { mode } = useTheme();
 
   const handleChanges = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -121,6 +123,7 @@ const WorkplaceDetailsDialog = ({
 
             <TextField
               type="date"
+              className={mode === "dark" ? "dark" : ""}
               name="startDate"
               label="Start Date"
               value={
@@ -133,6 +136,7 @@ const WorkplaceDetailsDialog = ({
 
             <TextField
               type="date"
+              className={mode === "dark" ? "dark" : ""}
               name="endDate"
               value={
                 data.endDate ? new Date(data.endDate).toISOString().split("T")[0] : ""

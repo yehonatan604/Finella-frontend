@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import useNote from "../hooks/useNote";
 import { TNote } from "../types/TNote";
+import useTheme from "../../Common/hooks/useTheme";
 
 const AddNoteForm = ({
   setIsDialogOpen,
@@ -16,6 +17,7 @@ const AddNoteForm = ({
   setIsDialogOpen: (isOpen: boolean) => void;
 }) => {
   const { register, errors, handleSubmit, onSubmit } = useNote();
+  const { mode } = useTheme();
 
   const onFormSubmit = async (data: TNote) => {
     await onSubmit(data);
@@ -56,6 +58,7 @@ const AddNoteForm = ({
               label="Date"
               {...register("date")}
               type="date"
+              className={mode === "dark" ? "dark" : ""}
               fullWidth
               color={errors.date ? "error" : "primary"}
               slotProps={{

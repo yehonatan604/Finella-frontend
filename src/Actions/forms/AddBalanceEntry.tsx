@@ -10,9 +10,11 @@ import {
 } from "@mui/material";
 import useBalanceEntry from "../hooks/useBalanceEntry";
 import Page from "../../Common/components/Page";
+import useTheme from "../../Common/hooks/useTheme";
 
 const AddBalanceEntry = () => {
   const { register, errors, handleSubmit, onSubmit } = useBalanceEntry();
+  const { mode } = useTheme();
 
   return (
     <Page title="Add a Balance Entry">
@@ -48,6 +50,7 @@ const AddBalanceEntry = () => {
               label="Date"
               {...register("date")}
               type="date"
+              className={mode === "dark" ? "dark" : ""}
               fullWidth
               sx={{ mb: 2 }}
               color={errors.date ? "error" : "primary"}

@@ -6,6 +6,7 @@ import { signupSchema } from "../validations/signup.schema";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { signupFormDefault } from "../forms/signupFormDefault";
+import useTheme from "../../Common/hooks/useTheme";
 
 const SignUpPage = () => {
   const {
@@ -22,6 +23,7 @@ const SignUpPage = () => {
   });
 
   const { signup } = useAuth();
+  const { mode } = useTheme();
   const nav = useNavigate();
 
   const onSubmit = async (data: Record<string, unknown>) => {
@@ -102,6 +104,7 @@ const SignUpPage = () => {
           <TextField
             label="Date of Birth"
             {...register("dob")}
+            className={mode === "dark" ? "dark" : ""}
             variant="outlined"
             fullWidth
             type="date"
