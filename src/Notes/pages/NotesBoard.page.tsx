@@ -2,9 +2,11 @@ import { Box, Card, CardContent, Typography } from "@mui/material";
 import useNote from "../hooks/useNote";
 import Page from "../../Common/components/Page";
 import PushPinIcon from "@mui/icons-material/PushPin";
+import useTheme from "../../Common/hooks/useTheme";
 
 const NotesBoard = () => {
   const { fetchedNotes } = useNote(true);
+  const { mode } = useTheme();
 
   return (
     <Page title="Notes Board">
@@ -23,7 +25,6 @@ const NotesBoard = () => {
             backgroundColor: "burlywood",
             p: 3,
             borderRadius: 2,
-            boxShadow: 4,
             border: "5px groove white",
             margin: "0 auto",
             display: "grid",
@@ -31,6 +32,9 @@ const NotesBoard = () => {
             gap: 2,
             justifyContent: "center",
             justifyItems: "start",
+          }}
+          style={{
+            boxShadow: mode === "dark" ? "0 2px 10px azure" : "0 2px 10px grey",
           }}
         >
           {fetchedNotes?.map(
@@ -51,13 +55,17 @@ const NotesBoard = () => {
                   }}
                 >
                   <CardContent>
-                    <Typography variant="h6" gutterBottom noWrap>
+                    <Typography variant="h6" color="black" gutterBottom noWrap>
                       {note.name}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                    <Typography variant="body2" color="silver" sx={{ mb: 1 }}>
                       {new Date(note.date).toLocaleString()}
                     </Typography>
-                    <Typography variant="body1" sx={{ whiteSpace: "pre-line" }}>
+                    <Typography
+                      variant="body1"
+                      color="grey"
+                      sx={{ whiteSpace: "pre-line" }}
+                    >
                       {note.content.length > 100
                         ? note.content.slice(0, 100) + "..."
                         : note.content}

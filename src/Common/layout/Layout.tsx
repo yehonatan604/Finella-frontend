@@ -30,10 +30,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           component={"main"}
           sx={{
             flexGrow: 1,
-            background:
-              mode === "light"
-                ? blue[50]
-                : "linear-gradient(125deg, #0f172a 75%, #334155 105%)",
+            transition: "background-color 0.3s ease-in-out",
+            backgroundColor: mode === "light" ? blue[50] : "#0f172a",
             p: 3,
             height: "100vh",
             overflow: "hidden",
