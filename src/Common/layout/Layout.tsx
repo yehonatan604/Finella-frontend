@@ -29,8 +29,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         <Box
           component={"main"}
           sx={{
+            "*": {
+              transition: "all 0.5s ease, color 0.5s ease",
+            },
             flexGrow: 1,
-            transition: "background-color 0.3s ease-in-out",
             backgroundColor: mode === "light" ? blue[50] : "#0f172a",
             p: 3,
             height: "100vh",

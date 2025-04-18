@@ -48,7 +48,7 @@ export const noteCols = (
   },
   {
     field: "isSticky",
-    headerName: "Sticky",
+    headerName: "Is Sticky",
     flex: 0.2,
     headerClassName: "super-app-theme--header",
     sortable: true,
@@ -60,7 +60,7 @@ export const noteCols = (
   {
     field: "options",
     headerName: "Options",
-    flex: 0.4,
+    flex: 0.2,
     headerClassName: "super-app-theme--header",
     sortable: false,
     editable: false,

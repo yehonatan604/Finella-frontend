@@ -44,7 +44,6 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => {
       outline: "none",
     },
 
-    // Optional: toolbar buttons, sorting arrows etc.
     "& .MuiDataGrid-toolbarContainer, & .MuiButtonBase-root": {
       color: isDark ? "#bbdefb" : "inherit",
     },

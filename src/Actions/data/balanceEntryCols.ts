@@ -80,7 +80,7 @@ export const balanceEntryCols = (
         {
             field: "options",
             headerName: "Options",
-            flex: .4,
+            flex: 0.4,
             headerClassName: "super-app-theme--header",
             sortable: false,
             editable: false,
