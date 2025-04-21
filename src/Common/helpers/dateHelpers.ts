@@ -10,7 +10,6 @@ const formatStringDate = (value: string) => {
     return value.split("/").reverse().join("-")
 };
 
-
 const formatDateLuxon = (value?: string | Date | null) => {
     if (!value) return "";
 

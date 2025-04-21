@@ -2,6 +2,7 @@ import { Checkbox, MenuItem, TextField } from "@mui/material";
 import { TDataGridInputCellParams } from "../../../Actions/types/TDataGridInputCellParams";
 import { Box } from "@mui/system";
 import { DateTime } from "luxon";
+import { formatStringDate } from "../../helpers/dateHelpers";
 
 export const createDataGridInputCell = (
   params: TDataGridInputCellParams,
@@ -41,9 +42,7 @@ export const createDataGridInputCell = (
       return (
         <TextField
           type={type}
-          defaultValue={
-            type === "date" ? value.toString().split("/").reverse().join("-") : value
-          }
+          defaultValue={type === "date" ? formatStringDate(value as string) : value}
           variant="outlined"
           size="small"
           sx={{ pt: 0.5 }}
