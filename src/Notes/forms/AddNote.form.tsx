@@ -6,6 +6,7 @@ import {
   Checkbox,
   FormControlLabel,
   Divider,
+  Paper,
 } from "@mui/material";
 import useNote from "../hooks/useNote";
 import { TNote } from "../types/TNote";
@@ -25,12 +26,12 @@ const AddNoteForm = ({
   };
 
   return (
-    <>
+    <Box sx={{ p: 2, pb: 0 }}>
       <Container
         maxWidth="xl"
+        component={Paper}
         sx={{
-          px: 4,
-          pt: 2,
+          p: 4,
           textAlign: "center",
         }}
       >
@@ -99,13 +100,13 @@ const AddNoteForm = ({
 
           <Divider sx={{ my: 2 }} />
 
-          <Box sx={{ display: "flex", gap: 2 }}>
+          <Box sx={{ display: "flex", gap: 2, pt: 1 }}>
             <Button
               type="submit"
               variant="contained"
               color="primary"
               fullWidth
-              sx={{ fontSize: "1.2rem", py: 1 }}
+              sx={{ fontSize: "1.2rem" }}
             >
               Add
             </Button>
@@ -115,14 +116,14 @@ const AddNoteForm = ({
               variant="contained"
               color="error"
               fullWidth
-              sx={{ fontSize: "1.2rem", py: 1 }}
+              sx={{ fontSize: "1.2rem" }}
             >
               Reset
             </Button>
           </Box>
         </form>
       </Container>
-    </>
+    </Box>
   );
 };
 

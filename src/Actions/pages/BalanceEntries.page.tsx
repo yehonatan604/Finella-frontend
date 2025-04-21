@@ -14,6 +14,8 @@ import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import useTheme from "../../Common/hooks/useTheme";
 import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
 import { TDataGridRow } from "../../Common/types/TDataGridRow";
+import AddFormDialog from "../../Common/components/dialogs/AddFormDialog";
+import AddBalanceEntry from "../forms/AddBalanceEntry";
 
 const BalanceEntriesPage = () => {
   const {
@@ -39,6 +41,7 @@ const BalanceEntriesPage = () => {
   } = useBalanceEntry();
 
   const [isChartsDialogOpen, setIsChartsDialogOpen] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const { mode } = useTheme();
 
   return (
@@ -101,12 +104,14 @@ const BalanceEntriesPage = () => {
           />
         </Box>
       </Page>
+
       <PageButtons
         fileName="BalanceEntries"
         rows={rows}
         Doc={BalanceEnetriesPdfDoc}
         openCharts={() => setIsChartsDialogOpen(true)}
       />
+      <PlusButton onClick={() => setIsAddDialogOpen(true)} />
 
       {isBEntryDetailsDialogOpen && selectedBEntry && (
         <BalanceEntryDetailsDialog
@@ -128,7 +133,12 @@ const BalanceEntriesPage = () => {
         />
       )}
 
-      <PlusButton addUrl="/actions/add-balance-entry" />
+      <AddFormDialog
+        open={isAddDialogOpen}
+        onClose={() => setIsAddDialogOpen(false)}
+        title="Add a Note"
+        formComponent={<AddBalanceEntry setIsDialogOpen={setIsAddDialogOpen} />}
+      />
     </>
   );
 };
