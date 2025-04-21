@@ -105,7 +105,9 @@ const TodosBoard = () => {
                       transform: "scale(1.02)",
                     },
                     borderLeft:
-                      todo.toDoStatus === "FAILED" || todo.toDoStatus === "CANCELED"
+                      todo.status === "inactive"
+                        ? "6px solid transparent"
+                        : todo.toDoStatus === "FAILED" || todo.toDoStatus === "CANCELED"
                         ? "6px solid #ef4444"
                         : todo.toDoStatus === "COMPLETE"
                         ? "6px solid #22c55e"
