@@ -128,9 +128,12 @@ const entitiesSlice = createSlice({
             state,
             action: PayloadAction<{ id: string }>
         ) => {
-            const todo: TToDo = state.todos?.find(n => n._id === action.payload.id) as TToDo;
-            if (todo) {
-                todo.status = "FAILED";
+            const { id } = action.payload;
+            if (!state.todos) return;
+
+            const todoIndex = state.todos.findIndex(todo => todo._id === id);
+            if (todoIndex !== -1) {
+                state.todos[todoIndex].toDoStatus = "FAILED";
             }
         }
     },

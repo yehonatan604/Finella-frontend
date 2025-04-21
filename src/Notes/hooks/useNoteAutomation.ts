@@ -5,9 +5,13 @@ import { HTTPMethodTypes } from "../../Common/types/HTTPMethodTypes";
 import { TNote } from "../types/TNote";
 import { TNoteAutomation } from "../types/TNoteAutomation";
 import { DateTime } from "luxon";
+import { useSelector } from "react-redux";
+import { TRootState } from "../../Core/store/store";
+import { alert } from "../../Common/utilities/alert";
 
 const useNoteAutomation = () => {
     const { user } = useAuth();
+    const { socket } = useSelector((state: TRootState) => state.socketSlice);
     const [noteAutomations, setNoteAutomations] = useState<TNoteAutomation[]>([]);
     const [allNotes, setAllNotes] = useState<TNote[]>([]);
     const [showAddNoteDialog, setShowAddNoteDialog] = useState(false);
@@ -77,6 +81,21 @@ const useNoteAutomation = () => {
             console.error("Error saving changes:", error);
         }
     }, [noteAutomations, user?._id]);
+
+    const noteAutomationTriggered = useCallback((args: {
+        title: string;
+        content: string;
+    }) => {
+        alert(args.title, args.content, "info")
+    }, []);
+
+    useEffect(() => {
+        socket?.on("note-automation-triggered", noteAutomationTriggered);
+
+        return () => {
+            socket?.off("note-automation-triggered", noteAutomationTriggered);
+        };
+    }, [socket, noteAutomations, noteAutomationTriggered]);
 
     return {
         noteAutomations,

@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { io, Socket } from "socket.io-client";
 import { WritableDraft } from "immer";
-import { alert } from "../../Common/utilities/alert";
 
 type TSocketState = {
     socket: Socket | null;
@@ -30,7 +29,7 @@ const socketSlice = createSlice({
                 state.connected = true;
 
                 const connectionEvents = ["connect", "disconnect"];
-                const alertEvents = ["note-automation-triggered", "todo-failed"];
+                //const alertEvents = ["note-automation-triggered", "todo-failed"];
 
                 connectionEvents.forEach((event) => {
                     socket.on(event, () => {
@@ -38,15 +37,15 @@ const socketSlice = createSlice({
                     });
                 });
 
-                alertEvents.forEach((event) => {
-                    socket.on(event, (args) => {
-                        alert(args.title, args.content, "info");
+                // alertEvents.forEach((event) => {
+                //     socket.on(event, (args) => {
+                //         alert(args.title, args.content, "info");
 
-                        if (args.id) {
-                            socket.emit("note-read", { id: args.id });
-                        }
-                    });
-                });
+                //         if (args.id) {
+                //             socket.emit("note-read", { id: args.id });
+                //         }
+                //     });
+                // });
 
                 socket.on("connect_error", (err) => {
                     console.error("❌ connection error:", err.message);

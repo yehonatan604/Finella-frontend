@@ -63,6 +63,7 @@ export const todoCols = (
       return createDataGridInputCell(params, onCellUpdate, "toDoStatus", "select", [
         "PENDING",
         "COMPLETED",
+        "FAILED",
       ]);
     },
   },
