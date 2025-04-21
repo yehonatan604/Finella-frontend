@@ -42,9 +42,7 @@ export const createDataGridInputCell = (
         <TextField
           type={type}
           defaultValue={
-            type === "date"
-              ? DateTime.fromISO(String(value)).toFormat("yyyy-MM-dd")
-              : value
+            type === "date" ? value.toString().split("/").reverse().join("-") : value
           }
           variant="outlined"
           size="small"
@@ -61,8 +59,6 @@ export const createDataGridInputCell = (
                       .toISO()
                   : event.target.value,
             };
-            console.log(updatedRow);
-
             processRowOnCellUpdate(updatedRow as never);
           }}
           onKeyDown={(event) => {
