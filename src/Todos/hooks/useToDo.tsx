@@ -308,6 +308,8 @@ const useToDo = (isTodoPage: boolean = false) => {
     paginationModel,
     setPaginationModel,
     paginatedRows: paginatedRows(paginationModel, filteredRows),
+    onDelete,
+    onUndelete,
   };
 };
 
