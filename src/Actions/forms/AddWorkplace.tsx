@@ -3,11 +3,14 @@ import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { addWorkplaceSchema } from "../validations/addWorkplace.schema";
 import { TWorkplace } from "../types/TWorkplace";
-import Page from "../../Common/components/Page";
 import useWorkplaces from "../hooks/useWorkplace";
 import { addWorkplaceFormDefault } from "./initialData/addWorkplaceFormDefault";
 
-const AddWorkplace = () => {
+const AddWorkplace = ({
+  setIsDialogOpen,
+}: {
+  setIsDialogOpen: (isOpen: boolean) => void;
+}) => {
   const {
     handleSubmit,
     register,
@@ -17,25 +20,24 @@ const AddWorkplace = () => {
     defaultValues: addWorkplaceFormDefault,
     resolver: joiResolver(addWorkplaceSchema),
   });
-
   const { add } = useWorkplaces();
 
-  const onSubmit = async (data: TWorkplace) => {
+  const onFormSubmit = async (data: TWorkplace) => {
     await add(data);
+    setIsDialogOpen(false);
   };
 
   return (
-    <Page title="Add a Workplace">
+    <Box sx={{ p: 2, pb: 0 }}>
       <Container
-        maxWidth="md"
+        maxWidth="xl"
         component={Paper}
         sx={{
-          borderRadius: 3,
           p: 4,
           textAlign: "center",
         }}
       >
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onFormSubmit)}>
           <Box sx={{ display: "flex", gap: 2 }}>
             <TextField
               label="Name"
@@ -213,7 +215,7 @@ const AddWorkplace = () => {
           </Box>
         </form>
       </Container>
-    </Page>
+    </Box>
   );
 };
 

@@ -136,7 +136,7 @@ const SalariesPage = () => {
       <AddFormDialog
         open={isAddDialogOpen}
         onClose={() => setIsAddDialogOpen(false)}
-        title="Add a Note"
+        title="Add a Salary"
         formComponent={<AddSalary setIsDialogOpen={setIsAddDialogOpen} />}
       />
     </>

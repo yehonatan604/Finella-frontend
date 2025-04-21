@@ -136,7 +136,7 @@ const BalanceEntriesPage = () => {
       <AddFormDialog
         open={isAddDialogOpen}
         onClose={() => setIsAddDialogOpen(false)}
-        title="Add a Note"
+        title="Add a Balance Entry"
         formComponent={<AddBalanceEntry setIsDialogOpen={setIsAddDialogOpen} />}
       />
     </>

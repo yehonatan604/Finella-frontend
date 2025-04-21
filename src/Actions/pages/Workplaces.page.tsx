@@ -12,6 +12,9 @@ import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import useTheme from "../../Common/hooks/useTheme";
 import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
 import { TDataGridRow } from "../../Common/types/TDataGridRow";
+import AddFormDialog from "../../Common/components/dialogs/AddFormDialog";
+import AddWorkplace from "../forms/AddWorkplace";
+import { useState } from "react";
 
 const WorkplacesPage = () => {
   const {
@@ -32,6 +35,7 @@ const WorkplacesPage = () => {
     setPaginationModel,
   } = useWorkplaces();
 
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const { mode } = useTheme();
 
   return (
@@ -83,7 +87,9 @@ const WorkplacesPage = () => {
           />
         </Box>
       </Page>
+
       <PageButtons fileName="workplaces" rows={rows} Doc={WorkplacesPdfDoc} />
+      <PlusButton onClick={() => setIsAddDialogOpen(true)} />
 
       {isUpdateDialogOpen && selectedWorkplace && (
         <WorkplaceDetailsDialog
@@ -97,7 +103,12 @@ const WorkplacesPage = () => {
         />
       )}
 
-      <PlusButton addUrl="/actions/add-workplace" />
+      <AddFormDialog
+        open={isAddDialogOpen}
+        onClose={() => setIsAddDialogOpen(false)}
+        title="Add a Workplace"
+        formComponent={<AddWorkplace setIsDialogOpen={setIsAddDialogOpen} />}
+      />
     </>
   );
 };
