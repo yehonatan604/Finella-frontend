@@ -1,8 +1,8 @@
 import { Checkbox, MenuItem, TextField } from "@mui/material";
-import { TDataGridInputCellParams } from "../../../Actions/types/TDataGridInputCellParams";
 import { Box } from "@mui/system";
 import { DateTime } from "luxon";
 import { formatStringDate } from "../../helpers/dateHelpers";
+import { TDataGridInputCellParams } from "../../../Records/types/TDataGridInputCellParams";
 
 export const createDataGridInputCell = (
   params: TDataGridInputCellParams,

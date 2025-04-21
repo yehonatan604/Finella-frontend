@@ -1,10 +1,10 @@
 import { Button } from "@mui/material";
 import { Box } from "@mui/system";
-import { exportDataToExcel } from "../../Actions/helpers/exportDataToExcel";
-import { exportDataToPDF } from "../../Actions/helpers/exportDataToPDF";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
+import { exportDataToExcel } from "../../Records/helpers/exportDataToExcel";
+import { exportDataToPDF } from "../../Records/helpers/exportDataToPDF";
 
 type PageButtonsProps = {
   fileName: string;

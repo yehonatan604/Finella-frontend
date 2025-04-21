@@ -16,9 +16,9 @@ import {
 import { ChangeEvent, useEffect, useState } from "react";
 import { capitalizeFirstLetter } from "../../Common/helpers/stringHelpers";
 import DialogXButton from "../../Common/components/dialogs/DialogXButton";
-import StyledTitleInput from "../../Actions/components/styled/StyledTitleInput";
 import useTheme from "../../Common/hooks/useTheme";
 import { TToDo } from "../types/TToDo";
+import StyledTitleInput from "../../Records/components/styled/StyledTitleInput";
 
 type ToDoDetailsDialogProps = {
   isOpen: boolean;

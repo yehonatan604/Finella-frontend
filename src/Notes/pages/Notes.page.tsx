@@ -5,7 +5,6 @@ import PageButtons from "../../Common/components/PageButtons";
 import PageFilters from "../../Common/components/PageFilters";
 import PlusButton from "../../Common/components/PlusButton";
 import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
-import WorkplacesPdfDoc from "../../Actions/components/WorkplacesPdfDoc";
 import NoteDetailsDialog from "../components/NoteDetailsDialog";
 import useNote from "../hooks/useNote";
 import AddFormDialog from "../../Common/components/dialogs/AddFormDialog";
@@ -14,6 +13,7 @@ import useTheme from "../../Common/hooks/useTheme";
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
 import { TDataGridRow } from "../../Common/types/TDataGridRow";
+import WorkplacesPdfDoc from "../../Records/components/WorkplacesPdfDoc";
 
 const NotesPage = () => {
   const { mode } = useTheme();

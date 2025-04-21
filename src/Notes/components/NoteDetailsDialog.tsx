@@ -16,9 +16,9 @@ import { formatStringDate, formatDate } from "../../Common/helpers/dateHelpers";
 import { capitalizeFirstLetter } from "../../Common/helpers/stringHelpers";
 import CenterBox from "../../Common/components/CenterBox";
 import DialogXButton from "../../Common/components/dialogs/DialogXButton";
-import StyledTitleInput from "../../Actions/components/styled/StyledTitleInput";
 import { TNote } from "../types/TNote";
 import useTheme from "../../Common/hooks/useTheme";
+import StyledTitleInput from "../../Records/components/styled/StyledTitleInput";
 
 type NoteDetailsDialogProps = {
   isOpen: boolean;

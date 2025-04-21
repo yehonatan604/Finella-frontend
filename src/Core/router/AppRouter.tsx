@@ -4,15 +4,15 @@ import RouteGuard from "./RouteGuard";
 import useAuth from "../../Auth/hooks/useAuth";
 import LoginPage from "../../Auth/pages/Login.page";
 import SignUpPage from "../../Auth/pages/SignUp.page";
-import SalariesPage from "../../Actions/pages/Salaries.page";
-import WorkplacesPage from "../../Actions/pages/Workplaces.page";
 import PageHolder from "../../Common/components/PageHolder";
 import HomePage from "../../Common/pages/Home.page";
-import BalanceEntriesPage from "../../Actions/pages/BalanceEntries.page";
 import ToDoPage from "../../Todos/pages/ToDo.page";
 import NoteAutomationPage from "../../Notes/pages/NoteAutomation.page";
 import NotesPage from "../../Notes/pages/Notes.page";
 import NotesBoard from "../../Notes/pages/NotesBoard.page";
+import BalanceEntriesPage from "../../Records/pages/BalanceEntries.page";
+import SalariesPage from "../../Records/pages/Salaries.page";
+import WorkplacesPage from "../../Records/pages/Workplaces.page";
 
 const AppRouter = () => {
   const { loginByToken } = useAuth();
