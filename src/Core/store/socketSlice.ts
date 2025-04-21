@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { io, Socket } from "socket.io-client";
 import { WritableDraft } from "immer";
+import { capitalizeFirstLetter } from "../../Common/helpers/stringHelpers";
 
 type TSocketState = {
     socket: Socket | null;
@@ -32,7 +33,7 @@ const socketSlice = createSlice({
 
                 connectionEvents.forEach((event) => {
                     socket.on(event, () => {
-                        console.log(`${event === "connect" ? "✅" : "❌"} ${event}ed`);
+                        console.log(`${event === "connect" ? "✅" : "❌"} ${capitalizeFirstLetter(event)}ed`);
                     });
                 });
 

@@ -92,6 +92,7 @@ const TodosBoard = () => {
             (todo) =>
               (todo.status !== "inactive" || showInactive) && (
                 <Card
+                  key={todo._id}
                   sx={{
                     width: "300px",
                     height: "250px",
