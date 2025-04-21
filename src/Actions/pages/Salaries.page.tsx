@@ -14,6 +14,8 @@ import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import useTheme from "../../Common/hooks/useTheme";
 import { TDataGridRow } from "../../Common/types/TDataGridRow";
 import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
+import AddFormDialog from "../../Common/components/dialogs/AddFormDialog";
+import AddSalary from "../forms/AddSalary";
 
 const SalariesPage = () => {
   const {
@@ -40,6 +42,7 @@ const SalariesPage = () => {
   } = useSalary(true);
 
   const [isChartsDialogOpen, setIsChartsDialogOpen] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const { mode } = useTheme();
 
   return (
@@ -100,12 +103,14 @@ const SalariesPage = () => {
           />
         </Box>
       </Page>
+
       <PageButtons
         fileName="Salaries"
         rows={rows}
         Doc={SalariesPdfDoc}
         openCharts={() => setIsChartsDialogOpen(true)}
       />
+      <PlusButton onClick={() => setIsAddDialogOpen(true)} />
 
       {isSalaryDetailsDialogOpen && selectedSalary && (
         <SalaryDetailsDialog
@@ -128,7 +133,12 @@ const SalariesPage = () => {
         />
       )}
 
-      <PlusButton addUrl="/actions/add-salary" />
+      <AddFormDialog
+        open={isAddDialogOpen}
+        onClose={() => setIsAddDialogOpen(false)}
+        title="Add a Note"
+        formComponent={<AddSalary setIsDialogOpen={setIsAddDialogOpen} />}
+      />
     </>
   );
 };

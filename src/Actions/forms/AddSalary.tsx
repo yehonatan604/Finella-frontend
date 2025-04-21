@@ -8,10 +8,14 @@ import {
   Paper,
 } from "@mui/material";
 import useSalary from "../hooks/useSalary";
-import Page from "../../Common/components/Page";
 import UploadExcelDialog from "../components/dialogs/UploadExcelDialog";
+import { TSalary } from "../types/TSalary";
 
-const AddSalary = () => {
+const AddSalary = ({
+  setIsDialogOpen,
+}: {
+  setIsDialogOpen: (isOpen: boolean) => void;
+}) => {
   const {
     addNewSalaryHour,
     addSalaryFromExcel,
@@ -26,18 +30,22 @@ const AddSalary = () => {
     workplaces,
   } = useSalary();
 
+  const onFormSubmit = async (data: TSalary) => {
+    await onSubmit(data);
+    setIsDialogOpen(false);
+  };
+
   return (
-    <Page title="Add a Salary">
+    <Box sx={{ p: 2, pb: 0 }}>
       <Container
-        maxWidth="md"
+        maxWidth="xl"
         component={Paper}
         sx={{
-          borderRadius: 3,
           p: 4,
           textAlign: "center",
         }}
       >
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onFormSubmit)}>
           <Box sx={{ display: "flex", gap: 2 }}>
             <TextField
               label="workPlace"
@@ -214,7 +222,7 @@ const AddSalary = () => {
           onUpload={addSalaryFromExcel}
         />
       )}
-    </Page>
+    </Box>
   );
 };
 
