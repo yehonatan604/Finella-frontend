@@ -4,9 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import useAuth from "../../Auth/hooks/useAuth";
 import { sendApiRequest } from "../../Common/helpers/sendApiRequest";
 import { addToDoFormDefault } from "../forms/initialData/addToDoFormDefault";
-import { TToDo } from "../types/TToDo";
 import { toastify } from "../../Common/utilities/toast";
-import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
+import { TDataGridInputCellParams } from "../../Actions/types/TDataGridInputCellParams";
 import { parseToUTCISO, formatDateLuxon } from "../../Common/helpers/dateHelpers";
 import { todoCols } from "../data/todoCols";
 import { todoRows } from "../data/todoRows";
@@ -16,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { entitiesActions } from "../../Core/store/entitiesSlice";
 import { defaultPageSize, paginatedRows } from "../../Common/helpers/paginationHelpers";
 import { alert } from "../../Common/utilities/alert";
+import { TToDo } from "../types/TToDo";
 
 const useToDo = (isTodoPage: boolean = false) => {
   const { user } = useAuth();

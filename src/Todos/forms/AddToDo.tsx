@@ -10,10 +10,11 @@ import {
 } from "@mui/material";
 import Page from "../../Common/components/Page";
 import { useState } from "react";
-import { TTask } from "../types/TTask";
-import useToDo from "../hooks/useToDo";
+
 import { DateTime } from "luxon";
 import useTheme from "../../Common/hooks/useTheme";
+import { TTask } from "../../Actions/types/TTask";
+import useToDo from "../hooks/useToDo";
 
 const AddToDo = () => {
   const { mode } = useTheme();

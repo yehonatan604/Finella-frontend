@@ -14,11 +14,11 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { ChangeEvent, useEffect, useState } from "react";
-import { capitalizeFirstLetter } from "../../../../Common/helpers/stringHelpers";
-import { TToDo } from "../../../types/TToDo";
-import DialogXButton from "../../../../Common/components/dialogs/DialogXButton";
-import StyledTitleInput from "../../styled/StyledTitleInput";
-import useTheme from "../../../../Common/hooks/useTheme";
+import { capitalizeFirstLetter } from "../../Common/helpers/stringHelpers";
+import DialogXButton from "../../Common/components/dialogs/DialogXButton";
+import StyledTitleInput from "../../Actions/components/styled/StyledTitleInput";
+import useTheme from "../../Common/hooks/useTheme";
+import { TToDo } from "../types/TToDo";
 
 type ToDoDetailsDialogProps = {
   isOpen: boolean;

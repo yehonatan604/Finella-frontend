@@ -8,7 +8,6 @@ import { MenuItemWithIcon } from "../components/MenuItemWithIcon";
 import BalanceIcon from "@mui/icons-material/Balance";
 import LocalAtmIcon from "@mui/icons-material/LocalAtm";
 import ApartmentIcon from "@mui/icons-material/Apartment";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
@@ -30,6 +29,7 @@ import { TRootState } from "../../Core/store/store";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import { themeActions } from "../../Core/store/themeSlice";
+import ChecklistIcon from "@mui/icons-material/Checklist";
 
 const LeftNavigation = () => {
   const [toolModals, setToolModals] = useState({
@@ -174,31 +174,25 @@ const LeftNavigation = () => {
               }}
             >
               <MenuAccordion
-                title="Actions"
+                title="Records"
                 icon={<AttractionsIcon sx={{ color: sectionColor }} />}
               >
-                <Link to={"/data/balance-entries"}>
+                <Link to={"/records/balance-entries"}>
                   <MenuItemWithIcon
                     title="Balance Entries"
                     icon={<BalanceIcon sx={{ color: iconColor }} />}
                   />
                 </Link>
-                <Link to={"/data/salaries"}>
+                <Link to={"/records/salaries"}>
                   <MenuItemWithIcon
                     title="Salaries"
                     icon={<LocalAtmIcon sx={{ color: iconColor }} />}
                   />
                 </Link>
-                <Link to={"/data/workplaces"}>
+                <Link to={"/records/workplaces"}>
                   <MenuItemWithIcon
                     title="Workplaces"
                     icon={<ApartmentIcon sx={{ color: iconColor }} />}
-                  />
-                </Link>
-                <Link to={"/data/todos"}>
-                  <MenuItemWithIcon
-                    title="Todo's"
-                    icon={<FormatListBulletedIcon sx={{ color: iconColor }} />}
                   />
                 </Link>
               </MenuAccordion>
@@ -222,6 +216,24 @@ const LeftNavigation = () => {
                 <Link to={"/notes/board"}>
                   <MenuItemWithIcon
                     title="Notes Board"
+                    icon={<DashboardCustomizeIcon sx={{ color: iconColor }} />}
+                  />
+                </Link>
+              </MenuAccordion>
+
+              <MenuAccordion
+                title="Todo's"
+                icon={<ChecklistIcon sx={{ color: sectionColor }} />}
+              >
+                <Link to={"/todos"}>
+                  <MenuItemWithIcon
+                    title="All Todo's"
+                    icon={<EditNoteIcon sx={{ color: iconColor }} />}
+                  />
+                </Link>
+                <Link to={"/todos/board"}>
+                  <MenuItemWithIcon
+                    title="Todos Board"
                     icon={<DashboardCustomizeIcon sx={{ color: iconColor }} />}
                   />
                 </Link>

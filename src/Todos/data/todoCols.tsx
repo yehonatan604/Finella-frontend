@@ -1,6 +1,6 @@
 import { createDataGridInputCell } from "../../Common/components/generators/createDataGridInputCell";
 import { createRowIcons } from "../../Common/components/generators/createRowIcons";
-import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
+import { TDataGridInputCellParams } from "../../Actions/types/TDataGridInputCellParams";
 import { TToDo } from "../types/TToDo";
 
 export const todoCols = (

@@ -1,5 +1,5 @@
-import { TDbItem } from "./TDbItem";
-import { TTask } from "./TTask";
+import { TDbItem } from "../../Actions/types/TDbItem";
+import { TTask } from "../../Actions/types/TTask";
 
 export type TToDo = TDbItem & {
     userId: string;

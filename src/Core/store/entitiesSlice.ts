@@ -3,10 +3,10 @@ import { TBalanceEntry } from "../../Actions/types/TBalanceEntry";
 import { TSalary } from "../../Actions/types/TSalary";
 import { TWorkplace } from "../../Actions/types/TWorkplace";
 import { TNote } from "../../Notes/types/TNote";
-import { TToDo } from "../../Actions/types/TToDo";
 import { TNoteAutomation } from "../../Notes/types/TNoteAutomation";
 import { TDbItem } from "../../Actions/types/TDbItem";
 import { TEntityType, TEntity } from "../../Common/types/TEntity";
+import { TToDo } from "../../Todos/types/TToDo";
 
 export type TEntitiesState = {
     balanceEntries: TBalanceEntry[] | null;
