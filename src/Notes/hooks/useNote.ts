@@ -10,11 +10,11 @@ import useAuth from "../../Auth/hooks/useAuth";
 import { formatStringDate } from "../../Common/helpers/dateHelpers";
 import { useForm } from "react-hook-form";
 import { addNoteFormDefault } from "../forms/initialData/addNoteFormDefault";
-import { TDataGridInputCellParams } from "../../Actions/types/TDataGridInputCellParams";
 import { useDispatch, useSelector } from "react-redux";
 import { TRootState } from "../../Core/store/store";
 import { entitiesActions } from "../../Core/store/entitiesSlice";
 import { defaultPageSize, paginatedRows } from "../../Common/helpers/paginationHelpers";
+import { TDataGridInputCellParams } from "../../Records/types/TDataGridInputCellParams";
 
 const useNote = (isPage?: boolean) => {
     const { user } = useAuth();
@@ -249,6 +249,8 @@ const useNote = (isPage?: boolean) => {
         paginationModel,
         setPaginationModel,
         paginatedRows: paginatedRows(paginationModel, filteredRows),
+        onDelete,
+        onUndelete,
     }
 }
 

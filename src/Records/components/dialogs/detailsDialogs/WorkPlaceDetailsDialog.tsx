@@ -16,7 +16,7 @@ import { capitalizeFirstLetter } from "../../../../Common/helpers/stringHelpers"
 import CenterBox from "../../../../Common/components/CenterBox";
 import { TWorkplace } from "../../../types/TWorkplace";
 import DialogXButton from "../../../../Common/components/dialogs/DialogXButton";
-import StyledTitleInput from "../../styled/StyledTitleInput";
+import StyledTitleInput from "../../../../Common/components/styled/StyledTitleInput";
 import useTheme from "../../../../Common/hooks/useTheme";
 
 type WorkplaceDetailsDialogProps = {

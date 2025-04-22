@@ -18,7 +18,7 @@ import { capitalizeFirstLetter } from "../../Common/helpers/stringHelpers";
 import DialogXButton from "../../Common/components/dialogs/DialogXButton";
 import useTheme from "../../Common/hooks/useTheme";
 import { TToDo } from "../types/TToDo";
-import StyledTitleInput from "../../Records/components/styled/StyledTitleInput";
+import StyledTitleInput from "../../Common/components/styled/StyledTitleInput";
 
 type ToDoDetailsDialogProps = {
   isOpen: boolean;

@@ -18,7 +18,7 @@ import CenterBox from "../../Common/components/CenterBox";
 import DialogXButton from "../../Common/components/dialogs/DialogXButton";
 import { TNote } from "../types/TNote";
 import useTheme from "../../Common/hooks/useTheme";
-import StyledTitleInput from "../../Records/components/styled/StyledTitleInput";
+import StyledTitleInput from "../../Common/components/styled/StyledTitleInput";
 
 type NoteDetailsDialogProps = {
   isOpen: boolean;

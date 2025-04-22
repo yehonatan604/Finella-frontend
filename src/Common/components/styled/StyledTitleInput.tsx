@@ -5,6 +5,7 @@ const StyledTitleInput = styled(TextField)(({ theme }) => ({
     color: "#fff",
     fontSize: "1.3rem",
     border: "none",
+    backgroundColor: "transparent",
   },
   "& .MuiOutlinedInput-notchedOutline": {
     borderColor: "transparent",
