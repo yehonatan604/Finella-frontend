@@ -1,11 +1,14 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.node.json"
-    }
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "outDir": "dist-electron",
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleDetection": "force"
+  },
+  "include": [
+    "electron"
   ]
 }
