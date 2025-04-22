@@ -108,7 +108,11 @@ const Timer = () => {
             size="small"
             value={target.min}
             onChange={(e) => handleTargetChange("min", Number(e.target.value))}
-            inputProps={{ min: 0 }}
+            slotProps={{
+              htmlInput: {
+                min: 0,
+              },
+            }}
             sx={{ width: 70 }}
           />
           <TextField
@@ -117,7 +121,12 @@ const Timer = () => {
             size="small"
             value={target.sec}
             onChange={(e) => handleTargetChange("sec", Number(e.target.value))}
-            inputProps={{ min: 0, max: 59 }}
+            slotProps={{
+              htmlInput: {
+                min: 0,
+                max: 99,
+              },
+            }}
             sx={{ width: 70 }}
           />
           <TextField
@@ -126,7 +135,12 @@ const Timer = () => {
             size="small"
             value={target.ms}
             onChange={(e) => handleTargetChange("ms", Number(e.target.value))}
-            inputProps={{ min: 0, max: 99 }}
+            slotProps={{
+              htmlInput: {
+                min: 0,
+                max: 99,
+              },
+            }}
             sx={{ width: 70 }}
           />
         </Box>

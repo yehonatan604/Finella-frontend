@@ -16,7 +16,7 @@ import { entitiesActions } from "../../Core/store/entitiesSlice";
 import { defaultPageSize, paginatedRows } from "../../Common/helpers/paginationHelpers";
 import { TDataGridInputCellParams } from "../../Records/types/TDataGridInputCellParams";
 
-const useNote = (isPage?: boolean) => {
+const useNote = (isPage: boolean = false, all: boolean = false) => {
     const { user } = useAuth();
 
     const fetchedNotes = useSelector((state: TRootState) => state.entitiesSlice.notes);
@@ -217,11 +217,11 @@ const useNote = (isPage?: boolean) => {
 
             if (queryString === lastFetchedQuery) return;
 
-            await getAllNotes(`?${queryString}`);
-            setLastFetchedQuery(queryString);
+            await getAllNotes(`?${all ? queryString : ""}`);
+            setLastFetchedQuery(all ? "" : queryString);
         };
         fetchData();
-    }, [fromYear, getAllNotes, lastFetchedQuery, months, toYear, isPage]);
+    }, [fromYear, getAllNotes, lastFetchedQuery, months, toYear, isPage, all]);
 
     return {
         columns,

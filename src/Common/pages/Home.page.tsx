@@ -6,6 +6,8 @@ import logoWhite from "../../Assets/images/logo-big-white.png";
 import logoBlue from "../../Assets/images/logo-big-navy.png";
 import FeatureBox from "../components/FeatureBox";
 import useTheme from "../hooks/useTheme";
+import UserHomeSummary from "../components/UserSummary";
+import SummaryCharts from "../components/SummaryCharts";
 
 const HomePage = () => {
   const { user } = useAuth();
@@ -21,7 +23,6 @@ const HomePage = () => {
           alignItems: "start",
           justifyContent: "start",
           color: "text.primary",
-          py: 6,
         }}
       >
         <Container maxWidth="md" sx={{ textAlign: "center" }}>
@@ -96,13 +97,14 @@ const HomePage = () => {
         flexDirection: "column",
         alignItems: "center",
         gap: "1rem",
-        mt: 8,
       }}
     >
       <Typography variant="h4" fontWeight="bold">
         Welcome back, {user.name.first} {user.name.last}
       </Typography>
-      <Typography variant="body1">What would you like to do today?</Typography>
+
+      <UserHomeSummary />
+      <SummaryCharts />
     </Box>
   );
 };
