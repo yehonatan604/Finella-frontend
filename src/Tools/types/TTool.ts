@@ -1,1 +1,1 @@
-export type TTool = "calculator" | "currency" | "weather";
+export type TTool = "calculator" | "currency" | "timer";

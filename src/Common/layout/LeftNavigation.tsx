@@ -11,7 +11,7 @@ import ApartmentIcon from "@mui/icons-material/Apartment";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
-import AirIcon from "@mui/icons-material/Air";
+import TimerIcon from "@mui/icons-material/Timer";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import Person2Icon from "@mui/icons-material/Person2";
 import AttractionsIcon from "@mui/icons-material/Attractions";
@@ -35,7 +35,9 @@ const LeftNavigation = () => {
   const [toolModals, setToolModals] = useState({
     calculator: false,
     currency: false,
+    timer: false,
   });
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { mode, setTheme } = useTheme();
   const { logout } = useAuth();
@@ -255,10 +257,12 @@ const LeftNavigation = () => {
                     icon={<CurrencyExchangeIcon sx={{ color: iconColor }} />}
                   />
                 </Box>
-                <MenuItemWithIcon
-                  title="Weather"
-                  icon={<AirIcon sx={{ color: iconColor }} />}
-                />
+                <Box onClick={() => handleToolClick("timer")}>
+                  <MenuItemWithIcon
+                    title="Timer"
+                    icon={<TimerIcon sx={{ color: iconColor }} />}
+                  />
+                </Box>
               </MenuAccordion>
             </Box>
           </ColBox>
@@ -274,6 +278,12 @@ const LeftNavigation = () => {
             onClose={() => handleToolClick("currency")}
             tool={"currency"}
             title={"Currency Converter"}
+          />
+          <ToolDragDialog
+            open={toolModals.timer}
+            onClose={() => handleToolClick("timer")}
+            tool={"timer"}
+            title={"Timer"}
           />
         </Box>
       </Drawer>
