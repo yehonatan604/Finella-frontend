@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Paper, Typography, Box, IconButton } from "@mui/material";
 import { toolsList } from "../../helpers/ToolsList";
 import { TTool } from "../../types/TTool";
@@ -18,24 +19,20 @@ type ToolDragDialogProps = {
 const ToolDragDialog = ({ open, onClose, tool, title }: ToolDragDialogProps) => {
   const { mode } = useTheme();
   const [isMinimized, setIsMinimized] = useState(false);
-  const [position, setPosition] = useState({
-    x: 100,
-    y: 100,
-  });
+  const [position, setPosition] = useState({ x: 100, y: 100 });
   const ref = useRef<HTMLDivElement>(null);
   const posOffset = useRef({ x: 0, y: 0 });
 
   const handleMouseDown = (e: React.MouseEvent) => {
     const dialogRect = ref.current?.getBoundingClientRect();
     if (isMinimized || !dialogRect) {
-      posOffset.current = { x: 20, y: 20 }; // minimal offset when minimized
+      posOffset.current = { x: 20, y: 20 };
     } else {
       posOffset.current = {
         x: e.clientX - dialogRect.left,
         y: e.clientY - dialogRect.top,
       };
     }
-
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
   };
@@ -54,10 +51,7 @@ const ToolDragDialog = ({ open, onClose, tool, title }: ToolDragDialogProps) => 
 
   const handleMinimize = () => {
     setIsMinimized(true);
-    setPosition({
-      x: 32,
-      y: window.innerHeight - 120,
-    });
+    setPosition({ x: 32, y: window.innerHeight - 120 });
   };
 
   const handleMaximize = () => {
@@ -72,7 +66,7 @@ const ToolDragDialog = ({ open, onClose, tool, title }: ToolDragDialogProps) => 
 
   if (!open) return null;
 
-  return (
+  const dialog = (
     <Paper
       ref={ref}
       elevation={10}
@@ -114,7 +108,7 @@ const ToolDragDialog = ({ open, onClose, tool, title }: ToolDragDialogProps) => 
                 color: "#fff",
                 padding: 0,
                 "&:hover": {
-                  backgroundColor: "transparent", // prevent hover bg
+                  backgroundColor: "transparent",
                 },
               }}
             >
@@ -133,6 +127,8 @@ const ToolDragDialog = ({ open, onClose, tool, title }: ToolDragDialogProps) => 
       {!isMinimized && <Box sx={{ p: 2 }}>{toolsList[tool]}</Box>}
     </Paper>
   );
+
+  return createPortal(dialog, document.getElementById("overlay")!);
 };
 
 export default ToolDragDialog;
