@@ -8,10 +8,14 @@ import { TToDo } from "../types/TToDo";
 import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
 import { useState } from "react";
 import ToDoCard from "../components/ToDoCard";
+import PlusButton from "../../Common/components/PlusButton";
+import AddFormDialog from "../../Common/components/dialogs/AddFormDialog";
+import AddToDo from "../forms/AddToDo";
 
 const TodosBoard = () => {
   const { fetchedToDos, onUpdate } = useToDo(true, true);
   const [showInactive, setShowInactive] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const { mode } = useTheme();
 
   const handleUpdateTask = (todoId: string, task: TTask) => {
@@ -72,6 +76,8 @@ const TodosBoard = () => {
             gap: 2,
             justifyContent: "center",
             justifyItems: "start",
+            height: "65vh",
+            overflowY: "auto",
           }}
           style={{
             boxShadow: mode === "dark" ? "0 2px 10px azure" : "0 2px 10px grey",
@@ -90,6 +96,19 @@ const TodosBoard = () => {
           )}
         </Box>
       </Box>
+
+      <PlusButton
+        onClick={() => {
+          setIsAddDialogOpen(true);
+        }}
+      />
+
+      <AddFormDialog
+        open={isAddDialogOpen}
+        onClose={() => setIsAddDialogOpen(false)}
+        title="Add a ToDo"
+        formComponent={<AddToDo setIsDialogOpen={setIsAddDialogOpen} />}
+      />
     </Page>
   );
 };

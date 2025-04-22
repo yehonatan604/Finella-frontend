@@ -19,8 +19,6 @@ import RestoreIcon from "@mui/icons-material/Restore";
 import { TTask } from "../../Records/types/TTask";
 import { DateTime } from "luxon";
 import StyledDateTimePicker from "./StyledDateTimePicker";
-import AddFormDialog from "../../Common/components/dialogs/AddFormDialog";
-import AddToDo from "../forms/AddToDo";
 import ToDoDetailsDialog from "./ToDoDetailsDialog";
 import CreateIcon from "@mui/icons-material/Create";
 import { green } from "@mui/material/colors";
@@ -36,7 +34,6 @@ export const ToDoCard = (props: ToDoCardProps) => {
   const { mode } = useTheme();
   const [editStartDate, setEditStartDate] = useState(false);
   const [editEndDate, setEditEndDate] = useState(false);
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isToDoDetailsDialogOpen, setIsToDoDetailsDialogOpen] = useState(false);
   const { onDelete, onUndelete, onUpdate, selectedToDo, setSelectedToDo } = useToDo();
 
@@ -251,12 +248,6 @@ export const ToDoCard = (props: ToDoCardProps) => {
           </Typography>
         )}
       </CardContent>
-      <AddFormDialog
-        open={isAddDialogOpen}
-        onClose={() => setIsAddDialogOpen(false)}
-        title="Add a ToDo"
-        formComponent={<AddToDo setIsDialogOpen={setIsAddDialogOpen} />}
-      />
       {isToDoDetailsDialogOpen && selectedToDo && (
         <ToDoDetailsDialog
           isOpen={isToDoDetailsDialogOpen}
