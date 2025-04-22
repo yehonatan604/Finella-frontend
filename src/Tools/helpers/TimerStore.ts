@@ -1,4 +1,9 @@
-type TimerListener = (elapsed: number, isRunning: boolean) => void;
+type TimerListener = (
+    displayTime: number,
+    isRunning: boolean,
+    modeTimer: boolean,
+    targetTime: number
+) => void;
 
 class TimerStore {
     private startTime: number | null = null;
@@ -6,6 +11,10 @@ class TimerStore {
     private isRunning = false;
     private frameId: number | null = null;
     private listeners: TimerListener[] = [];
+
+    private modeTimer: boolean = false;
+    private targetTime: number = 0;
+    private onTimeout: (() => void) | null = null;
 
     start() {
         if (this.isRunning) return;
@@ -30,30 +39,76 @@ class TimerStore {
         this.notify();
     }
 
-    getElapsed() {
-        return this.elapsed;
+    maximize() {
+        this.notify();
     }
 
-    getRunning() {
+    getElapsed() {
+        const now = Date.now();
+        return this.isRunning && this.startTime
+            ? now - this.startTime + this.elapsed
+            : this.elapsed;
+    }
+
+    getDisplayTime() {
+        const base = this.modeTimer ? this.targetTime : 0;
+        return this.modeTimer
+            ? Math.max(base - this.getElapsed(), 0)
+            : this.getElapsed();
+    }
+
+    getIsRunning() {
         return this.isRunning;
+    }
+
+    getModeTimer() {
+        return this.modeTimer;
+    }
+
+    getTargetTime() {
+        return this.targetTime;
+    }
+
+    setModeTimer(enabled: boolean) {
+        this.modeTimer = enabled;
+        this.notify();
+    }
+
+    setTargetTime(ms: number) {
+        this.targetTime = ms;
+        this.notify();
+    }
+
+    setOnTimeout(callback: () => void) {
+        this.onTimeout = callback;
     }
 
     private tick = () => {
         if (!this.isRunning) return;
-        const now = Date.now();
-        const current = now - (this.startTime || now) + this.elapsed;
-        this.notify(current);
+
+        const currentElapsed = this.getElapsed();
+        const remaining = this.targetTime - currentElapsed;
+
+        if (this.modeTimer && this.targetTime > 0 && remaining <= 0) {
+            this.pause();
+            if (this.onTimeout) this.onTimeout();
+            return;
+        }
+
+        this.notify();
         this.frameId = requestAnimationFrame(this.tick);
     };
 
-    private notify(currentTime?: number) {
-        const time = currentTime ?? this.elapsed;
-        this.listeners.forEach((cb) => cb(time, this.isRunning));
+    private notify() {
+        const time = this.getDisplayTime();
+        this.listeners.forEach((cb) =>
+            cb(time, this.isRunning, this.modeTimer, this.targetTime)
+        );
     }
 
     subscribe(listener: TimerListener) {
         this.listeners.push(listener);
-        listener(this.elapsed, this.isRunning); // initial push
+        this.notify();
         return () => {
             this.listeners = this.listeners.filter((cb) => cb !== listener);
         };

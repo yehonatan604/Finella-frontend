@@ -11,7 +11,6 @@ import ApartmentIcon from "@mui/icons-material/Apartment";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
-import TimerIcon from "@mui/icons-material/Timer";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import Person2Icon from "@mui/icons-material/Person2";
 import AttractionsIcon from "@mui/icons-material/Attractions";
@@ -20,6 +19,7 @@ import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
 import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
 import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 import EventNoteIcon from "@mui/icons-material/EventNote";
+import TimerSharpIcon from "@mui/icons-material/TimerSharp";
 import { useState } from "react";
 import ToolDragDialog from "../../Tools/components/dialogs/ToolDragDialog";
 import useTheme from "../hooks/useTheme";
@@ -260,7 +260,7 @@ const LeftNavigation = () => {
                 <Box onClick={() => handleToolClick("timer")}>
                   <MenuItemWithIcon
                     title="Timer"
-                    icon={<TimerIcon sx={{ color: iconColor }} />}
+                    icon={<TimerSharpIcon sx={{ color: iconColor }} />}
                   />
                 </Box>
               </MenuAccordion>

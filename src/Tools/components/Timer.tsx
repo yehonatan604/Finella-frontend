@@ -1,5 +1,13 @@
-import { Box, Button, Typography, TextField } from "@mui/material";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  Box,
+  Button,
+  Typography,
+  TextField,
+  FormControlLabel,
+  Switch,
+} from "@mui/material";
+import { useEffect, useState } from "react";
+import { timerStore } from "../helpers/timerStore";
 
 const formatTime = (ms: number) => {
   const minutes = Math.floor(ms / 60000)
@@ -15,128 +23,110 @@ const formatTime = (ms: number) => {
 };
 
 const Timer = () => {
-  const [, forceUpdate] = useState(0);
-  const displayRef = useRef(0);
-  const startTimeRef = useRef<number | null>(null);
-  const elapsedRef = useRef(0);
-  const isRunningRef = useRef(false);
-  const frameRef = useRef<number>(null);
-
-  const [mode, setMode] = useState<"stopper" | "timer">("stopper");
-  const [targetMinutes, setTargetMinutes] = useState(0);
-  const [targetSeconds, setTargetSeconds] = useState(0);
-  const [targetMilliseconds, setTargetMilliseconds] = useState(0);
-  const targetTimeRef = useRef(0);
-
-  const tick = useCallback(() => {
-    if (isRunningRef.current && startTimeRef.current !== null) {
-      const now = Date.now();
-      displayRef.current = now - startTimeRef.current + elapsedRef.current;
-
-      // Check if timer mode is active and time exceeded
-      if (
-        mode === "timer" &&
-        targetTimeRef.current > 0 &&
-        displayRef.current >= targetTimeRef.current
-      ) {
-        pause();
-        alert("Time's up!");
-      }
-
-      forceUpdate(displayRef.current);
-    }
-    frameRef.current = requestAnimationFrame(tick);
-  }, [mode]);
-
-  const start = () => {
-    if (isRunningRef.current) return;
-    if (mode === "timer") {
-      targetTimeRef.current =
-        targetMinutes * 60000 + targetSeconds * 1000 + targetMilliseconds * 10;
-    }
-    startTimeRef.current = Date.now();
-    isRunningRef.current = true;
-    tick();
-  };
-
-  const pause = () => {
-    if (!isRunningRef.current) return;
-    isRunningRef.current = false;
-    elapsedRef.current = displayRef.current;
-  };
-
-  const reset = () => {
-    isRunningRef.current = false;
-    displayRef.current = 0;
-    elapsedRef.current = 0;
-    startTimeRef.current = null;
-    forceUpdate(0);
-  };
+  const [displayTime, setDisplayTime] = useState(timerStore.getDisplayTime());
+  const [isRunning, setIsRunning] = useState(timerStore.getIsRunning());
+  const [modeTimer, setModeTimer] = useState(timerStore.getModeTimer());
+  const [target, setTarget] = useState(() => {
+    const total = timerStore.getTargetTime();
+    return {
+      min: Math.floor(total / 60000),
+      sec: Math.floor((total % 60000) / 1000),
+      ms: Math.floor((total % 1000) / 10),
+    };
+  });
 
   useEffect(() => {
-    frameRef.current = requestAnimationFrame(tick);
-    return () => {
-      if (frameRef.current) cancelAnimationFrame(frameRef.current);
-    };
-  }, [tick]);
+    const unsubscribe = timerStore.subscribe((time, running, mode) => {
+      setDisplayTime(time);
+      setIsRunning(running);
+      setModeTimer(mode);
+    });
+
+    timerStore.setOnTimeout(() => alert("⏰ Time's up!"));
+
+    return unsubscribe;
+  }, []);
+
+  const handleStartPause = () => {
+    if (isRunning) {
+      timerStore.pause();
+    } else {
+      if (modeTimer) {
+        const totalMs = target.min * 60000 + target.sec * 1000 + target.ms * 10;
+        timerStore.setTargetTime(totalMs);
+      }
+      timerStore.start();
+    }
+  };
+
+  const handleReset = () => {
+    timerStore.reset();
+  };
+
+  const handleToggleMode = (checked: boolean) => {
+    timerStore.setModeTimer(checked);
+  };
+
+  const handleTargetChange = (key: "min" | "sec" | "ms", value: number) => {
+    const updated = { ...target, [key]: value };
+    setTarget(updated);
+    const total = updated.min * 60000 + updated.sec * 1000 + updated.ms * 10;
+    timerStore.setTargetTime(total);
+  };
 
   return (
     <Box display="flex" flexDirection="column" alignItems="center" gap={2} p={2}>
-      <Box display="flex" gap={1} mt={2}>
-        <Button
-          variant={mode === "stopper" ? "contained" : "outlined"}
-          onClick={() => setMode("stopper")}
-        >
-          Stopper
-        </Button>
-        <Button
-          variant={mode === "timer" ? "contained" : "outlined"}
-          onClick={() => setMode("timer")}
-        >
-          Timer
-        </Button>
-      </Box>
-
       <Typography variant="h4" fontFamily="monospace">
-        {formatTime(displayRef.current)}
+        {formatTime(displayTime)}
       </Typography>
 
       <Box display="flex" gap={1}>
-        <Button
-          variant="contained"
-          onClick={() => (isRunningRef.current ? pause() : start())}
-        >
-          {isRunningRef.current ? "Pause" : "Start"}
+        <Button variant="contained" onClick={handleStartPause}>
+          {isRunning ? "Pause" : "Start"}
         </Button>
-        <Button variant="outlined" onClick={reset} color="secondary">
+        <Button variant="outlined" onClick={handleReset} color="secondary">
           Reset
         </Button>
       </Box>
 
-      {mode === "timer" && (
-        <Box display="flex" gap={1} mt={2}>
+      <FormControlLabel
+        control={
+          <Switch
+            checked={modeTimer}
+            onChange={(e) => handleToggleMode(e.target.checked)}
+          />
+        }
+        label="Timer Mode"
+        sx={{ mt: 1 }}
+      />
+
+      {modeTimer && (
+        <Box display="flex" gap={1}>
           <TextField
             type="number"
             label="Min"
             size="small"
-            value={targetMinutes}
-            onChange={(e) => setTargetMinutes(Number(e.target.value))}
+            value={target.min}
+            onChange={(e) => handleTargetChange("min", Number(e.target.value))}
+            inputProps={{ min: 0 }}
             sx={{ width: 70 }}
           />
           <TextField
             type="number"
             label="Sec"
             size="small"
-            value={targetSeconds}
-            onChange={(e) => setTargetSeconds(Number(e.target.value))}
+            value={target.sec}
+            onChange={(e) => handleTargetChange("sec", Number(e.target.value))}
+            inputProps={{ min: 0, max: 59 }}
             sx={{ width: 70 }}
           />
           <TextField
             type="number"
             label="Ms"
             size="small"
-            value={targetMilliseconds}
-            onChange={(e) => setTargetMilliseconds(Number(e.target.value))}
+            value={target.ms}
+            onChange={(e) => handleTargetChange("ms", Number(e.target.value))}
+            inputProps={{ min: 0, max: 99 }}
             sx={{ width: 70 }}
           />
         </Box>
