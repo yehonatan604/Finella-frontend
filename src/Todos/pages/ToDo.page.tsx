@@ -14,6 +14,8 @@ import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
 import { TDataGridRow } from "../../Common/types/TDataGridRow";
 import ToDosChartsDialogDialog from "../../Records/components/dialogs/chratDialogs/ToDosChartsDialog";
 import SalariesPdfDoc from "../../Records/components/SalariesPdfDoc";
+import AddFormDialog from "../../Common/components/dialogs/AddFormDialog";
+import AddToDo from "../forms/AddToDo";
 
 const ToDoPage = () => {
   const {
@@ -39,6 +41,7 @@ const ToDoPage = () => {
   } = useToDo(true);
 
   const [isChartsDialogOpen, setIsChartsDialogOpen] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const { mode } = useTheme();
 
   return (
@@ -104,8 +107,7 @@ const ToDoPage = () => {
         Doc={SalariesPdfDoc}
         openCharts={() => setIsChartsDialogOpen(true)}
       />
-
-      <PlusButton addUrl="/actions/add-todo" />
+      <PlusButton onClick={() => setIsAddDialogOpen(true)} />
 
       {isToDoDetailsDialogOpen && selectedToDo && (
         <ToDoDetailsDialog
@@ -126,6 +128,13 @@ const ToDoPage = () => {
           data={filteredRows}
         />
       )}
+
+      <AddFormDialog
+        open={isAddDialogOpen}
+        onClose={() => setIsAddDialogOpen(false)}
+        title="Add a ToDo"
+        formComponent={<AddToDo setIsDialogOpen={setIsAddDialogOpen} />}
+      />
     </>
   );
 };

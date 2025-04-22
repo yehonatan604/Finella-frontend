@@ -17,7 +17,7 @@ import { alert } from "../../Common/utilities/alert";
 import { TToDo } from "../types/TToDo";
 import { TDataGridInputCellParams } from "../../Records/types/TDataGridInputCellParams";
 
-const useToDo = (isTodoPage: boolean = false) => {
+const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
   const { user } = useAuth();
   const { socket } = useSelector((state: TRootState) => state.socketSlice);
   const fetchedToDos = useSelector((state: TRootState) => state.entitiesSlice.todos);
@@ -263,11 +263,11 @@ const useToDo = (isTodoPage: boolean = false) => {
       }
 
       const queryString = queryParams.toString();
-      await getToDos(`?${queryString}`);
+      await getToDos(!all ? `?${queryString}` : "");
     };
 
     fetchData();
-  }, [fromYear, toYear, months, pickedStatus, isTodoPage, getToDos]);
+  }, [fromYear, toYear, months, pickedStatus, isTodoPage, getToDos, all]);
 
   useEffect(() => {
     socket?.on("todo-failed", todoFailed);

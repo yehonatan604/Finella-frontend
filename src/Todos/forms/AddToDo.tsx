@@ -8,15 +8,14 @@ import {
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
-import Page from "../../Common/components/Page";
 import { useState } from "react";
-
 import { DateTime } from "luxon";
 import useTheme from "../../Common/hooks/useTheme";
-import { TTask } from "../../Actions/types/TTask";
 import useToDo from "../hooks/useToDo";
+import { TTask } from "../../Records/types/TTask";
+import { TToDo } from "../types/TToDo";
 
-const AddToDo = () => {
+const AddToDo = ({ setIsDialogOpen }: { setIsDialogOpen: (isOpen: boolean) => void }) => {
   const { mode } = useTheme();
   const { register, errors, handleSubmit, onSubmit, watch } = useToDo();
   const [withTasks, setWithTasks] = useState(true);
@@ -28,17 +27,22 @@ const AddToDo = () => {
     },
   ]);
 
+  const onFormSubmit = async (data: TToDo) => {
+    await onSubmit(data);
+    setIsDialogOpen(false);
+  };
+
   return (
-    <Page title="Add a To Do">
+    <Box sx={{ p: 2, pb: 0 }}>
       <Container
-        maxWidth="md"
+        maxWidth="xl"
         component={Paper}
         sx={{
-          borderRadius: 3,
           p: 4,
+          textAlign: "center",
         }}
       >
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onFormSubmit)}>
           <Box sx={{ display: "flex", gap: 2 }}>
             <TextField
               label="Name"
@@ -231,7 +235,7 @@ const AddToDo = () => {
           </Box>
         </form>
       </Container>
-    </Page>
+    </Box>
   );
 };
 
