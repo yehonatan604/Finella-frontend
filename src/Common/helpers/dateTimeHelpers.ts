@@ -48,5 +48,17 @@ const parseToUTCISO = (value: string | Date | null | undefined): string | null =
     return dt.isValid ? dt.toUTC().toISO() : null;
 };
 
+const formatTime = (ms: number) => {
+    const minutes = Math.floor(ms / 60000)
+        .toString()
+        .padStart(2, "0");
+    const seconds = Math.floor((ms % 60000) / 1000)
+        .toString()
+        .padStart(2, "0");
+    const milliseconds = Math.floor((ms % 1000) / 10)
+        .toString()
+        .padStart(2, "0");
+    return `${minutes}:${seconds}.${milliseconds}`;
+};
 
-export { formatDate, formatStringDate, formatDateLuxon, parseToUTCISO };
+export { formatDate, formatStringDate, formatDateLuxon, parseToUTCISO, formatTime };

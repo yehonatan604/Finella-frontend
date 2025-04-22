@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { ChangeEvent, useState } from "react";
 import { DeepPartial } from "react-hook-form";
-import { formatStringDate, formatDate } from "../../Common/helpers/dateHelpers";
+import { formatStringDate, formatDate } from "../../Common/helpers/dateTimeHelpers";
 import { capitalizeFirstLetter } from "../../Common/helpers/stringHelpers";
 import CenterBox from "../../Common/components/CenterBox";
 import DialogXButton from "../../Common/components/dialogs/DialogXButton";

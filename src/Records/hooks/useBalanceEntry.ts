@@ -7,7 +7,7 @@ import { sendApiRequest } from "../../Common/helpers/sendApiRequest";
 import { addBalanceEntryFormDefault } from "../forms/initialData/addBalanceEntryFormDefault";
 import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
 import { toastify } from "../../Common/utilities/toast";
-import { formatDate } from "../../Common/helpers/dateHelpers";
+import { formatDate } from "../../Common/helpers/dateTimeHelpers";
 import { fixPriceString } from "../../Common/helpers/stringHelpers";
 import { balanceEntryCols } from "../data/balanceEntryCols";
 import { balanceEntryRows } from "../data/balanceEntryRows";

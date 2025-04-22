@@ -1,4 +1,4 @@
-import { formatDate } from "../../Common/helpers/dateHelpers";
+import { formatDate } from "../../Common/helpers/dateTimeHelpers";
 import { TNote } from "../types/TNote";
 
 export const noteRows = (notes: TNote[]) => {

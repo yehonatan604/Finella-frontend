@@ -18,18 +18,10 @@ type ToolDragDialogProps = {
 const ToolDragDialog = ({ open, onClose, tool, title }: ToolDragDialogProps) => {
   const { mode } = useTheme();
   const [isMinimized, setIsMinimized] = useState(false);
-
-  const defaultPosition = {
+  const [position, setPosition] = useState({
     x: 100,
     y: 100,
-  };
-
-  const minimizedPosition = {
-    x: 32,
-    y: window.innerHeight - 120,
-  };
-
-  const [position, setPosition] = useState(defaultPosition);
+  });
   const ref = useRef<HTMLDivElement>(null);
   const posOffset = useRef({ x: 0, y: 0 });
 
@@ -62,7 +54,10 @@ const ToolDragDialog = ({ open, onClose, tool, title }: ToolDragDialogProps) => 
 
   const handleMinimize = () => {
     setIsMinimized(true);
-    setPosition(minimizedPosition);
+    setPosition({
+      x: 32,
+      y: window.innerHeight - 120,
+    });
   };
 
   const handleMaximize = () => {

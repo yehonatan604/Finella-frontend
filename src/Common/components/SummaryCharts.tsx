@@ -30,7 +30,7 @@ const SummaryCharts = () => {
       }}
     >
       <Typography variant="h6" fontWeight={600} gutterBottom>
-        📊 Monthly Balance Entries
+        📊 Monthly Balance
       </Typography>
 
       <Divider sx={{ mb: 2 }} />

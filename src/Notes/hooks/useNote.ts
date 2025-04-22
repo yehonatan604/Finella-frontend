@@ -7,7 +7,7 @@ import { TNote } from "../types/TNote";
 import { noteCols } from "../data/noteCols";
 import { noteRows } from "../data/noteRows";
 import useAuth from "../../Auth/hooks/useAuth";
-import { formatStringDate } from "../../Common/helpers/dateHelpers";
+import { formatStringDate } from "../../Common/helpers/dateTimeHelpers";
 import { useForm } from "react-hook-form";
 import { addNoteFormDefault } from "../forms/initialData/addNoteFormDefault";
 import { useDispatch, useSelector } from "react-redux";
