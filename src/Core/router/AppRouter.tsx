@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-import { useEffect } from "react";
 import RouteGuard from "./RouteGuard";
 import useAuth from "../../Auth/hooks/useAuth";
 import LoginPage from "../../Auth/pages/Login.page";

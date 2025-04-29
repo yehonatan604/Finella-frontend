@@ -27,6 +27,11 @@ const useAuth = () => {
         }
     }, [POST]);
 
+    const logout = useCallback(() => {
+        dispatch(authActions.logout());
+        localStorage.removeItem("token");
+    }, [dispatch])
+
     const login = useCallback(async (data: Record<string, unknown>) => {
         setLoading(true);
         try {
@@ -58,15 +63,11 @@ const useAuth = () => {
             const error = err as Error;
             setError(error.message);
             console.log(error);
+            logout();
         } finally {
             setLoading(false);
         }
-    }, [GET, dispatch]);
-
-    const logout = useCallback(() => {
-        dispatch(authActions.logout());
-        localStorage.removeItem("token");
-    }, [dispatch]);
+    }, [GET, dispatch, logout]);;
 
     useEffect(() => {
         if (auth.user) {

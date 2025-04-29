@@ -1,5 +1,13 @@
 import React from "react";
-import { Box, Button, Typography, Container, Stack, Fade } from "@mui/material";
+import {
+  Box,
+  Button,
+  Typography,
+  Container,
+  Stack,
+  Fade,
+  IconButton,
+} from "@mui/material";
 import { Task, Paid, NotificationsActive, Lock } from "@mui/icons-material";
 import useAuth from "../../Auth/hooks/useAuth";
 import { Link } from "react-router-dom";
@@ -9,10 +17,12 @@ import FeatureBox from "../components/FeatureBox";
 import useTheme from "../hooks/useTheme";
 import UserHomeSummary from "../components/UserSummary";
 import SummaryCharts from "../components/SummaryCharts";
+import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
+import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 
 const HomePage = () => {
   const { user } = useAuth();
-  const { mode } = useTheme();
+  const { mode, setTheme } = useTheme();
   const logoImg = mode === "light" ? logoBlue : logoWhite;
 
   return !user ? (
@@ -27,6 +37,32 @@ const HomePage = () => {
         }}
       >
         <Container maxWidth="md" sx={{ textAlign: "center" }}>
+          <Box
+            sx={{
+              position: "absolute",
+              top: 20,
+              left: 20,
+              zIndex: 1000,
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <IconButton>
+              {mode === "dark" ? (
+                <LightModeRoundedIcon
+                  onClick={() => setTheme("light")}
+                  sx={{
+                    color: "white",
+                  }}
+                />
+              ) : (
+                <DarkModeRoundedIcon
+                  onClick={() => setTheme("dark")}
+                  sx={{ color: "text.standard" }}
+                />
+              )}
+            </IconButton>
+          </Box>
           <img
             src={logoImg}
             alt="Finella Logo"
