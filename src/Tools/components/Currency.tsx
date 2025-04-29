@@ -1,5 +1,5 @@
+import React, { useEffect, useState } from "react";
 import { TextField, MenuItem, Typography, Box } from "@mui/material";
-import { useEffect, useState } from "react";
 
 const CurrencyConverter = () => {
   const [amount, setAmount] = useState(1);

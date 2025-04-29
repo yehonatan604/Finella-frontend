@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,7 +15,7 @@ import { ChangeEvent, useState } from "react";
 import { DeepPartial } from "react-hook-form";
 import { formatStringDate, formatDate } from "../../Common/helpers/dateTimeHelpers";
 import { capitalizeFirstLetter } from "../../Common/helpers/stringHelpers";
-import CenterBox from "../../Common/components/CenterBox";
+import CenterBox from "../../Common/components/styled/CenterBox";
 import DialogXButton from "../../Common/components/dialogs/DialogXButton";
 import { TNote } from "../types/TNote";
 import useTheme from "../../Common/hooks/useTheme";

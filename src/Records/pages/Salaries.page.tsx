@@ -1,3 +1,4 @@
+import React from "react";
 import { Box, Paper } from "@mui/material";
 import useSalary from "../hooks/useSalary";
 import { GridColDef } from "@mui/x-data-grid";

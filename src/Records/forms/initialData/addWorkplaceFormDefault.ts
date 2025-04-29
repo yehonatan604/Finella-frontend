@@ -1,6 +1,7 @@
-import { TWorkplace } from "../../Data/types/TWorkplace";
+import { TWorkplace } from "../../types/TWorkplace";
 
 export const addWorkplaceFormDefault: TWorkplace = {
+    userId: "",
     name: "",
     email: "",
     address: {

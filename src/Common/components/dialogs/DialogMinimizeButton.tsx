@@ -1,3 +1,4 @@
+import React from "react";
 import { Box, IconButton } from "@mui/material";
 import MinimizeIcon from "@mui/icons-material/Minimize";
 

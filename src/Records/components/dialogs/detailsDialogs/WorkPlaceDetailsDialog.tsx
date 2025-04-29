@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -13,7 +14,7 @@ import {
 import { ChangeEvent, useState } from "react";
 import { DeepPartial } from "react-hook-form";
 import { capitalizeFirstLetter } from "../../../../Common/helpers/stringHelpers";
-import CenterBox from "../../../../Common/components/CenterBox";
+import CenterBox from "../../../../Common/components/styled/CenterBox";
 import { TWorkplace } from "../../../types/TWorkplace";
 import DialogXButton from "../../../../Common/components/dialogs/DialogXButton";
 import StyledTitleInput from "../../../../Common/components/styled/StyledTitleInput";

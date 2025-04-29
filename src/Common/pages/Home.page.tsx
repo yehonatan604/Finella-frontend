@@ -1,3 +1,4 @@
+import React from "react";
 import { Box, Button, Typography, Container, Stack, Fade } from "@mui/material";
 import { Task, Paid, NotificationsActive, Lock } from "@mui/icons-material";
 import useAuth from "../../Auth/hooks/useAuth";

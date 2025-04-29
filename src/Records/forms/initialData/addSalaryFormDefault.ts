@@ -1,5 +1,6 @@
-import { TSalary } from "../../Data/types/TSalary"
-import { TSalaryHours } from "../../Data/types/TSalaryHours"
+import { TSalary } from "../../types/TSalary"
+import { TSalaryHours } from "../../types/TSalaryHours"
+
 
 export const addSalaryFormDefault = (userId: string): TSalary => {
     return {

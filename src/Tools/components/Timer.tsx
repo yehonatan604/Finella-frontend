@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -6,7 +7,6 @@ import {
   FormControlLabel,
   Switch,
 } from "@mui/material";
-import { useEffect, useState } from "react";
 import { timerStore } from "../helpers/timerStore";
 import { formatTime } from "../../Common/helpers/dateTimeHelpers";
 

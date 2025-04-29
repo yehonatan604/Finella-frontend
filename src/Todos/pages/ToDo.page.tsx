@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { Box, Paper } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import Page from "../../Common/components/Page";
@@ -7,7 +8,6 @@ import useToDo from "../hooks/useToDo";
 import PlusButton from "../../Common/components/PlusButton";
 import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
 import ToDoDetailsDialog from "../components/ToDoDetailsDialog";
-import { useState } from "react";
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import useTheme from "../../Common/hooks/useTheme";
 import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";

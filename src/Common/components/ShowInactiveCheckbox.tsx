@@ -1,3 +1,4 @@
+import React from "react";
 import { Box, Checkbox, FormControlLabel } from "@mui/material";
 
 type ShowInactiveCheckboxProps = {

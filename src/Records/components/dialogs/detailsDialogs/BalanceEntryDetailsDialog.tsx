@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,7 +15,7 @@ import {
 } from "@mui/material";
 import { ChangeEvent, useState } from "react";
 import { capitalizeFirstLetter } from "../../../../Common/helpers/stringHelpers";
-import CenterBox from "../../../../Common/components/CenterBox";
+import CenterBox from "../../../../Common/components/styled/CenterBox";
 import { TBalanceEntry } from "../../../types/TBalanceEntry";
 import DialogXButton from "../../../../Common/components/dialogs/DialogXButton";
 import StyledTitleInput from "../../../../Common/components/styled/StyledTitleInput";

@@ -1,3 +1,4 @@
+import React from "react";
 import { Card, CardContent, Typography, Menu, MenuItem, IconButton } from "@mui/material";
 import { useEffect, useState } from "react";
 import { TNote } from "../types/TNote";
