@@ -6,6 +6,7 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { loginFormDefault } from "../forms/loginFormDefault";
+import AbsTopIcons from "../../Common/components/AbsTopIcons";
 
 const LoginPage = () => {
   const {
@@ -33,6 +34,7 @@ const LoginPage = () => {
         justifyContent: "center",
       }}
     >
+      <AbsTopIcons />
       <Container
         maxWidth="md"
         sx={{
@@ -87,13 +89,15 @@ const LoginPage = () => {
         </Typography>
         <Link to={"/auth/signup"} style={{ textDecoration: "none" }}>
           <Button
-            variant="outlined"
+            variant="contained"
+            color="primary"
+            size="small"
             fullWidth
             sx={{
               mt: 2,
-              borderColor: "white",
-              color: "white",
-              "&:hover": { backgroundColor: "rgba(255,255,255,0.2)" },
+              fontSize: "1.2rem",
+              width: "auto",
+              px: 2,
             }}
           >
             Sign Up

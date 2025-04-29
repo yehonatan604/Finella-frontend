@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { signupFormDefault } from "../forms/signupFormDefault";
 import useTheme from "../../Common/hooks/useTheme";
+import AbsTopIcons from "../../Common/components/AbsTopIcons";
 
 const SignUpPage = () => {
   const {
@@ -56,6 +57,7 @@ const SignUpPage = () => {
         backgroundPosition: "center",
       }}
     >
+      <AbsTopIcons />
       <Container
         maxWidth="xs"
         sx={{
