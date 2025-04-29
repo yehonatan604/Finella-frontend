@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import useAuth from "../hooks/useAuth";
 import { signupSchema } from "../validations/signup.schema";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { signupFormDefault } from "../forms/signupFormDefault";
 import useTheme from "../../Common/hooks/useTheme";
@@ -150,6 +150,25 @@ const SignUpPage = () => {
             Sign Up
           </Button>
         </form>
+        <Typography variant="body1" sx={{ mt: 3 }}>
+          already have an account?
+        </Typography>
+        <Link to={"/auth"} style={{ textDecoration: "none" }}>
+          <Button
+            variant="contained"
+            color="primary"
+            size="small"
+            fullWidth
+            sx={{
+              mt: 2,
+              fontSize: "1.2rem",
+              width: "auto",
+              px: 2,
+            }}
+          >
+            Login
+          </Button>
+        </Link>
       </Container>
     </Box>
   );
