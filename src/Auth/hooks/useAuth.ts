@@ -5,6 +5,8 @@ import { authActions } from "../../Core/store/authSlice";
 import { TRootState } from "../../Core/store/store";
 import { sendApiRequest } from "../../Common/helpers/sendApiRequest";
 import { socketActions } from "../../Core/store/socketSlice";
+import { toastify } from "../../Common/utilities/toast";
+import { alert } from "../../Common/utilities/alert";
 
 const useAuth = () => {
     const [error, setError] = useState<string | null>(null);
@@ -17,6 +19,11 @@ const useAuth = () => {
         setLoading(true);
         try {
             const response = await sendApiRequest("/auth/register", POST, data);
+            alert(
+                "Sign Up",
+                "Account created successfully, please check your email to verify your account.",
+                "success",
+            )
             return response;
         } catch (error) {
             const err = error as Error;
@@ -39,6 +46,7 @@ const useAuth = () => {
             if (response) {
                 localStorage.setItem("token", response.data.token);
                 dispatch(authActions.login({ role: response.data.role.permission, user: response.data.user }));
+                toastify.success("Login successful!");
             }
         } catch (err) {
             const error = err as Error;
