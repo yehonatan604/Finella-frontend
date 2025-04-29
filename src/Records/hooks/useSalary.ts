@@ -44,6 +44,7 @@ const useSalary = (isPage?: boolean) => {
         page: 0,
         pageSize: defaultPageSize,
     });
+    const [addBEntry, setAddBEntry] = useState(true);
 
     const addNewSalaryHour = useCallback(() => {
         setSalaryHours((prev) => {
@@ -94,6 +95,19 @@ const useSalary = (isPage?: boolean) => {
             };
 
             await sendApiRequest("/salary", HTTPMethodTypes.POST, finalData);
+
+            if (addBEntry) {
+                const balanceEntry = {
+                    userId: user?._id,
+                    price: calcTotalSum(finalData as TSalary),
+                    date: data.date,
+                    type: "income",
+                    withVat: data.withVat || false,
+                    isPayed: false,
+                    notes: `Salary for ${data.date}`,
+                };
+                await sendApiRequest("/balance-entry", HTTPMethodTypes.POST, balanceEntry);
+            }
             toastify.success("Salary added successfully");
         } catch (error) {
             console.log(error);
@@ -338,6 +352,8 @@ const useSalary = (isPage?: boolean) => {
         paginationModel,
         setPaginationModel,
         paginatedRows: paginatedRows(paginationModel, filteredRows),
+        setAddBEntry,
+        addBEntry,
     };
 };
 

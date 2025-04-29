@@ -7,6 +7,8 @@ import {
   Divider,
   MenuItem,
   Paper,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import useSalary from "../hooks/useSalary";
 import UploadExcelDialog from "../components/dialogs/UploadExcelDialog";
@@ -29,6 +31,8 @@ const AddSalary = ({
     isUploadDialogOpen,
     salaryHours,
     workplaces,
+    addBEntry,
+    setAddBEntry,
   } = useSalary();
 
   const onFormSubmit = async (data: TSalary) => {
@@ -47,13 +51,20 @@ const AddSalary = ({
         }}
       >
         <form onSubmit={handleSubmit(onFormSubmit)}>
-          <Box sx={{ display: "flex", gap: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              justifyContent: "center",
+              alignItems: "center",
+              mb: 2,
+            }}
+          >
             <TextField
               label="workPlace"
               {...register("workPlaceId")}
               variant="outlined"
-              fullWidth
-              sx={{ mb: 2 }}
+              sx={{ width: "40%" }}
               color={errors.workPlaceId ? "error" : "primary"}
               slotProps={{
                 inputLabel: {
@@ -75,14 +86,23 @@ const AddSalary = ({
               label="Date"
               {...register("date")}
               variant="outlined"
-              fullWidth
-              sx={{ mb: 2 }}
+              sx={{ width: "40%" }}
               color={errors.date ? "error" : "primary"}
               slotProps={{
                 inputLabel: {
                   shrink: true,
                 },
               }}
+            />
+
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={addBEntry}
+                  onChange={(e) => setAddBEntry(e.target.checked)}
+                />
+              }
+              label="Add Balance Entry"
             />
           </Box>
 
