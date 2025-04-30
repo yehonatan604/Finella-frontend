@@ -81,16 +81,34 @@ const HomePage = () => {
               />
             </Stack>
 
-            <Link to="/auth" style={{ textDecoration: "none" }}>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                sx={{ px: 5, py: 1.5, fontSize: "1.1rem", boxShadow: 3 }}
-              >
-                Login
-              </Button>
-            </Link>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "1rem",
+              }}
+            >
+              <Link to="/auth" style={{ textDecoration: "none" }}>
+                <Button
+                  variant="contained"
+                  color="success"
+                  size="large"
+                  sx={{ px: 5, py: 1.5, fontSize: "1.1rem", boxShadow: 3 }}
+                >
+                  Login
+                </Button>
+              </Link>
+              <Link to="/auth/signup" style={{ textDecoration: "none" }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  sx={{ px: 5, py: 1.5, fontSize: "1.1rem", boxShadow: 3 }}
+                >
+                  Sign Up
+                </Button>
+              </Link>
+            </Box>
           </Container>
         </Box>
       </Fade>

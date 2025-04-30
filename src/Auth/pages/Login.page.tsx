@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, TextField, Typography, Container } from "@mui/material";
+import { Box, Button, TextField, Typography, Container, Divider } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { loginSchema } from "../validations/login.schema";
 import { joiResolver } from "@hookform/resolvers/joi";
@@ -12,7 +12,7 @@ const LoginPage = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm({
     mode: "onChange",
     defaultValues: loginFormDefault,
@@ -60,6 +60,7 @@ const LoginPage = () => {
             variant="outlined"
             fullWidth
             error={!!errors?.email}
+            required
             helperText={errors?.email?.message as string}
             sx={{ mb: 2 }}
           />
@@ -69,24 +70,33 @@ const LoginPage = () => {
             variant="outlined"
             fullWidth
             type="password"
+            required
             error={!!errors?.password}
             helperText={errors?.password?.message as string}
             sx={{ mb: 3 }}
           />
+
+          {!isValid && (
+            <Typography variant="body2" color="error" sx={{ mb: 2 }}>
+              * Please fill all the required fields to sign up
+            </Typography>
+          )}
+
           <Button
             type="submit"
             variant="contained"
-            color="primary"
+            color="success"
             fullWidth
-            sx={{ fontSize: "1.2rem", py: 1 }}
+            sx={{ fontSize: "1.2rem", py: 1, px: 2, width: "auto" }}
+            disabled={!isValid}
           >
             Login
           </Button>
         </form>
 
-        <Typography variant="body1" sx={{ mt: 3 }}>
-          Don't have an account?
-        </Typography>
+        <Divider sx={{ my: 3, mb: 2 }} />
+
+        <Typography variant="body1">Don't have an account?</Typography>
         <Link to={"/auth/signup"} style={{ textDecoration: "none" }}>
           <Button
             variant="contained"

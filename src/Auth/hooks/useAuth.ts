@@ -7,6 +7,7 @@ import { sendApiRequest } from "../../Common/helpers/sendApiRequest";
 import { socketActions } from "../../Core/store/socketSlice";
 import { toastify } from "../../Common/utilities/toast";
 import { alert } from "../../Common/utilities/alert";
+import { AxiosError } from "axios";
 
 const useAuth = () => {
     const [error, setError] = useState<string | null>(null);
@@ -19,16 +20,19 @@ const useAuth = () => {
         setLoading(true);
         try {
             const response = await sendApiRequest("/auth/register", POST, data);
-            alert(
+            await alert(
                 "Sign Up",
                 "Account created successfully, please check your email to verify your account.",
                 "success",
             )
             return response;
         } catch (error) {
-            const err = error as Error;
-            setError(err.message);
-            console.log(err);
+            const err = error as AxiosError;
+            await alert(
+                "Signup Failed",
+                err?.response?.data + "",
+                "error",
+            );
         } finally {
             setLoading(false);
         }
@@ -49,11 +53,14 @@ const useAuth = () => {
                 toastify.success("Login successful!");
             }
         } catch (err) {
-            const error = err as Error;
+            const error = err as AxiosError;
             setError(error.message);
             console.log(error);
-
-            return null;
+            await alert(
+                "Login Failed",
+                error?.response?.data + "",
+                "error",
+            );
         } finally {
             setLoading(false);
         }

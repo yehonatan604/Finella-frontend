@@ -6,7 +6,13 @@ export const signupSchema = Joi.object({
         first: Joi.string().required(),
         last: Joi.string().required()
     }),
-    dob: Joi.date().max('now').required(),
+    dob: Joi.date().max('now').optional().allow(null, ""),
     password: Joi.string().pattern(new RegExp(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/)).required(),
-    confirmPassword: Joi.ref('password')
-})
+    confirmPassword: Joi.string()
+        .valid(Joi.ref('password'))
+        .required()
+        .messages({
+            'any.only': 'Passwords do not match',
+            'any.required': 'Confirm password is required'
+        })
+});

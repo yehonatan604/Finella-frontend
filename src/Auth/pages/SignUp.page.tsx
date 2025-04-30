@@ -1,11 +1,17 @@
 import React from "react";
-import { Box, Button, TextField, Typography, Container } from "@mui/material";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Container,
+  CircularProgress,
+} from "@mui/material";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import useAuth from "../hooks/useAuth";
 import { signupSchema } from "../validations/signup.schema";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
 import { signupFormDefault } from "../forms/signupFormDefault";
 import useTheme from "../../Common/hooks/useTheme";
 import AbsTopIcons from "../../Common/components/AbsTopIcons";
@@ -14,17 +20,14 @@ const SignUpPage = () => {
   const {
     register,
     handleSubmit,
-    watch,
-    setError,
-    clearErrors,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm({
     mode: "onChange",
     defaultValues: signupFormDefault,
     resolver: joiResolver(signupSchema),
   });
 
-  const { signup } = useAuth();
+  const { signup, loading } = useAuth();
   const { mode } = useTheme();
   const nav = useNavigate();
 
@@ -33,17 +36,6 @@ const SignUpPage = () => {
     await signup(data);
     nav("/auth");
   };
-
-  useEffect(() => {
-    if (watch("password") !== watch("confirmPassword")) {
-      setError("confirmPassword", {
-        type: "manual",
-        message: "Passwords do not match",
-      });
-    } else {
-      clearErrors("confirmPassword");
-    }
-  }, [clearErrors, setError, watch]);
 
   return (
     <Box
@@ -84,6 +76,7 @@ const SignUpPage = () => {
             fullWidth
             error={!!errors?.email}
             helperText={errors?.email?.message as string}
+            required
             sx={{ mb: 2 }}
           />
           <TextField
@@ -92,6 +85,7 @@ const SignUpPage = () => {
             variant="outlined"
             fullWidth
             error={!!errors?.name?.first}
+            required
             helperText={errors?.name?.first?.message as string}
             sx={{ mb: 3 }}
           />
@@ -100,6 +94,7 @@ const SignUpPage = () => {
             {...register("name.last")}
             variant="outlined"
             fullWidth
+            required
             error={!!errors?.name?.last}
             helperText={errors?.name?.last?.message as string}
             sx={{ mb: 3 }}
@@ -124,6 +119,7 @@ const SignUpPage = () => {
             fullWidth
             type="password"
             error={!!errors?.password}
+            required
             helperText={errors?.password?.message as string}
             sx={{ mb: 3 }}
           />
@@ -135,17 +131,25 @@ const SignUpPage = () => {
             fullWidth
             type="password"
             error={!!errors?.confirmPassword}
+            required
             helperText={errors?.confirmPassword?.message as string}
             sx={{ mb: 3 }}
           />
 
+          {!isValid && (
+            <Typography variant="body2" color="error" sx={{ mb: 2 }}>
+              * Please fill all the required fields to sign up
+            </Typography>
+          )}
+
           <Button
             type="submit"
             variant="contained"
-            color="primary"
+            color="success"
             fullWidth
-            disabled={Object.keys(errors).length > 0}
-            sx={{ fontSize: "1.2rem", py: 1 }}
+            size="small"
+            disabled={!isValid}
+            sx={{ fontSize: "1.2rem", px: 2, width: "auto" }}
           >
             Sign Up
           </Button>
@@ -169,6 +173,18 @@ const SignUpPage = () => {
             Login
           </Button>
         </Link>
+        {loading && (
+          <CircularProgress
+            size={48}
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              marginTop: "-12px",
+              marginLeft: "-12px",
+            }}
+          />
+        )}
       </Container>
     </Box>
   );
