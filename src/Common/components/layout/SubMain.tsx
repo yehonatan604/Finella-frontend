@@ -1,8 +1,8 @@
 import React from "react";
 import { Box } from "@mui/system";
-import useAuth from "../../Auth/hooks/useAuth";
 import { useSelector } from "react-redux";
-import { TRootState } from "../../Core/store/store";
+import useAuth from "../../../Auth/hooks/useAuth";
+import { TRootState } from "../../../Core/store/store";
 
 const SubMain = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();

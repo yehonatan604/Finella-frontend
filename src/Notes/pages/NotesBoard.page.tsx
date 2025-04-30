@@ -1,12 +1,12 @@
 import React from "react";
 import { Box } from "@mui/material";
 import useNote from "../hooks/useNote";
-import Page from "../../Common/components/Page";
+import Page from "../../Common/components/layout/Page";
 import useTheme from "../../Common/hooks/useTheme";
 import AddFormDialog from "../../Common/components/dialogs/AddFormDialog";
 import AddNoteForm from "../forms/AddNote.form";
 import { useState } from "react";
-import PlusButton from "../../Common/components/PlusButton";
+import PlusButton from "../../Common/components/layout/PlusButton";
 import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
 import NoteCard from "../components/NoteCard";
 

@@ -1,14 +1,15 @@
 import { Box } from "@mui/system";
 import { blue } from "@mui/material/colors";
-import useAuth from "../../Auth/hooks/useAuth";
 import LeftNavigation from "./LeftNavigation";
 import { ThemeProvider } from "@mui/material/styles";
 import { createTheme } from "@mui/material/styles";
-import useTheme from "../hooks/useTheme";
-import { lightTheme } from "../styles/themes/light.theme";
-import { darkTheme } from "../styles/themes/dark.theme";
 import { useEffect } from "react";
-import { TTheme } from "../types/TTheme";
+import useTheme from "../../hooks/useTheme";
+import React from "react";
+import useAuth from "../../../Auth/hooks/useAuth";
+import { TTheme } from "../../types/TTheme";
+import { darkTheme } from "../../styles/themes/dark.theme";
+import { lightTheme } from "../../styles/themes/light.theme";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { user } = useAuth();

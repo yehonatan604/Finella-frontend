@@ -6,7 +6,7 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { loginFormDefault } from "../forms/loginFormDefault";
-import AbsTopIcons from "../../Common/components/AbsTopIcons";
+import AbsTopIcons from "../../Common/components/layout/AbsTopIcons";
 
 const LoginPage = () => {
   const {

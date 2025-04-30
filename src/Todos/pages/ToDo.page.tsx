@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Box, Paper } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import Page from "../../Common/components/Page";
-import PageFilters from "../../Common/components/PageFilters";
-import PageButtons from "../../Common/components/PageButtons";
+import Page from "../../Common/components/layout/Page";
+import PageFilters from "../../Common/components/layout/PageFilters";
+import PageButtons from "../../Common/components/layout/PageButtons";
 import useToDo from "../hooks/useToDo";
-import PlusButton from "../../Common/components/PlusButton";
+import PlusButton from "../../Common/components/layout/PlusButton";
 import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
 import ToDoDetailsDialog from "../components/ToDoDetailsDialog";
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";

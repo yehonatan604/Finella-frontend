@@ -3,8 +3,8 @@ import { Box, IconButton } from "@mui/material";
 import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
 import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 import HomeIcon from "@mui/icons-material/Home";
-import useTheme from "../hooks/useTheme";
 import { useNavigate } from "react-router-dom";
+import useTheme from "../../hooks/useTheme";
 
 export const AbsTopIcons = ({ hideHome = false }: { hideHome?: boolean }) => {
   const { mode, setTheme } = useTheme();

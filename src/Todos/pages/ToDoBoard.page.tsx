@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Box, SelectChangeEvent } from "@mui/material";
 import useToDo from "../hooks/useToDo";
-import Page from "../../Common/components/Page";
+import Page from "../../Common/components/layout/Page";
 import useTheme from "../../Common/hooks/useTheme";
 import { TTask } from "../../Records/types/TTask";
 import { TTaskStastus } from "../../Records/types/TTaskStatus";
 import { TToDo } from "../types/TToDo";
 import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
 import ToDoCard from "../components/ToDoCard";
-import PlusButton from "../../Common/components/PlusButton";
+import PlusButton from "../../Common/components/layout/PlusButton";
 import AddFormDialog from "../../Common/components/dialogs/AddFormDialog";
 import AddToDo from "../forms/AddToDo";
 

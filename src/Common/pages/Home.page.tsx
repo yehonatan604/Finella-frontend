@@ -9,7 +9,7 @@ import FeatureBox from "../components/FeatureBox";
 import useTheme from "../hooks/useTheme";
 import UserHomeSummary from "../components/UserSummary";
 import SummaryCharts from "../components/SummaryCharts";
-import AbsTopIcons from "../components/AbsTopIcons";
+import AbsTopIcons from "../components/layout/AbsTopIcons";
 
 const HomePage = () => {
   const { user } = useAuth();

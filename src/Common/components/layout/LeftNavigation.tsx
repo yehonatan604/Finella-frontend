@@ -2,10 +2,6 @@ import React, { useState } from "react";
 import { Box, Drawer, IconButton, Menu, MenuItem } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import { Link, useNavigate } from "react-router-dom";
-import CenterBox from "../components/styled/CenterBox";
-import ColBox from "../components/styled/ColBox";
-import MenuAccordion from "../components/MenuAccordion";
-import { MenuItemWithIcon } from "../components/MenuItemWithIcon";
 import BalanceIcon from "@mui/icons-material/Balance";
 import LocalAtmIcon from "@mui/icons-material/LocalAtm";
 import ApartmentIcon from "@mui/icons-material/Apartment";
@@ -13,7 +9,6 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import CalculateIcon from "@mui/icons-material/Calculate";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
-import Person2Icon from "@mui/icons-material/Person2";
 import AttractionsIcon from "@mui/icons-material/Attractions";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
@@ -21,15 +16,20 @@ import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
 import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import TimerSharpIcon from "@mui/icons-material/TimerSharp";
-import ToolDragDialog from "../../Tools/components/dialogs/ToolDragDialog";
-import useTheme from "../hooks/useTheme";
-import useAuth from "../../Auth/hooks/useAuth";
 import { useDispatch, useSelector } from "react-redux";
-import { TRootState } from "../../Core/store/store";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
-import { themeActions } from "../../Core/store/themeSlice";
 import ChecklistIcon from "@mui/icons-material/Checklist";
+import useTheme from "../../hooks/useTheme";
+import useAuth from "../../../Auth/hooks/useAuth";
+import { TRootState } from "../../../Core/store/store";
+import { themeActions } from "../../../Core/store/themeSlice";
+import CenterBox from "../styled/CenterBox";
+import ColBox from "../styled/ColBox";
+import MenuAccordion from "../MenuAccordion";
+import { MenuItemWithIcon } from "../MenuItemWithIcon";
+import ToolDragDialog from "../dialogs/ToolDragDialog";
+import MenuIcon from "@mui/icons-material/Menu";
 
 const LeftNavigation = () => {
   const [toolModals, setToolModals] = useState({
@@ -125,7 +125,7 @@ const LeftNavigation = () => {
                 <HomeIcon onClick={() => nav("/")} />
               </IconButton>
               <IconButton sx={{ color: "white" }} onClick={handleClick}>
-                <Person2Icon />
+                <MenuIcon />
               </IconButton>
 
               <Menu
@@ -149,6 +149,9 @@ const LeftNavigation = () => {
                   }}
                 >
                   Logout
+                </MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <Link to={"/about"}>About</Link>
                 </MenuItem>
               </Menu>
 

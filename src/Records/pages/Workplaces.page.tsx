@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { GridColDef } from "@mui/x-data-grid";
 import { Box, Paper } from "@mui/material";
-import Page from "../../Common/components/Page";
+import Page from "../../Common/components/layout/Page";
 import useWorkplaces from "../hooks/useWorkplace";
 import WorkplacesPdfDoc from "../components/WorkplacesPdfDoc";
-import PageButtons from "../../Common/components/PageButtons";
-import PlusButton from "../../Common/components/PlusButton";
-import PageFilters from "../../Common/components/PageFilters";
+import PageButtons from "../../Common/components/layout/PageButtons";
+import PlusButton from "../../Common/components/layout/PlusButton";
+import PageFilters from "../../Common/components/layout/PageFilters";
 import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
 import WorkplaceDetailsDialog from "../components/dialogs/detailsDialogs/WorkPlaceDetailsDialog";
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";

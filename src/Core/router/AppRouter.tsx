@@ -4,7 +4,7 @@ import RouteGuard from "./RouteGuard";
 import useAuth from "../../Auth/hooks/useAuth";
 import LoginPage from "../../Auth/pages/Login.page";
 import SignUpPage from "../../Auth/pages/SignUp.page";
-import PageHolder from "../../Common/components/PageHolder";
+import PageHolder from "../../Common/components/layout/PageHolder";
 import HomePage from "../../Common/pages/Home.page";
 import ToDoPage from "../../Todos/pages/ToDo.page";
 import NoteAutomationPage from "../../Notes/pages/NoteAutomation.page";
@@ -14,6 +14,7 @@ import BalanceEntriesPage from "../../Records/pages/BalanceEntries.page";
 import SalariesPage from "../../Records/pages/Salaries.page";
 import WorkplacesPage from "../../Records/pages/Workplaces.page";
 import TodosBoard from "../../Todos/pages/ToDoBoard.page";
+import AboutPage from "../../Common/pages/About.page";
 
 const AppRouter = () => {
   const { loginByToken } = useAuth();
@@ -29,7 +30,7 @@ const AppRouter = () => {
     <Routes>
       <Route path="/" element={<PageHolder />}>
         <Route index element={<HomePage />} />
-        <Route path="about" element={<></>} />
+        <Route path="about" element={<AboutPage />} />
         <Route path="contact" element={<></>} />
       </Route>
 

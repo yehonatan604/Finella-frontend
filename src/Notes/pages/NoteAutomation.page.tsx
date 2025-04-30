@@ -1,5 +1,5 @@
 import React from "react";
-import Page from "../../Common/components/Page";
+import Page from "../../Common/components/layout/Page";
 import {
   Box,
   Button,

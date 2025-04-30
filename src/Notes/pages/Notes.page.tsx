@@ -1,10 +1,10 @@
 import React from "react";
 import { GridColDef } from "@mui/x-data-grid";
 import { Box, Paper } from "@mui/material";
-import Page from "../../Common/components/Page";
-import PageButtons from "../../Common/components/PageButtons";
-import PageFilters from "../../Common/components/PageFilters";
-import PlusButton from "../../Common/components/PlusButton";
+import Page from "../../Common/components/layout/Page";
+import PageButtons from "../../Common/components/layout/PageButtons";
+import PageFilters from "../../Common/components/layout/PageFilters";
+import PlusButton from "../../Common/components/layout/PlusButton";
 import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
 import NoteDetailsDialog from "../components/NoteDetailsDialog";
 import useNote from "../hooks/useNote";

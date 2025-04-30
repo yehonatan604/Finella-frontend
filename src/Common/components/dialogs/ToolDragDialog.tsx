@@ -1,13 +1,13 @@
 import React, { useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Paper, Typography, Box, IconButton } from "@mui/material";
-import { toolsList } from "../../helpers/ToolsList";
-import { TTool } from "../../types/TTool";
-import DialogXButton from "../../../Common/components/dialogs/DialogXButton";
-import useTheme from "../../../Common/hooks/useTheme";
+import { toolsList } from "../../../Tools/helpers/ToolsList";
+import { TTool } from "../../../Tools/types/TTool";
+import DialogXButton from "./DialogXButton";
+import useTheme from "../../hooks/useTheme";
 import MinimizeIcon from "@mui/icons-material/Minimize";
 import CropSquareIcon from "@mui/icons-material/CropSquare"; // maximize icon
-import StyledIconWrapper from "../../../Common/components/styled/StyledIconWrapper ";
+import StyledIconWrapper from "../styled/StyledIconWrapper ";
 
 type ToolDragDialogProps = {
   open: boolean;
