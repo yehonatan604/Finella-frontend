@@ -1,10 +1,13 @@
 import Joi from "joi";
+import { commonSchemaFields } from "../../Common/helpers/joiHelpers";
 
-export const addWorkplaceSchema = Joi.object({
+export const workplaceSchema = Joi.object({
+    ...commonSchemaFields,
     userId: Joi.string().required(),
     name: Joi.string().required(),
     email: Joi.string().email({ tlds: { allow: false } }).required(),
     address: Joi.object({
+        ...commonSchemaFields,
         street: Joi.string().required(),
         houseNumber: Joi.string().required(),
         city: Joi.string().required(),
@@ -12,6 +15,7 @@ export const addWorkplaceSchema = Joi.object({
         zip: Joi.string().allow(""),
     }),
     phone: Joi.object({
+        ...commonSchemaFields,
         main: Joi.string().required(),
         secondary: Joi.string().allow(""),
     }),

@@ -17,7 +17,7 @@ import { TDataGridRow } from "../../Common/types/TDataGridRow";
 import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
 import AddFormDialog from "../../Common/components/dialogs/AddFormDialog";
 import AddSalary from "../forms/AddSalary";
-import AddWorkplace from "../forms/AddWorkplace";
+import WorkplaceForm from "../forms/WorkplaceForm";
 
 const SalariesPage = () => {
   const {
@@ -152,7 +152,7 @@ const SalariesPage = () => {
         open={isAddWorkplaceDialogOpen}
         onClose={() => setIsAddWorkplaceDialogOpen(false)}
         title="Add a Workplace"
-        formComponent={<AddWorkplace setIsDialogOpen={setIsAddWorkplaceDialogOpen} />}
+        formComponent={<WorkplaceForm setIsDialogOpen={setIsAddWorkplaceDialogOpen} />}
       />
     </>
   );

@@ -2,19 +2,21 @@ import React from "react";
 import { Box, Button, TextField, Container, Divider, Paper } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
-import { addWorkplaceSchema } from "../validations/addWorkplace.schema";
+import { workplaceSchema } from "../validations/addWorkplace.schema";
 import { TWorkplace } from "../types/TWorkplace";
 import useWorkplaces from "../hooks/useWorkplace";
 import { addWorkplaceFormDefault } from "./initialData/addWorkplaceFormDefault";
 import useAuth from "../../Auth/hooks/useAuth";
 import FormValidationMessage from "../../Common/components/FormValidationMessage";
 
-const AddWorkplace = ({
+const WorkplaceForm = ({
   setIsDialogOpen,
+  workplace = null,
 }: {
   setIsDialogOpen: (isOpen: boolean) => void;
+  workplace?: TWorkplace | null;
 }) => {
-  const { add } = useWorkplaces();
+  const { add, onUpdate } = useWorkplaces();
   const { user } = useAuth();
 
   const {
@@ -28,14 +30,17 @@ const AddWorkplace = ({
     formState: { errors, isValid },
   } = useForm({
     mode: "onChange",
-    defaultValues: addWorkplaceFormDefault(user?._id),
-    resolver: joiResolver(addWorkplaceSchema),
+    defaultValues: workplace ?? addWorkplaceFormDefault(user?._id),
+    resolver: joiResolver(workplaceSchema),
   });
 
   const onFormSubmit = async (data: TWorkplace) => {
-    await add(data);
+    const func = workplace ? onUpdate : add;
+    await func(data);
     setIsDialogOpen(false);
   };
+
+  console.log(errors);
 
   return (
     <Box sx={{ p: 2, pb: 0 }}>
@@ -251,9 +256,8 @@ const AddWorkplace = ({
               color="primary"
               fullWidth
               sx={{ fontSize: "1.2rem", py: 1 }}
-              disabled={!isValid}
             >
-              Add
+              {workplace ? "Update" : "Add"}
             </Button>
 
             <Button
@@ -275,4 +279,4 @@ const AddWorkplace = ({
   );
 };
 
-export default AddWorkplace;
+export default WorkplaceForm;

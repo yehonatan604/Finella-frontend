@@ -8,13 +8,12 @@ import PageButtons from "../../Common/components/layout/PageButtons";
 import PlusButton from "../../Common/components/layout/PlusButton";
 import PageFilters from "../../Common/components/layout/PageFilters";
 import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
-import WorkplaceDetailsDialog from "../components/dialogs/detailsDialogs/WorkPlaceDetailsDialog";
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import useTheme from "../../Common/hooks/useTheme";
 import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
 import { TDataGridRow } from "../../Common/types/TDataGridRow";
 import AddFormDialog from "../../Common/components/dialogs/AddFormDialog";
-import AddWorkplace from "../forms/AddWorkplace";
+import WorkplaceForm from "../forms/WorkplaceForm";
 
 const WorkplacesPage = () => {
   const {
@@ -24,7 +23,6 @@ const WorkplacesPage = () => {
     setIsUpdateDialogOpen,
     selectedWorkplace,
     setSelectedWorkplace,
-    onUpdate,
     setSearch,
     filteredRows,
     showInactive,
@@ -91,23 +89,28 @@ const WorkplacesPage = () => {
       <PageButtons fileName="workplaces" rows={rows} Doc={WorkplacesPdfDoc} />
       <PlusButton onClick={() => setIsAddDialogOpen(true)} />
 
-      {isUpdateDialogOpen && selectedWorkplace && (
-        <WorkplaceDetailsDialog
-          isOpen={isUpdateDialogOpen}
-          onClose={() => setIsUpdateDialogOpen(false)}
-          workplace={selectedWorkplace}
-          onSubmit={(data) => {
-            onUpdate(data);
-            setSelectedWorkplace(null);
-          }}
-        />
-      )}
-
       <AddFormDialog
         open={isAddDialogOpen}
-        onClose={() => setIsAddDialogOpen(false)}
+        onClose={() => {
+          setIsAddDialogOpen(false);
+        }}
         title="Add a Workplace"
-        formComponent={<AddWorkplace setIsDialogOpen={setIsAddDialogOpen} />}
+        formComponent={<WorkplaceForm setIsDialogOpen={setIsAddDialogOpen} />}
+      />
+
+      <AddFormDialog
+        open={isUpdateDialogOpen}
+        onClose={() => {
+          setSelectedWorkplace(null);
+          setIsUpdateDialogOpen(false);
+        }}
+        title="Edit Workplace"
+        formComponent={
+          <WorkplaceForm
+            setIsDialogOpen={setIsUpdateDialogOpen}
+            workplace={selectedWorkplace}
+          />
+        }
       />
     </>
   );

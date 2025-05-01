@@ -56,6 +56,9 @@ const useWorkplaces = () => {
         try {
             dispatch(entitiesActions.setLoading(true));
 
+            console.log("workplace", workplace);
+
+
             const finalWorlpace = {
                 userId: user?._id,
                 _id: workplace._id ? workplace._id : (workplace as TWorkplace & { id: string })["id"],
@@ -67,11 +70,15 @@ const useWorkplaces = () => {
                 endDate: workplace.endDate,
                 phone: {
                     main: workplace.phone
-                        ? (workplace as TWorkplaceWithFormPhone).phone["main phone"] :
-                        (workplace as TWorkplace & { "main phone": string })["main phone"],
+                        ? workplace.phone.main
+                            ? workplace.phone.main
+                            : (workplace as TWorkplaceWithFormPhone).phone["main phone"]
+                        : (workplace as TWorkplace & { "main phone": string })["main phone"],
                     secondary: workplace.phone
-                        ? (workplace as TWorkplaceWithFormPhone).phone["secondary phone"] :
-                        (workplace as TWorkplace & { "secondary phone": string })["secondary phone"],
+                        ? workplace.phone.secondary
+                            ? workplace.phone.secondary
+                            : (workplace as TWorkplaceWithFormPhone).phone["secondary phone"]
+                        : (workplace as TWorkplace & { "secondary phone": string })["secondary phone"],
                 },
                 email: workplace.email,
                 withVat: workplace.withVat,
