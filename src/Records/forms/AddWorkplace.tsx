@@ -6,22 +6,31 @@ import { addWorkplaceSchema } from "../validations/addWorkplace.schema";
 import { TWorkplace } from "../types/TWorkplace";
 import useWorkplaces from "../hooks/useWorkplace";
 import { addWorkplaceFormDefault } from "./initialData/addWorkplaceFormDefault";
+import useAuth from "../../Auth/hooks/useAuth";
+import FormValidationMessage from "../../Common/components/FormValidationMessage";
 
 const AddWorkplace = ({
   setIsDialogOpen,
 }: {
   setIsDialogOpen: (isOpen: boolean) => void;
 }) => {
+  const { add } = useWorkplaces();
+  const { user } = useAuth();
+
   const {
     handleSubmit,
     register,
-    formState: { errors },
+    reset,
+    watch,
+    setError,
+    clearErrors,
+    setValue,
+    formState: { errors, isValid },
   } = useForm({
     mode: "onChange",
-    defaultValues: addWorkplaceFormDefault,
+    defaultValues: addWorkplaceFormDefault(user?._id),
     resolver: joiResolver(addWorkplaceSchema),
   });
-  const { add } = useWorkplaces();
 
   const onFormSubmit = async (data: TWorkplace) => {
     await add(data);
@@ -35,7 +44,6 @@ const AddWorkplace = ({
         component={Paper}
         sx={{
           p: 4,
-          textAlign: "center",
         }}
       >
         <form onSubmit={handleSubmit(onFormSubmit)}>
@@ -44,6 +52,7 @@ const AddWorkplace = ({
               label="Name"
               {...register("name")}
               variant="outlined"
+              required
               fullWidth
               sx={{ mb: 2 }}
               color={errors.name ? "error" : "primary"}
@@ -57,6 +66,7 @@ const AddWorkplace = ({
               label="Email"
               {...register("email")}
               variant="outlined"
+              required
               fullWidth
               sx={{ mb: 2 }}
               color={errors.email ? "error" : "primary"}
@@ -73,6 +83,7 @@ const AddWorkplace = ({
               label="Street"
               {...register("address.street")}
               variant="outlined"
+              required
               fullWidth
               sx={{ mb: 2 }}
               color={errors.address?.street ? "error" : "primary"}
@@ -82,6 +93,7 @@ const AddWorkplace = ({
               label="House Number"
               {...register("address.houseNumber")}
               variant="outlined"
+              required
               fullWidth
               sx={{ mb: 2 }}
               color={errors.address?.houseNumber ? "error" : "primary"}
@@ -90,6 +102,7 @@ const AddWorkplace = ({
             <TextField
               label="City"
               {...register("address.city")}
+              required
               variant="outlined"
               fullWidth
               sx={{ mb: 2 }}
@@ -102,6 +115,7 @@ const AddWorkplace = ({
             <TextField
               label="Country"
               {...register("address.country")}
+              required
               variant="outlined"
               fullWidth
               sx={{ mb: 2 }}
@@ -124,6 +138,7 @@ const AddWorkplace = ({
               label="Main Phone"
               {...register("phone.main")}
               variant="outlined"
+              required
               fullWidth
               sx={{ mb: 2 }}
               color={errors.phone?.main ? "error" : "primary"}
@@ -148,14 +163,30 @@ const AddWorkplace = ({
               {...register("pricePerHour")}
               variant="outlined"
               fullWidth
+              type="number"
               sx={{ mb: 2 }}
               color={errors.pricePerHour ? "error" : "primary"}
               slotProps={{ inputLabel: { shrink: true } }}
+              error={!!errors.pricePerHour}
+              helperText={errors.pricePerHour?.message as string}
+              onChange={(e) => {
+                if (+e.target.value <= 0 && +watch("pricePerMonth")! <= 0) {
+                  setError("pricePerHour", {
+                    type: "manual",
+                    message: "Price per hour or month must be greater than 0",
+                  });
+                } else {
+                  clearErrors("pricePerHour");
+                  clearErrors("pricePerMonth");
+                  setValue("pricePerHour", +e.target.value);
+                }
+              }}
             />
             <TextField
               label="With Vat"
               {...register("withVat")}
               variant="outlined"
+              required
               fullWidth
               sx={{ mb: 2 }}
               color={errors.withVat ? "error" : "primary"}
@@ -169,18 +200,35 @@ const AddWorkplace = ({
               sx={{ mb: 2 }}
               color={errors.pricePerMonth ? "error" : "primary"}
               slotProps={{ inputLabel: { shrink: true } }}
+              type="number"
+              error={!!errors.pricePerMonth}
+              helperText={errors.pricePerMonth?.message as string}
+              onChange={(e) => {
+                if (+e.target.value <= 0 && +watch("pricePerHour")! <= 0) {
+                  setError("pricePerMonth", {
+                    type: "manual",
+                    message: "Price per hour or month must be greater than 0",
+                  });
+                } else {
+                  clearErrors("pricePerMonth");
+                  clearErrors("pricePerHour");
+                  setValue("pricePerMonth", +e.target.value);
+                }
+              }}
             />
           </Box>
 
           <Box sx={{ display: "flex", gap: 2 }}>
             <TextField
               label="Start Date"
+              required
               {...register("startDate")}
               variant="outlined"
               fullWidth
               sx={{ mb: 2 }}
               color={errors.startDate ? "error" : "primary"}
               slotProps={{ inputLabel: { shrink: true } }}
+              type="date"
             />
             <TextField
               label="End Date"
@@ -190,8 +238,11 @@ const AddWorkplace = ({
               sx={{ mb: 3 }}
               color={errors.endDate ? "error" : "primary"}
               slotProps={{ inputLabel: { shrink: true } }}
+              type="date"
             />
           </Box>
+
+          <FormValidationMessage isValid={isValid} />
 
           <Box sx={{ display: "flex", gap: 2 }}>
             <Button
@@ -200,6 +251,7 @@ const AddWorkplace = ({
               color="primary"
               fullWidth
               sx={{ fontSize: "1.2rem", py: 1 }}
+              disabled={!isValid}
             >
               Add
             </Button>
@@ -210,6 +262,9 @@ const AddWorkplace = ({
               color="error"
               fullWidth
               sx={{ fontSize: "1.2rem", py: 1 }}
+              onClick={() => {
+                reset(addWorkplaceFormDefault(user?._id));
+              }}
             >
               Reset
             </Button>

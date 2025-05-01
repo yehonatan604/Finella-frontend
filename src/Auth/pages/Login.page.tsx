@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { loginFormDefault } from "../forms/loginFormDefault";
 import AbsTopIcons from "../../Common/components/layout/AbsTopIcons";
+import FormValidationMessage from "../../Common/components/FormValidationMessage";
 
 const LoginPage = () => {
   const {
@@ -76,11 +77,7 @@ const LoginPage = () => {
             sx={{ mb: 3 }}
           />
 
-          {!isValid && (
-            <Typography variant="body2" color="error" sx={{ mb: 2 }}>
-              * Please fill all the required fields to sign up
-            </Typography>
-          )}
+          <FormValidationMessage isValid={isValid} />
 
           <Button
             type="submit"

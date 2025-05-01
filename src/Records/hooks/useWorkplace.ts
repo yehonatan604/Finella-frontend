@@ -43,23 +43,21 @@ const useWorkplaces = () => {
     const add = useCallback(async (workplace: TWorkplace) => {
         try {
             dispatch(entitiesActions.setLoading(true));
-            const res = await sendApiRequest("/work-place", HTTPMethodTypes.POST, {
-                ...workplace,
-                userId: user?._id,
-            });
+            const res = await sendApiRequest("/work-place", HTTPMethodTypes.POST, workplace);
             dispatch(entitiesActions.addEntityItem({ type: "workplaces", item: res.data }));
             toastify.success("Workplace added successfully");
         } catch (e) {
             console.log(e);
             toastify.error("Error adding workplace");
         }
-    }, [dispatch, user?._id]);
+    }, [dispatch]);
 
     const onUpdate = useCallback(async (workplace: TWorkplace) => {
         try {
             dispatch(entitiesActions.setLoading(true));
 
             const finalWorlpace = {
+                userId: user?._id,
                 _id: workplace._id ? workplace._id : (workplace as TWorkplace & { id: string })["id"],
                 name: workplace.name,
                 address: workplace.address,
@@ -87,8 +85,10 @@ const useWorkplaces = () => {
         catch (e) {
             console.log(e);
             toastify.error("Error updating workplace");
+        } finally {
+            dispatch(entitiesActions.setLoading(false));
         }
-    }, [dispatch]);
+    }, [dispatch, user?._id]);
 
     const onCellUpdate = useMemo(
         () => (row: TWorkplace & { id: string | undefined }) => {

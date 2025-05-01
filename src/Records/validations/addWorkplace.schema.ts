@@ -1,6 +1,7 @@
 import Joi from "joi";
 
 export const addWorkplaceSchema = Joi.object({
+    userId: Joi.string().required(),
     name: Joi.string().required(),
     email: Joi.string().email({ tlds: { allow: false } }).required(),
     address: Joi.object({

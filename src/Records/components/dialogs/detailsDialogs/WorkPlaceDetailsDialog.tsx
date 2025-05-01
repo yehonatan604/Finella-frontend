@@ -33,8 +33,8 @@ const WorkplaceDetailsDialog = ({
   workplace,
   onSubmit,
 }: WorkplaceDetailsDialogProps) => {
-  const [data, setData] = useState<TWorkplace | DeepPartial<TWorkplace>>(workplace);
   const { mode } = useTheme();
+  const [data, setData] = useState<TWorkplace | DeepPartial<TWorkplace>>(workplace);
 
   const handleChanges = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

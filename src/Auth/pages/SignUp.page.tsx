@@ -15,6 +15,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { signupFormDefault } from "../forms/signupFormDefault";
 import useTheme from "../../Common/hooks/useTheme";
 import AbsTopIcons from "../../Common/components/layout/AbsTopIcons";
+import FormValidationMessage from "../../Common/components/FormValidationMessage";
 
 const SignUpPage = () => {
   const {
@@ -136,11 +137,7 @@ const SignUpPage = () => {
             sx={{ mb: 3 }}
           />
 
-          {!isValid && (
-            <Typography variant="body2" color="error" sx={{ mb: 2 }}>
-              * Please fill all the required fields to sign up
-            </Typography>
-          )}
+          <FormValidationMessage isValid={isValid} />
 
           <Button
             type="submit"

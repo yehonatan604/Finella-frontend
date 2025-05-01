@@ -81,6 +81,7 @@ const useSalary = (isPage?: boolean) => {
         handleSubmit,
         register,
         setValue,
+        watch,
         formState: { errors },
     } = useForm<TSalary>({
         mode: "onChange",
@@ -326,6 +327,7 @@ const useSalary = (isPage?: boolean) => {
         handleSubmit,
         register,
         setValue,
+        watch,
         errors,
         onSubmit,
         toggleUploadDialog,

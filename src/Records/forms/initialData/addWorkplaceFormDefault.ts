@@ -1,7 +1,7 @@
 import { TWorkplace } from "../../types/TWorkplace";
 
-export const addWorkplaceFormDefault: TWorkplace = {
-    userId: "",
+export const addWorkplaceFormDefault = (userId: string): TWorkplace => ({
+    userId,
     name: "",
     email: "",
     address: {
@@ -18,7 +18,7 @@ export const addWorkplaceFormDefault: TWorkplace = {
     pricePerHour: 0,
     pricePerMonth: 0,
     withVat: false,
-    startDate: "",
+    startDate: new Date().toISOString().split("T")[0],
     endDate: "",
     notes: "",
-};
+});
