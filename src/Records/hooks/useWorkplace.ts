@@ -232,6 +232,7 @@ const useWorkplaces = () => {
         paginationModel,
         setPaginationModel,
         paginatedRows: paginatedRows(paginationModel, filteredRows),
+        user
     }
 }
 

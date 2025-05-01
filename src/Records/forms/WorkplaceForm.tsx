@@ -1,12 +1,20 @@
 import React from "react";
-import { Box, Button, TextField, Container, Divider, Paper } from "@mui/material";
+import {
+  Box,
+  Button,
+  TextField,
+  Container,
+  Divider,
+  Paper,
+  FormControlLabel,
+  Checkbox,
+} from "@mui/material";
 import { useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { workplaceSchema } from "../validations/addWorkplace.schema";
 import { TWorkplace } from "../types/TWorkplace";
 import useWorkplaces from "../hooks/useWorkplace";
 import { addWorkplaceFormDefault } from "./initialData/addWorkplaceFormDefault";
-import useAuth from "../../Auth/hooks/useAuth";
 import FormValidationMessage from "../../Common/components/FormValidationMessage";
 
 const WorkplaceForm = ({
@@ -16,8 +24,7 @@ const WorkplaceForm = ({
   setIsDialogOpen: (isOpen: boolean) => void;
   workplace?: TWorkplace | null;
 }) => {
-  const { add, onUpdate } = useWorkplaces();
-  const { user } = useAuth();
+  const { add, onUpdate, user } = useWorkplaces();
 
   const {
     handleSubmit,
@@ -40,8 +47,6 @@ const WorkplaceForm = ({
     setIsDialogOpen(false);
   };
 
-  console.log(errors);
-
   return (
     <Box sx={{ p: 2, pb: 0 }}>
       <Container
@@ -61,6 +66,8 @@ const WorkplaceForm = ({
               fullWidth
               sx={{ mb: 2 }}
               color={errors.name ? "error" : "primary"}
+              error={!!errors.name}
+              helperText={errors.name?.message as string}
               slotProps={{
                 inputLabel: {
                   shrink: true,
@@ -73,6 +80,9 @@ const WorkplaceForm = ({
               variant="outlined"
               required
               fullWidth
+              type="email"
+              error={!!errors.email}
+              helperText={errors.email?.message as string}
               sx={{ mb: 2 }}
               color={errors.email ? "error" : "primary"}
               slotProps={{
@@ -89,6 +99,8 @@ const WorkplaceForm = ({
               {...register("address.street")}
               variant="outlined"
               required
+              error={!!errors.address?.street}
+              helperText={errors.address?.street?.message as string}
               fullWidth
               sx={{ mb: 2 }}
               color={errors.address?.street ? "error" : "primary"}
@@ -103,6 +115,8 @@ const WorkplaceForm = ({
               sx={{ mb: 2 }}
               color={errors.address?.houseNumber ? "error" : "primary"}
               slotProps={{ inputLabel: { shrink: true } }}
+              error={!!errors.address?.houseNumber}
+              helperText={errors.address?.houseNumber?.message as string}
             />
             <TextField
               label="City"
@@ -113,6 +127,8 @@ const WorkplaceForm = ({
               sx={{ mb: 2 }}
               color={errors.address?.city ? "error" : "primary"}
               slotProps={{ inputLabel: { shrink: true } }}
+              error={!!errors.address?.city}
+              helperText={errors.address?.city?.message as string}
             />
           </Box>
 
@@ -126,6 +142,8 @@ const WorkplaceForm = ({
               sx={{ mb: 2 }}
               color={errors.address?.country ? "error" : "primary"}
               slotProps={{ inputLabel: { shrink: true } }}
+              error={!!errors.address?.country}
+              helperText={errors.address?.country?.message as string}
             />
             <TextField
               label="Zip"
@@ -135,6 +153,8 @@ const WorkplaceForm = ({
               sx={{ mb: 2 }}
               color={errors.address?.zip ? "error" : "primary"}
               slotProps={{ inputLabel: { shrink: true } }}
+              error={!!errors.address?.zip}
+              helperText={errors.address?.zip?.message as string}
             />
           </Box>
 
@@ -148,6 +168,8 @@ const WorkplaceForm = ({
               sx={{ mb: 2 }}
               color={errors.phone?.main ? "error" : "primary"}
               slotProps={{ inputLabel: { shrink: true } }}
+              error={!!errors.phone?.main}
+              helperText={errors.phone?.main?.message as string}
             />
             <TextField
               label="Secondary Phone"
@@ -157,19 +179,20 @@ const WorkplaceForm = ({
               sx={{ mb: 2 }}
               color={errors.phone?.secondary ? "error" : "primary"}
               slotProps={{ inputLabel: { shrink: true } }}
+              error={!!errors.phone?.secondary}
+              helperText={errors.phone?.secondary?.message as string}
             />
           </Box>
 
-          <Divider sx={{ my: 2, background: "silver" }} />
+          <Divider sx={{ mb: 2, color: "silver" }} />
 
-          <Box sx={{ display: "flex", gap: 2 }}>
+          <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
             <TextField
               label="price Per Hour"
               {...register("pricePerHour")}
               variant="outlined"
-              fullWidth
               type="number"
-              sx={{ mb: 2 }}
+              sx={{ mb: 2, width: "33%" }}
               color={errors.pricePerHour ? "error" : "primary"}
               slotProps={{ inputLabel: { shrink: true } }}
               error={!!errors.pricePerHour}
@@ -187,22 +210,12 @@ const WorkplaceForm = ({
                 }
               }}
             />
-            <TextField
-              label="With Vat"
-              {...register("withVat")}
-              variant="outlined"
-              required
-              fullWidth
-              sx={{ mb: 2 }}
-              color={errors.withVat ? "error" : "primary"}
-              slotProps={{ inputLabel: { shrink: true } }}
-            />
+
             <TextField
               label="price Per Month"
               {...register("pricePerMonth")}
               variant="outlined"
-              fullWidth
-              sx={{ mb: 2 }}
+              sx={{ mb: 2, width: "33%" }}
               color={errors.pricePerMonth ? "error" : "primary"}
               slotProps={{ inputLabel: { shrink: true } }}
               type="number"
@@ -221,6 +234,26 @@ const WorkplaceForm = ({
                 }
               }}
             />
+            <Box
+              sx={{
+                width: "33%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    {...register("withVat")}
+                    color="primary"
+                    defaultChecked={workplace?.withVat}
+                  />
+                }
+                label="With VAT"
+                sx={{ mb: 2 }}
+              />
+            </Box>
           </Box>
 
           <Box sx={{ display: "flex", gap: 2 }}>
@@ -267,7 +300,7 @@ const WorkplaceForm = ({
               fullWidth
               sx={{ fontSize: "1.2rem", py: 1 }}
               onClick={() => {
-                reset(addWorkplaceFormDefault(user?._id));
+                reset(workplace ? workplace : addWorkplaceFormDefault(user?._id));
               }}
             >
               Reset
