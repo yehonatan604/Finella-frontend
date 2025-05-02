@@ -18,6 +18,7 @@ type FormFieldProps = {
   rows?: number;
   multiline?: boolean;
   selectItems?: React.ReactNode;
+  doRegister?: boolean;
 };
 
 const FormField = (props: FormFieldProps) => {
@@ -35,6 +36,7 @@ const FormField = (props: FormFieldProps) => {
     rows = 1,
     multiline = false,
     selectItems,
+    doRegister = true,
   } = props;
   const {
     register,
@@ -47,7 +49,7 @@ const FormField = (props: FormFieldProps) => {
     <TextField
       className={className}
       label={label}
-      {...register(name)}
+      {...(doRegister ? register(name) : {})}
       select
       required={required}
       variant="outlined"
@@ -83,7 +85,7 @@ const FormField = (props: FormFieldProps) => {
     <TextField
       className={className}
       label={label}
-      {...register(name)}
+      {...(doRegister ? register(name) : {})}
       type={type}
       required={required}
       variant="outlined"

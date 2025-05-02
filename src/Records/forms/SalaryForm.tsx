@@ -55,8 +55,10 @@ const SalaryForm = ({
     setValue,
     watch,
     reset,
-    formState: { isValid },
+    formState: { errors, isValid },
   } = formMethods;
+
+  console.log(errors);
 
   const onFormSubmit = async (data: TSalary) => {
     const func = salary ? onUpdate : onSubmit;
@@ -88,6 +90,7 @@ const SalaryForm = ({
                 <FormField
                   label="Workplace"
                   name="workPlaceId"
+                  doRegister={false}
                   required
                   selectItems={[
                     <MenuItem key="" value="" disabled>
@@ -118,6 +121,7 @@ const SalaryForm = ({
                 <FormField
                   label="Month"
                   name="month"
+                  doRegister={false}
                   required
                   selectArray={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
                   sx={{ width: "24%", mb: 0 }}
@@ -133,6 +137,7 @@ const SalaryForm = ({
                 <FormField
                   label="Year"
                   name="year"
+                  doRegister={false}
                   required
                   sx={{ width: "24%", mb: 0 }}
                   defaultValue={watch("date").split("-")[1] || ""}
@@ -191,10 +196,6 @@ const SalaryForm = ({
                         name={`hours.${index}.day`}
                         type="number"
                         required
-                        defaultValue={item.day || ""}
-                        onChange={(e) => {
-                          setValue(`hours.${index}.day`, e.target.value);
-                        }}
                       />
 
                       <FormField
@@ -238,7 +239,7 @@ const SalaryForm = ({
                         >
                           -
                         </Button>
-                        {index === salaryHours.length - 1 && (
+                        {index === (salary ? salary.hours : salaryHours).length - 1 && (
                           <Button
                             variant="contained"
                             color="primary"
