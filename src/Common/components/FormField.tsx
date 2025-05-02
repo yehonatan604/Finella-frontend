@@ -10,13 +10,14 @@ type FormFieldProps = {
   type?: string;
   required?: boolean;
   width?: string;
-  selectArray?: string[];
+  selectArray?: string[] | number[];
   defaultValue?: string;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   className?: string;
   sx?: object;
   rows?: number;
   multiline?: boolean;
+  selectItems?: React.ReactNode;
 };
 
 const FormField = (props: FormFieldProps) => {
@@ -33,6 +34,7 @@ const FormField = (props: FormFieldProps) => {
     sx = {},
     rows = 1,
     multiline = false,
+    selectItems,
   } = props;
   const {
     register,
@@ -41,7 +43,7 @@ const FormField = (props: FormFieldProps) => {
 
   type KeyOfError = keyof typeof errors;
 
-  return selectArray ? (
+  return selectArray || selectItems ? (
     <TextField
       className={className}
       label={label}
@@ -70,11 +72,12 @@ const FormField = (props: FormFieldProps) => {
         }
       }}
     >
-      {selectArray.map((option) => (
-        <MenuItem key={option} value={option}>
-          {option}
-        </MenuItem>
-      ))}
+      {selectItems ??
+        selectArray!.map((option) => (
+          <MenuItem key={option} value={option}>
+            {option}
+          </MenuItem>
+        ))}
     </TextField>
   ) : (
     <TextField

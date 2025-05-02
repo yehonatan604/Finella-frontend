@@ -2,7 +2,6 @@ import React from "react";
 import {
   Box,
   Button,
-  TextField,
   Container,
   Divider,
   MenuItem,
@@ -13,10 +12,12 @@ import {
 import useSalary from "../hooks/useSalary";
 import UploadExcelDialog from "../components/dialogs/UploadExcelDialog";
 import { TSalary } from "../types/TSalary";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { addSalaryFormDefault } from "./initialData/addSalaryFormDefault";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { salarySchema } from "../validations/salary.schema";
+import FormField from "../../Common/components/FormField";
+import useTheme from "../../Common/hooks/useTheme";
 
 const SalaryForm = ({
   setIsDialogOpen,
@@ -42,18 +43,20 @@ const SalaryForm = ({
     user,
   } = useSalary();
 
-  const {
-    handleSubmit,
-    register,
-    setValue,
-    watch,
-    reset,
-    formState: { errors, isValid },
-  } = useForm<TSalary>({
-    mode: "onChange",
+  const { mode } = useTheme();
+
+  const formMethods = useForm<TSalary>({
     defaultValues: salary ?? addSalaryFormDefault(user?._id || ""),
     resolver: joiResolver(salarySchema),
   });
+
+  const {
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    formState: { isValid },
+  } = formMethods;
 
   const onFormSubmit = async (data: TSalary) => {
     const func = salary ? onUpdate : onSubmit;
@@ -71,247 +74,215 @@ const SalaryForm = ({
             p: 4,
           }}
         >
-          <form onSubmit={handleSubmit(onFormSubmit)}>
-            <Box
-              sx={{
-                display: "flex",
-                gap: 2,
-                justifyContent: "start",
-                alignItems: "center",
-                mb: 2,
-              }}
-            >
-              <TextField
-                label="workPlace"
-                select
-                value={watch("workPlaceId")}
-                {...register("workPlaceId")}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (value === "__new__") {
-                    setValue("workPlaceId", "");
-                    setIsAddWorkplaceDialogOpen(true);
-                  } else {
-                    setValue("workPlaceId", value);
+          <FormProvider {...formMethods}>
+            <form onSubmit={handleSubmit(onFormSubmit)}>
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 2,
+                  justifyContent: "start",
+                  alignItems: "center",
+                  mb: 2,
+                }}
+              >
+                <FormField
+                  label="Workplace"
+                  name="workPlaceId"
+                  required
+                  selectItems={[
+                    <MenuItem key="" value="" disabled>
+                      Select a Workplace
+                    </MenuItem>,
+                    <MenuItem key="__new__" value="__new__">
+                      Create New...
+                    </MenuItem>,
+                    ...workplaces!.map((workplace) => (
+                      <MenuItem key={workplace._id} value={workplace._id}>
+                        {workplace.name}
+                      </MenuItem>
+                    )),
+                  ]}
+                  defaultValue={salary?.workPlaceId || ""}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === "__new__") {
+                      setValue("workPlaceId", "");
+                      setIsAddWorkplaceDialogOpen(true);
+                    } else {
+                      setValue("workPlaceId", value);
+                    }
+                  }}
+                  sx={{ width: "30%", mb: 0 }}
+                />
+
+                <FormField
+                  label="Month"
+                  name="month"
+                  required
+                  selectArray={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
+                  sx={{ width: "24%", mb: 0 }}
+                  defaultValue={watch("date").split("-")[0] || ""}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value) {
+                      setValue("date", `${value}-${watch("date").split("-")[1]}`);
+                    }
+                  }}
+                />
+
+                <FormField
+                  label="Year"
+                  name="year"
+                  required
+                  sx={{ width: "24%", mb: 0 }}
+                  defaultValue={watch("date").split("-")[1] || ""}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value) {
+                      setValue("date", `${watch("date").split("-")[0]}-${value}`);
+                    }
+                  }}
+                />
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={addBEntry}
+                      onChange={(e) => setAddBEntry(e.target.checked)}
+                    />
                   }
-                }}
-                variant="outlined"
-                sx={{ width: "30%", textAlign: "left" }}
-                color={errors.workPlaceId ? "error" : "primary"}
-              >
-                <MenuItem value="" disabled>
-                  Select a Workplace
-                </MenuItem>
-                <MenuItem value="__new__">Create New...</MenuItem>
-                {workplaces?.map((workplace) => (
-                  <MenuItem key={workplace._id} value={workplace._id}>
-                    {workplace.name}
-                  </MenuItem>
-                ))}
-              </TextField>
+                  label="Add Balance Entry"
+                />
+              </Box>
 
-              <TextField
-                label="Month"
-                select
-                variant="outlined"
-                sx={{ width: "24%" }}
-                color={errors.date ? "error" : "primary"}
-                slotProps={{
-                  inputLabel: {
-                    shrink: true,
-                  },
-                }}
-                value={watch("date").split("-")[0] || ""}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (value) {
-                    setValue("date", `${value}-${watch("date").split("-")[1]}`);
-                  }
-                }}
-              >
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((month) => (
-                  <MenuItem key={month} value={month}>
-                    {month}
-                  </MenuItem>
-                ))}
-              </TextField>
+              <Divider sx={{ my: 2, background: "silver" }} />
 
-              <TextField
-                label="Year"
-                type="number"
-                variant="outlined"
-                sx={{ width: "24%" }}
-                color={errors.date ? "error" : "primary"}
-                slotProps={{
-                  inputLabel: {
-                    shrink: true,
-                  },
-                }}
-                value={watch("date").split("-")[1] || ""}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (value) {
-                    setValue("date", `${watch("date").split("-")[0]}-${value}`);
-                  }
-                }}
-              />
-
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={addBEntry}
-                    onChange={(e) => setAddBEntry(e.target.checked)}
-                  />
-                }
-                label="Add Balance Entry"
-              />
-            </Box>
-
-            <Divider sx={{ my: 2, background: "silver" }} />
-
-            <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
-              <Button
-                variant="contained"
-                color="primary"
-                size="small"
-                onClick={addNewSalaryHour}
-              >
-                Add Salary Hour
-              </Button>
-              <Button
-                variant="contained"
-                color="success"
-                fullWidth
-                onClick={toggleUploadDialog}
-                size="small"
-                sx={{ width: "30%" }}
-              >
-                Add Hours From Excel
-              </Button>
-            </Box>
-            <Divider sx={{ my: 2, background: "silver" }} />
-
-            <Box sx={{ display: "flex", gap: 2, flexDirection: "column" }}>
-              {(salary ? salary.hours : salaryHours).map((item, index) => (
-                <Box
-                  key={index}
-                  sx={{ display: "flex", gap: 2, flexDirection: "column" }}
+              <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="small"
+                  onClick={addNewSalaryHour}
                 >
-                  <Box key={index} sx={{ display: "flex", gap: 2 }}>
-                    <TextField
-                      label="Day"
-                      type="number"
-                      variant="outlined"
-                      fullWidth
-                      sx={{ mb: 2 }}
-                      color={errors.hours?.[index]?.day ? "error" : "primary"}
-                      slotProps={{
-                        inputLabel: {
-                          shrink: true,
-                        },
-                      }}
-                      {...register(`hours.${index}.day`)}
-                      defaultValue={item.day || ""}
-                      onChange={(e) => {
-                        setValue(`hours.${index}.day`, e.target.value);
-                      }}
-                    />
-                    <TextField
-                      label="Start Time"
-                      variant="outlined"
-                      fullWidth
-                      sx={{ mb: 2 }}
-                      color={errors.hours?.[index]?.startTime ? "error" : "primary"}
-                      slotProps={{
-                        inputLabel: {
-                          shrink: true,
-                        },
-                      }}
-                      {...register(`hours.${index}.startTime`)}
-                      defaultValue={item.startTime || ""}
-                      onChange={(e) => {
-                        setValue(`hours.${index}.startTime`, e.target.value);
-                      }}
-                    />
-                    <TextField
-                      label="End Time"
-                      variant="outlined"
-                      fullWidth
-                      sx={{ mb: 2 }}
-                      color={errors.hours?.[index]?.endTime ? "error" : "primary"}
-                      slotProps={{
-                        inputLabel: {
-                          shrink: true,
-                        },
-                      }}
-                      {...register(`hours.${index}.endTime`)}
-                      defaultValue={item.endTime || ""}
-                      onChange={(e) => {
-                        setValue(`hours.${index}.endTime`, e.target.value);
-                      }}
-                    />
+                  Add Salary Hour
+                </Button>
+                <Button
+                  variant="contained"
+                  color="success"
+                  fullWidth
+                  onClick={toggleUploadDialog}
+                  size="small"
+                  sx={{ width: "30%" }}
+                >
+                  Add Hours From Excel
+                </Button>
+              </Box>
+              <Divider sx={{ my: 2, background: "silver" }} />
 
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        mb: 2,
-                        gap: 2,
-                      }}
-                    >
-                      <Button
-                        variant="contained"
-                        color="error"
-                        size="small"
-                        onClick={() => removeSalaryHour(index)}
+              <Box sx={{ display: "flex", gap: 2, flexDirection: "column" }}>
+                {(salary ? salary.hours : salaryHours).map((item, index) => (
+                  <Box
+                    key={index}
+                    sx={{ display: "flex", gap: 2, flexDirection: "column" }}
+                  >
+                    <Box key={index} sx={{ display: "flex", gap: 2 }}>
+                      <FormField
+                        label="Day"
+                        name={`hours.${index}.day`}
+                        type="number"
+                        required
+                        defaultValue={item.day || ""}
+                        onChange={(e) => {
+                          setValue(`hours.${index}.day`, e.target.value);
+                        }}
+                      />
+
+                      <FormField
+                        className={mode === "dark" ? "dark" : ""}
+                        label="Start Time"
+                        name={`hours.${index}.startTime`}
+                        type="time"
+                        required
+                        defaultValue={item.startTime || ""}
+                        onChange={(e) => {
+                          setValue(`hours.${index}.startTime`, e.target.value);
+                        }}
+                      />
+
+                      <FormField
+                        className={mode === "dark" ? "dark" : ""}
+                        label="End Time"
+                        name={`hours.${index}.endTime`}
+                        type="time"
+                        required
+                        defaultValue={item.endTime || ""}
+                        onChange={(e) => {
+                          setValue(`hours.${index}.endTime`, e.target.value);
+                        }}
+                      />
+
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          mb: 2,
+                          gap: 2,
+                        }}
                       >
-                        -
-                      </Button>
-                      {index === salaryHours.length - 1 && (
                         <Button
                           variant="contained"
-                          color="primary"
+                          color="error"
                           size="small"
-                          onClick={addNewSalaryHour}
+                          onClick={() => removeSalaryHour(index)}
                         >
-                          +
+                          -
                         </Button>
-                      )}
+                        {index === salaryHours.length - 1 && (
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            size="small"
+                            onClick={addNewSalaryHour}
+                          >
+                            +
+                          </Button>
+                        )}
+                      </Box>
                     </Box>
                   </Box>
-                </Box>
-              ))}
-            </Box>
+                ))}
+              </Box>
 
-            {salaryHours.length > 0 && <Divider sx={{ my: 2, background: "silver" }} />}
+              {salaryHours.length > 0 && <Divider sx={{ my: 2, background: "silver" }} />}
 
-            <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-                sx={{ fontSize: "1.2rem", py: 1 }}
-                disabled={!isValid}
-              >
-                {salary ? "Update" : "Add"}
-              </Button>
+              <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                  sx={{ fontSize: "1.2rem", py: 1 }}
+                  disabled={!isValid}
+                >
+                  {salary ? "Update" : "Add"}
+                </Button>
 
-              <Button
-                type="reset"
-                variant="contained"
-                color="error"
-                fullWidth
-                sx={{ fontSize: "1.2rem", py: 1 }}
-                onClick={() => {
-                  reset(salary ?? addSalaryFormDefault(user?._id || ""));
-                }}
-              >
-                Reset
-              </Button>
-            </Box>
-          </form>
+                <Button
+                  type="reset"
+                  variant="contained"
+                  color="error"
+                  fullWidth
+                  sx={{ fontSize: "1.2rem", py: 1 }}
+                  onClick={() => {
+                    reset(salary ?? addSalaryFormDefault(user?._id || ""));
+                  }}
+                >
+                  Reset
+                </Button>
+              </Box>
+            </form>
+          </FormProvider>
         </Container>
         {isUploadDialogOpen && (
           <UploadExcelDialog
