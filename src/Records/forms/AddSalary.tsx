@@ -44,7 +44,8 @@ const SalaryForm = ({
     register,
     setValue,
     watch,
-    formState: { errors },
+    reset,
+    formState: { errors, isValid },
   } = useForm<TSalary>({
     mode: "onChange",
     defaultValues: addSalaryFormDefault(user?._id || ""),
@@ -286,6 +287,7 @@ const SalaryForm = ({
                 color="primary"
                 fullWidth
                 sx={{ fontSize: "1.2rem", py: 1 }}
+                disabled={!isValid}
               >
                 Add
               </Button>
@@ -296,6 +298,9 @@ const SalaryForm = ({
                 color="error"
                 fullWidth
                 sx={{ fontSize: "1.2rem", py: 1 }}
+                onClick={() => {
+                  reset(addSalaryFormDefault(user?._id || ""));
+                }}
               >
                 Reset
               </Button>

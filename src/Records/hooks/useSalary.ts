@@ -21,9 +21,9 @@ const useSalary = (isPage?: boolean) => {
     const { workplaces, getAllWorkplaces } = useWorkplaces();
 
     const fetchedSalaries = useSelector((state: TRootState) => state.entitiesSlice.salaries);
-    const loading = useSelector((state: TRootState) => state.entitiesSlice.loading);
     const dispatch = useDispatch();
 
+    const [loading, setLoading] = useState(false);
     const [salaryHours, setSalaryHours] = useState<TSalaryHours[]>([]);
     const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
     const [fromYear, setFromYear] = useState(new Date().getFullYear());
@@ -81,13 +81,9 @@ const useSalary = (isPage?: boolean) => {
 
     const onSubmit = async (data: Record<string, unknown>) => {
         try {
-            const finalData = {
-                ...data,
-                hours: salaryHours,
-            };
-
-            const newSalary = await sendApiRequest("/salary", HTTPMethodTypes.POST, finalData);
-            dispatch(entitiesActions.addEntityItem({ type: "salaries", item: { ...finalData, _id: newSalary.data._id } }));
+            setLoading(true);
+            const newSalary = await sendApiRequest("/salary", HTTPMethodTypes.POST, data);
+            dispatch(entitiesActions.addEntityItem({ type: "salaries", item: { ...data, _id: newSalary.data._id } }));
             if (addBEntry) {
                 const workplaceName = workplaces?.find(
                     (workplace) => workplace._id === data.workPlaceId
@@ -102,7 +98,7 @@ const useSalary = (isPage?: boolean) => {
                 const balanceEntry = {
                     name: `Salary ${data.date} - ${workplaces?.find((workplace) => workplace._id === data.workPlaceId)?.name}`,
                     userId: user?._id,
-                    price: calcTotalSum(finalData as TSalary),
+                    price: calcTotalSum(data as TSalary),
                     date: fullDate,
                     type: "income",
                     withVat: data.withVat || false,
@@ -116,6 +112,8 @@ const useSalary = (isPage?: boolean) => {
             toastify.success("Salary added successfully");
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -125,13 +123,15 @@ const useSalary = (isPage?: boolean) => {
 
     const getSalaries = useCallback(async (query: string) => {
         try {
-            dispatch(entitiesActions.setLoading(true));
+            setLoading(true);
             const response = await sendApiRequest("/salary/by" + query, HTTPMethodTypes.GET);
             dispatch(entitiesActions.setEntity({ type: "salaries", data: response.data }));
         }
         catch (error) {
             console.log(error);
             toastify.error("Error fetching salaries");
+        } finally {
+            setLoading(false);
         }
     }, [dispatch]);
 
@@ -158,7 +158,7 @@ const useSalary = (isPage?: boolean) => {
     const onUpdate = useCallback(
         async (data: TSalary) => {
             try {
-                dispatch(entitiesActions.setLoading(true));
+                setLoading(true);
 
                 data.hours.forEach((hour) => {
                     delete hour._id;
@@ -171,6 +171,8 @@ const useSalary = (isPage?: boolean) => {
             } catch (error) {
                 console.log(error);
                 toastify.error("Error updating Balance Entry");
+            } finally {
+                setLoading(false);
             }
         },
         [dispatch]
@@ -228,6 +230,7 @@ const useSalary = (isPage?: boolean) => {
     const onDelete = useCallback(
         async (id: string) => {
             try {
+                setLoading(true);
                 await question(
                     "Delete Salary",
                     "Are you sure you want to delete this Salary?",
@@ -242,12 +245,15 @@ const useSalary = (isPage?: boolean) => {
             } catch (error) {
                 console.log(error);
                 toastify.error("Error deleting Salary");
+            } finally {
+                setLoading(false);
             }
         }, [user?._id, dispatch]);
 
     const onUndelete = useCallback(
         async (id: string) => {
             try {
+                setLoading(true);
                 await question(
                     "Undelete Salary",
                     "Are you sure you want to undelete this Salary?",
@@ -262,6 +268,8 @@ const useSalary = (isPage?: boolean) => {
             } catch (error) {
                 console.log(error);
                 toastify.error("Error undeleting Salary");
+            } finally {
+                setLoading(false);
             }
         },
         [user?._id, dispatch]
