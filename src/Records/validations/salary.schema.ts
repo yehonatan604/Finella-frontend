@@ -11,7 +11,6 @@ export const salarySchema = Joi.object({
         day: Joi.string().required(),
         startTime: Joi.string().required(),
         endTime: Joi.string().required(),
-        vat: Joi.number().optional(),
         notes: Joi.string().allow("").optional(),
     })),
     notes: Joi.string().allow("").optional(),

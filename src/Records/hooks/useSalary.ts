@@ -82,7 +82,7 @@ const useSalary = (isPage?: boolean) => {
         try {
             setLoading(true);
             const newSalary = await sendApiRequest("/salary", HTTPMethodTypes.POST, data);
-            dispatch(entitiesActions.addEntityItem({ type: "salaries", item: { ...data, _id: newSalary.data._id } }));
+            dispatch(entitiesActions.addEntityItem({ type: "salaries", item: newSalary.data }));
             if (addBEntry) {
                 const workplaceName = workplaces?.find(
                     (workplace) => workplace._id === data.workPlaceId
@@ -105,12 +105,13 @@ const useSalary = (isPage?: boolean) => {
                     notes: `Salary ${data.date} - ${workplaceName}`,
                 };
                 const newBentry = await sendApiRequest("/balance-entry", HTTPMethodTypes.POST, balanceEntry);
-                dispatch(entitiesActions.addEntityItem({ type: "balanceEntries", item: { ...balanceEntry, _id: newBentry.data._id } }));
+                dispatch(entitiesActions.addEntityItem({ type: "balanceEntries", item: newBentry.data }));
                 toastify.success("Balance Entry added successfully");
             }
             toastify.success("Salary added successfully");
         } catch (error) {
             console.log(error);
+            toastify.error("Error adding Salary");
         } finally {
             setLoading(false);
         }

@@ -3,7 +3,7 @@ import { GridColDef } from "@mui/x-data-grid";
 import { Box, Paper } from "@mui/material";
 import Page from "../../Common/components/layout/Page";
 import useWorkplaces from "../hooks/useWorkplace";
-import WorkplacesPdfDoc from "../components/WorkplacesPdfDoc";
+import WorkplacesPdfDoc from "../components/pdfDocs/WorkplacesPdfDoc";
 import PageButtons from "../../Common/components/layout/PageButtons";
 import PlusButton from "../../Common/components/layout/PlusButton";
 import PageFilters from "../../Common/components/layout/PageFilters";

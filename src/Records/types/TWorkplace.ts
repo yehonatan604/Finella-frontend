@@ -17,7 +17,6 @@ export type TWorkplace = TDbItem & {
     };
     pricePerHour?: number;
     pricePerMonth?: number;
-    withVat: boolean;
     startDate: string;
     endDate?: string;
     notes?: string;

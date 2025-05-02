@@ -6,7 +6,5 @@ export type TBalanceEntry = TDbItem & {
     date: string;
     type: "income" | "expense";
     price: number;
-    withVat: boolean;
-    isPayed: boolean;
     notes: string;
 };  

@@ -1,10 +1,8 @@
-import { useForm } from "react-hook-form";
 import { HTTPMethodTypes } from "../../Common/types/HTTPMethodTypes";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import useAuth from "../../Auth/hooks/useAuth";
 import { TBalanceEntry } from "../types/TBalanceEntry";
 import { sendApiRequest } from "../../Common/helpers/sendApiRequest";
-import { addBalanceEntryFormDefault } from "../forms/initialData/addBalanceEntryFormDefault";
 import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
 import { toastify } from "../../Common/utilities/toast";
 import { formatDate } from "../../Common/helpers/dateTimeHelpers";
@@ -20,15 +18,15 @@ import { defaultPageSize, paginatedRows } from "../../Common/helpers/paginationH
 const useBalanceEntry = () => {
     const { user } = useAuth();
     const fetchedBalanceEntries = useSelector((state: TRootState) => state.entitiesSlice.balanceEntries);
-    const loading = useSelector((state: TRootState) => state.entitiesSlice.loading);
     const dispatch = useDispatch();
 
+    const [loading, setLoading] = useState(false);
     const [fromYear, setFromYear] = useState(new Date().getFullYear());
     const [toYear, setToYear] = useState(new Date().getFullYear());
     const [months, setMonths] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
     const [pickedType, setPickedType] = useState<string>("all");
     const [selectedBEntry, setSelectedBEntry] = useState<TBalanceEntry | null>(null);
-    const [isBEntryDetailsDialogOpen, setIsBEntryDetailsDialogOpen] = useState(false);
+    const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
     const [search, setSearch] = useState<string>("");
     const [showInactive, setShowInactive] = useState(false);
     const [paginationModel, setPaginationModel] = useState({
@@ -36,52 +34,33 @@ const useBalanceEntry = () => {
         pageSize: defaultPageSize,
     });
 
-    const {
-        register,
-        formState: { errors },
-        handleSubmit,
-    } = useForm<TBalanceEntry>({
-        mode: "onChange",
-        defaultValues: addBalanceEntryFormDefault,
-    });
-
     const onUpdate = useCallback(
         async (data: TBalanceEntry) => {
             try {
-                dispatch(entitiesActions.setLoading(true));
+                setLoading(true);
 
                 const fixedPrice = data.price.toString().includes("-")
                     ? fixPriceString(data.price + "")
                     : data.price;
 
-                await sendApiRequest(`/balance-entry`, HTTPMethodTypes.PUT, {
+                const finalData = {
                     ...data,
                     userId: user?._id,
                     price: fixedPrice,
-                });
+                };
 
-                const finalBentries: TBalanceEntry[] = (fetchedBalanceEntries ?? []).map((bEntry) => {
-                    const fixedPrice = bEntry.price.toString().includes("-")
-                        ? fixPriceString(bEntry.price + "")
-                        : bEntry.price;
+                await sendApiRequest(`/balance-entry`, HTTPMethodTypes.PUT, finalData);
 
-                    const fixedBEntry = {
-                        ...bEntry,
-                        price: +fixedPrice,
-                    };
-
-                    return (bEntry._id === data._id ? fixedBEntry : bEntry)
-                });
-
-                dispatch(entitiesActions.setEntity({ type: "balanceEntries", data: finalBentries }));
-
+                dispatch(entitiesActions.updateEntityItem({ type: "balanceEntries", item: finalData, id: data._id! }));
                 toastify.success("Balance Entry updated successfully");
             } catch (error) {
                 console.log(error);
                 toastify.error("Error updating Balance Entry");
+            } finally {
+                setLoading(false);
             }
         },
-        [dispatch, fetchedBalanceEntries, user?._id]
+        [dispatch, user?._id]
     );
 
     const onCellUpdate = useMemo(
@@ -103,7 +82,6 @@ const useBalanceEntry = () => {
                             : row?.date,
                         type: row?.type,
                         price: row?.price,
-                        withVat: row?.withVat,
                         notes: row?.notes ?? ""
                     };
                 };
@@ -124,7 +102,6 @@ const useBalanceEntry = () => {
                     ),
                     type: row.type ?? fetchedRow?.type ?? "income",
                     price: Number(row.price ?? fetchedRow?.price ?? 0),
-                    withVat: row.withVat ?? fetchedRow?.withVat,
                     notes: row.notes ?? fetchedRow?.notes ?? "",
                 };
                 onUpdate(finalRow as unknown as TBalanceEntry);
@@ -145,6 +122,7 @@ const useBalanceEntry = () => {
     const onDelete = useCallback(
         async (id: string) => {
             try {
+                setLoading(true);
                 await question(
                     "Delete Balance Entry",
                     "Are you sure you want to delete this Balance Entry?",
@@ -159,12 +137,15 @@ const useBalanceEntry = () => {
             } catch (error) {
                 console.log(error);
                 toastify.error("Error deleting Balance Entry");
+            } finally {
+                setLoading(false);
             }
         }, [dispatch, user?._id]);
 
     const onUndelete = useCallback(
         async (id: string) => {
             try {
+                setLoading(true);
                 await question(
                     "Undelete Balance Entry",
                     "Are you sure you want to undelete this Balance Entry?",
@@ -179,31 +160,37 @@ const useBalanceEntry = () => {
             } catch (error) {
                 console.log(error);
                 toastify.error("Error undeleting Balance Entry");
+            } finally {
+                setLoading(false);
             }
         }
         , [user?._id, dispatch]);
 
     const onSubmit = useCallback(async (data: TBalanceEntry) => {
         try {
-            dispatch(entitiesActions.setLoading(true));
-            await sendApiRequest(`/balance-entry`, HTTPMethodTypes.POST, { ...data, userId: user?._id, notes: data.notes ?? "" });
-            dispatch(entitiesActions.addEntityItem({ type: "balanceEntries", item: data }));
+            setLoading(true);
+            const newBentry = await sendApiRequest(`/balance-entry`, HTTPMethodTypes.POST, { ...data, userId: user?._id, notes: data.notes ?? "" });
+            dispatch(entitiesActions.addEntityItem({ type: "balanceEntries", item: newBentry.data }));
             toastify.success("Balance Entry added successfully");
         } catch (error) {
             console.log(error);
             toastify.error("Error adding Balance Entry");
+        } finally {
+            setLoading(false);
         }
     }, [dispatch, user?._id]);
 
     const getBalanceEntries = useCallback(async (query: string) => {
         try {
-            dispatch(entitiesActions.setLoading(true));
+            setLoading(true);
             const response = await sendApiRequest("/balance-entry/by" + query, HTTPMethodTypes.GET);
             dispatch(entitiesActions.setEntity({ type: "balanceEntries", data: response.data }));
         }
         catch (error) {
             console.log(error);
             toastify.error("Error fetching Balance Entries");
+        } finally {
+            setLoading(false);
         }
     }, [dispatch]);
 
@@ -212,7 +199,7 @@ const useBalanceEntry = () => {
             onCellUpdate,
             (params: TDataGridInputCellParams) => {
                 setSelectedBEntry(fetchedBalanceEntries?.find((bEntry) => bEntry._id === params.id) ?? null);
-                setIsBEntryDetailsDialogOpen(true)
+                setIsUploadDialogOpen(true)
             },
             (params: TDataGridInputCellParams) => {
                 onDelete(params.id as string);
@@ -259,14 +246,13 @@ const useBalanceEntry = () => {
     }, [fromYear, toYear, months, pickedType, getBalanceEntries]);
 
     return {
-        register,
-        handleSubmit,
         onSubmit,
         onUpdate,
-        errors,
         loading,
         columns,
         rows,
+        isUploadDialogOpen,
+        setIsUploadDialogOpen,
         fromYear,
         setFromYear,
         toYear,
@@ -278,8 +264,6 @@ const useBalanceEntry = () => {
         fetchedBalanceEntries,
         selectedBEntry,
         setSelectedBEntry,
-        isBEntryDetailsDialogOpen,
-        setIsBEntryDetailsDialogOpen,
         setSearch,
         filteredRows,
         showInactive,

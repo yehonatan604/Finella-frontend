@@ -2,21 +2,20 @@ import React from "react";
 import { Box, Paper } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import Page from "../../Common/components/layout/Page";
-import BalanceEnetriesPdfDoc from "../components/BalanceEnetriesPdfDoc";
+import BalanceEnetriesPdfDoc from "../components/pdfDocs/BalanceEnetriesPdfDoc";
 import useBalanceEntry from "../hooks/useBalanceEntry";
 import PageButtons from "../../Common/components/layout/PageButtons";
 import PageFilters from "../../Common/components/layout/PageFilters";
 import PlusButton from "../../Common/components/layout/PlusButton";
 import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
 import { useState } from "react";
-import BalanceEntriesChartsDialog from "../components/dialogs/chratDialogs/BalanceEntriesChartsDialog";
-import BalanceEntryDetailsDialog from "../components/dialogs/detailsDialogs/BalanceEntryDetailsDialog";
+import BalanceEntriesChartsDialog from "../components/dialogs/BalanceEntriesChartsDialog";
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import useTheme from "../../Common/hooks/useTheme";
 import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
 import { TDataGridRow } from "../../Common/types/TDataGridRow";
 import FormDialog from "../../Common/components/dialogs/FormDialog";
-import AddBalanceEntry from "../forms/AddBalanceEntry";
+import BalanceEntryForm from "../forms/BalanceEntryForm";
 
 const BalanceEntriesPage = () => {
   const {
@@ -26,10 +25,8 @@ const BalanceEntriesPage = () => {
     setToYear,
     setMonths,
     setPickedType,
-    onUpdate,
-    setSelectedBEntry,
-    setIsBEntryDetailsDialogOpen,
-    isBEntryDetailsDialogOpen,
+    setIsUploadDialogOpen,
+    isUploadDialogOpen,
     selectedBEntry,
     setSearch,
     filteredRows,
@@ -114,18 +111,6 @@ const BalanceEntriesPage = () => {
       />
       <PlusButton onClick={() => setIsAddDialogOpen(true)} />
 
-      {isBEntryDetailsDialogOpen && selectedBEntry && (
-        <BalanceEntryDetailsDialog
-          isOpen={isBEntryDetailsDialogOpen}
-          onClose={() => setIsBEntryDetailsDialogOpen(false)}
-          bEntry={selectedBEntry}
-          onSubmit={(data) => {
-            onUpdate(data);
-            setSelectedBEntry(null);
-          }}
-        />
-      )}
-
       {isChartsDialogOpen && (
         <BalanceEntriesChartsDialog
           open={isChartsDialogOpen}
@@ -138,7 +123,20 @@ const BalanceEntriesPage = () => {
         open={isAddDialogOpen}
         onClose={() => setIsAddDialogOpen(false)}
         title="Add a Balance Entry"
-        formComponent={<AddBalanceEntry setIsDialogOpen={setIsAddDialogOpen} />}
+        formComponent={<BalanceEntryForm setIsDialogOpen={setIsAddDialogOpen} />}
+      />
+
+      <FormDialog
+        open={isUploadDialogOpen}
+        onClose={() => setIsUploadDialogOpen(false)}
+        title="Update Balance Entry"
+        formComponent={
+          <BalanceEntryForm
+            setIsDialogOpen={setIsAddDialogOpen}
+            setIsUpdateDialogOpen={setIsUploadDialogOpen}
+            bEntry={selectedBEntry}
+          />
+        }
       />
     </>
   );

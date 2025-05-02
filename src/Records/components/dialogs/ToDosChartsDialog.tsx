@@ -1,3 +1,4 @@
+import React, { useRef, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -9,9 +10,8 @@ import {
 } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { LineChart } from "@mui/x-charts/LineChart";
-import DialogXButton from "../../../../Common/components/dialogs/DialogXButton";
+import DialogXButton from "../../../Common/components/dialogs/DialogXButton";
 import html2canvas from "html2canvas";
-import { useRef, useState } from "react";
 import {
   PDFDownloadLink,
   Document,
@@ -20,32 +20,20 @@ import {
   StyleSheet,
 } from "@react-pdf/renderer";
 
-type BalanceEntriesChartsDialogProps = {
+type ToDosChartsDialogProps = {
   open: boolean;
   onClose: () => void;
-  data: (
-    | {
-        id: string | undefined;
-        name: string;
-        date: string;
-        type: "income" | "expense";
-        price: string | number;
-        withVat: boolean;
-        notes: string;
-        status: string | undefined;
-      }
-    | {
-        id: string;
-        name: string;
-        price: string;
-      }
-  )[];
+  data: {
+    id: string | undefined;
+    name: string;
+    description: string;
+    startDate: string;
+    endDate: string;
+    toDoStatus: "PENDING" | "COMPLETE" | "CANCELED" | "FAILED";
+    tasks: number | undefined;
+    status: string | undefined;
+  }[];
 };
-
-function parseDDMMYYYY(dateStr: string): Date {
-  const [day, month, year] = dateStr.split("/");
-  return new Date(`${year}-${month}-${day}`);
-}
 
 const styles = StyleSheet.create({
   image: {
@@ -56,11 +44,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const BalanceEntriesChartsDialog = ({
-  open,
-  onClose,
-  data,
-}: BalanceEntriesChartsDialogProps) => {
+function parseDDMMYYYY(dateStr: string): Date {
+  const [day, month, year] = dateStr.split("/");
+  return new Date(`${year}-${month}-${day}`);
+}
+
+const ToDosChartsDialogDialog = ({ open, onClose, data }: ToDosChartsDialogProps) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const [chartImage, setChartImage] = useState<string | null>(null);
   const [pdfReady, setPdfReady] = useState(false);
@@ -97,29 +86,32 @@ const BalanceEntriesChartsDialog = ({
           p: "1rem",
         }}
       >
-        Balance Entries Report
+        To Do's Report
         <DialogXButton onClose={onClose} />
       </DialogTitle>
 
       <DialogContent>
         <div ref={chartRef} style={{ padding: 16 }}>
-          <DialogContentText sx={{ mb: 1 }}>By Name</DialogContentText>
+          <DialogContentText sx={{ mb: 1 }}>By Workplace</DialogContentText>
           <BarChart
             xAxis={[
               {
-                id: "categories",
-                data: data.filter((d) => d.id !== "total").map((d) => d.name),
+                id: "todos",
+                data: data.map((d) => d.name),
                 scaleType: "band",
               },
             ]}
-            yAxis={[{ id: "price-axis", min: -10000, max: 10000 }]}
+            yAxis={[
+              {
+                id: "task-count",
+                label: "Tasks",
+                min: 0,
+              },
+            ]}
             series={[
               {
-                data: data
-                  .filter((d) => d.id !== "total")
-                  .map((d) =>
-                    typeof d.price === "string" ? parseFloat(d.price) : d.price
-                  ),
+                label: "Tasks",
+                data: data.map((d) => d.tasks ?? 0),
               },
             ]}
             width={500}
@@ -132,23 +124,23 @@ const BalanceEntriesChartsDialog = ({
           <LineChart
             xAxis={[
               {
-                id: "dates",
-                data: data
-                  .filter((d) => d.id !== "total" && "date" in d)
-                  .map((d) => parseDDMMYYYY((d as { date: string }).date)),
+                id: "start-dates",
+                data: data.map((d) => parseDDMMYYYY(d.startDate)),
                 scaleType: "time",
               },
             ]}
-            yAxis={[{ id: "price-axis", min: -10000, max: 10000 }]}
+            yAxis={[
+              {
+                id: "task-count",
+                label: "Tasks",
+                min: 0,
+              },
+            ]}
             series={[
               {
-                id: "prices",
-                label: "Amount",
-                data: data
-                  .filter((d) => d.id !== "total" && "price" in d)
-                  .map((d) =>
-                    typeof d.price === "string" ? parseFloat(d.price) : d.price
-                  ),
+                id: "tasks",
+                label: "Tasks",
+                data: data.map((d) => d.tasks ?? 0),
               },
             ]}
             width={600}
@@ -190,4 +182,4 @@ const BalanceEntriesChartsDialog = ({
   );
 };
 
-export default BalanceEntriesChartsDialog;
+export default ToDosChartsDialogDialog;

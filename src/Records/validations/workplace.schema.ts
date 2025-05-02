@@ -21,7 +21,6 @@ export const workplaceSchema = Joi.object({
     }),
     pricePerHour: Joi.number().required(),
     pricePerMonth: Joi.number().required(),
-    withVat: Joi.boolean().required(),
     startDate: Joi.string().required(),
     endDate: Joi.string().allow(""),
     notes: Joi.string().allow(""),

@@ -1,29 +1,44 @@
 import React from "react";
-import {
-  Box,
-  Button,
-  TextField,
-  Container,
-  MenuItem,
-  Checkbox,
-  FormLabel,
-  Paper,
-} from "@mui/material";
+import { Box, Button, TextField, Container, MenuItem, Paper } from "@mui/material";
 import useBalanceEntry from "../hooks/useBalanceEntry";
 import useTheme from "../../Common/hooks/useTheme";
 import { TBalanceEntry } from "../types/TBalanceEntry";
+import { useForm } from "react-hook-form";
+import { addBalanceEntryFormDefault } from "./initialData/addBalanceEntryFormDefault";
+import { DateTime } from "luxon";
 
-const AddBalanceEntry = ({
+const BalanceEntryForm = ({
   setIsDialogOpen,
+  setIsUpdateDialogOpen,
+  bEntry = null,
 }: {
   setIsDialogOpen: (isOpen: boolean) => void;
+  setIsUpdateDialogOpen?: (isOpen: boolean) => void | null;
+  bEntry?: TBalanceEntry | null;
 }) => {
-  const { register, errors, handleSubmit, onSubmit } = useBalanceEntry();
+  const { onSubmit, onUpdate } = useBalanceEntry();
   const { mode } = useTheme();
 
+  const {
+    register,
+    reset,
+    setValue,
+    watch,
+    formState: { errors, isValid },
+    handleSubmit,
+  } = useForm<TBalanceEntry>({
+    mode: "onChange",
+    defaultValues: bEntry
+      ? { ...bEntry, date: new Date(bEntry.date).toISOString().split("T")[0] }
+      : addBalanceEntryFormDefault,
+  });
+
   const onFormSubmit = async (data: TBalanceEntry) => {
-    await onSubmit(data);
-    setIsDialogOpen(false);
+    const func = bEntry ? onUpdate : onSubmit;
+    const closeDialog =
+      bEntry && setIsUpdateDialogOpen ? setIsUpdateDialogOpen : setIsDialogOpen;
+    await func(data);
+    closeDialog(false);
   };
 
   return (
@@ -33,11 +48,22 @@ const AddBalanceEntry = ({
         component={Paper}
         sx={{
           p: 4,
-          textAlign: "center",
         }}
       >
         <form onSubmit={handleSubmit(onFormSubmit)}>
           <Box sx={{ display: "flex", gap: 2 }}>
+            <TextField
+              label="Name"
+              {...register("name")}
+              fullWidth
+              sx={{ mb: 2 }}
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+            />
+
             <TextField
               label="type"
               {...register("type")}
@@ -57,7 +83,6 @@ const AddBalanceEntry = ({
 
             <TextField
               label="Date"
-              {...register("date")}
               type="date"
               className={mode === "dark" ? "dark" : ""}
               fullWidth
@@ -68,22 +93,14 @@ const AddBalanceEntry = ({
                   shrink: true,
                 },
               }}
-            />
-
-            <TextField
-              label="Name"
-              {...register("name")}
-              fullWidth
-              sx={{ mb: 2 }}
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
+              {...register("date")}
+              defaultValue={watch("date")}
+              onChange={(e) => {
+                const date = DateTime.fromISO(e.target.value, { zone: "local" }).toISO();
+                setValue("date", bEntry ? date!.split("T")[0] : e.target.value);
               }}
             />
-          </Box>
 
-          <Box sx={{ display: "flex", gap: 2 }}>
             <TextField
               label="Price"
               {...register("price")}
@@ -98,34 +115,6 @@ const AddBalanceEntry = ({
               }}
               defaultValue={0}
             />
-
-            <Box
-              sx={{
-                display: "flex",
-                width: "100%",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%",
-                gap: 1,
-              }}
-            >
-              <FormLabel style={{ color: "white" }}>With VAT</FormLabel>
-              <Checkbox {...register("withVat")} style={{ color: "white" }} />
-            </Box>
-
-            <Box
-              sx={{
-                display: "flex",
-                width: "100%",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%",
-                gap: 1,
-              }}
-            >
-              <FormLabel style={{ color: "white" }}>Is Payed</FormLabel>
-              <Checkbox {...register("isPayed")} style={{ color: "white" }} />
-            </Box>
           </Box>
 
           <Box sx={{ display: "flex", gap: 2 }}>
@@ -147,8 +136,9 @@ const AddBalanceEntry = ({
               color="primary"
               fullWidth
               sx={{ fontSize: "1.2rem" }}
+              disabled={!isValid}
             >
-              Add
+              {bEntry ? "Update" : "Add"}
             </Button>
 
             <Button
@@ -157,6 +147,9 @@ const AddBalanceEntry = ({
               color="error"
               fullWidth
               sx={{ fontSize: "1.2rem" }}
+              onClick={() => {
+                reset(bEntry ?? addBalanceEntryFormDefault);
+              }}
             >
               Reset
             </Button>
@@ -167,4 +160,4 @@ const AddBalanceEntry = ({
   );
 };
 
-export default AddBalanceEntry;
+export default BalanceEntryForm;

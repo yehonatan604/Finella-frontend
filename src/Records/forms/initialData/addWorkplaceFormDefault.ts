@@ -17,7 +17,6 @@ export const addWorkplaceFormDefault = (userId: string): TWorkplace => ({
     },
     pricePerHour: 0,
     pricePerMonth: 0,
-    withVat: false,
     startDate: new Date().toISOString().split("T")[0],
     endDate: "",
     notes: "",

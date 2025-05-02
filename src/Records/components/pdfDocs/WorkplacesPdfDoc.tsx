@@ -1,14 +1,9 @@
 import React from "react";
-import { Document, Page, Text, View, StyleSheet, Font } from "@react-pdf/renderer";
-import hebrewFont from "../../Assets/fonts/Heebo/static/Heebo-SemiBold.ttf";
+import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+
 type PdfDocProps = {
   rows: Record<string, unknown>[];
 };
-
-Font.register({
-  family: "Heebo",
-  src: hebrewFont,
-});
 
 const WorkplacesPdfDoc = (props: PdfDocProps) => {
   const { rows } = props;

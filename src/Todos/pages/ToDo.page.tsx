@@ -12,8 +12,8 @@ import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import useTheme from "../../Common/hooks/useTheme";
 import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
 import { TDataGridRow } from "../../Common/types/TDataGridRow";
-import ToDosChartsDialogDialog from "../../Records/components/dialogs/chratDialogs/ToDosChartsDialog";
-import SalariesPdfDoc from "../../Records/components/SalariesPdfDoc";
+import ToDosChartsDialogDialog from "../../Records/components/dialogs/ToDosChartsDialog";
+import SalariesPdfDoc from "../../Records/components/pdfDocs/SalariesPdfDoc";
 import FormDialog from "../../Common/components/dialogs/FormDialog";
 import AddToDo from "../forms/AddToDo";
 

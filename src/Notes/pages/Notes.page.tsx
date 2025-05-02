@@ -14,7 +14,7 @@ import useTheme from "../../Common/hooks/useTheme";
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
 import { TDataGridRow } from "../../Common/types/TDataGridRow";
-import WorkplacesPdfDoc from "../../Records/components/WorkplacesPdfDoc";
+import WorkplacesPdfDoc from "../../Records/components/pdfDocs/WorkplacesPdfDoc";
 
 const NotesPage = () => {
   const { mode } = useTheme();

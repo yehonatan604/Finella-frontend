@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Button,
-  TextField,
-  Container,
-  Divider,
-  Paper,
-  FormControlLabel,
-  Checkbox,
-} from "@mui/material";
+import { Box, Button, TextField, Container, Divider, Paper } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { workplaceSchema } from "../validations/workplace.schema";
@@ -137,26 +128,6 @@ const WorkplaceForm = ({
                   }
                 }}
               />
-              <Box
-                sx={{
-                  width: "33%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      {...register("withVat")}
-                      color="primary"
-                      defaultChecked={workplace?.withVat}
-                    />
-                  }
-                  label="With VAT"
-                  sx={{ mb: 2 }}
-                />
-              </Box>
             </Box>
 
             <Box sx={{ display: "flex", gap: 2 }}>
