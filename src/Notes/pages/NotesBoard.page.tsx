@@ -3,7 +3,7 @@ import { Box } from "@mui/material";
 import useNote from "../hooks/useNote";
 import Page from "../../Common/components/layout/Page";
 import useTheme from "../../Common/hooks/useTheme";
-import AddFormDialog from "../../Common/components/dialogs/AddFormDialog";
+import FormDialog from "../../Common/components/dialogs/FormDialog";
 import AddNoteForm from "../forms/AddNote.form";
 import { useState } from "react";
 import PlusButton from "../../Common/components/layout/PlusButton";
@@ -65,7 +65,7 @@ const NotesBoard = () => {
 
       <PlusButton onClick={() => setIsAddDialogOpen(true)} />
 
-      <AddFormDialog
+      <FormDialog
         open={isAddDialogOpen}
         onClose={() => setIsAddDialogOpen(false)}
         title="Add a Note"

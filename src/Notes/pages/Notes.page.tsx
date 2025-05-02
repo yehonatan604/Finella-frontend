@@ -8,7 +8,7 @@ import PlusButton from "../../Common/components/layout/PlusButton";
 import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
 import NoteDetailsDialog from "../components/NoteDetailsDialog";
 import useNote from "../hooks/useNote";
-import AddFormDialog from "../../Common/components/dialogs/AddFormDialog";
+import FormDialog from "../../Common/components/dialogs/FormDialog";
 import AddNoteForm from "../forms/AddNote.form";
 import useTheme from "../../Common/hooks/useTheme";
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
@@ -117,7 +117,7 @@ const NotesPage = () => {
         />
       )}
 
-      <AddFormDialog
+      <FormDialog
         open={isAddDialogOpen}
         onClose={() => setIsAddDialogOpen(false)}
         title="Add a Note"

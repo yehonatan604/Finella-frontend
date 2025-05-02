@@ -7,6 +7,7 @@ export const salarySchema = Joi.object({
     workPlaceId: Joi.string().required(),
     date: Joi.string().required(),
     hours: Joi.array().items(Joi.object().keys({
+        ...commonSchemaFields,
         day: Joi.string().required(),
         startTime: Joi.string().required(),
         endTime: Joi.string().required(),

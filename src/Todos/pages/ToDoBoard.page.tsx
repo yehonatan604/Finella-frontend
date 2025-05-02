@@ -9,7 +9,7 @@ import { TToDo } from "../types/TToDo";
 import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
 import ToDoCard from "../components/ToDoCard";
 import PlusButton from "../../Common/components/layout/PlusButton";
-import AddFormDialog from "../../Common/components/dialogs/AddFormDialog";
+import FormDialog from "../../Common/components/dialogs/FormDialog";
 import AddToDo from "../forms/AddToDo";
 
 const TodosBoard = () => {
@@ -103,7 +103,7 @@ const TodosBoard = () => {
         }}
       />
 
-      <AddFormDialog
+      <FormDialog
         open={isAddDialogOpen}
         onClose={() => setIsAddDialogOpen(false)}
         title="Add a ToDo"

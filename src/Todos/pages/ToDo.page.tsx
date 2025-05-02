@@ -14,7 +14,7 @@ import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
 import { TDataGridRow } from "../../Common/types/TDataGridRow";
 import ToDosChartsDialogDialog from "../../Records/components/dialogs/chratDialogs/ToDosChartsDialog";
 import SalariesPdfDoc from "../../Records/components/SalariesPdfDoc";
-import AddFormDialog from "../../Common/components/dialogs/AddFormDialog";
+import FormDialog from "../../Common/components/dialogs/FormDialog";
 import AddToDo from "../forms/AddToDo";
 
 const ToDoPage = () => {
@@ -129,7 +129,7 @@ const ToDoPage = () => {
         />
       )}
 
-      <AddFormDialog
+      <FormDialog
         open={isAddDialogOpen}
         onClose={() => setIsAddDialogOpen(false)}
         title="Add a ToDo"
