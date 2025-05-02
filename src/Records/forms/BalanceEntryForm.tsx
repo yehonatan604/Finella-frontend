@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, TextField, Container, Paper } from "@mui/material";
+import { Box, Button, Container, Paper } from "@mui/material";
 import useBalanceEntry from "../hooks/useBalanceEntry";
 import useTheme from "../../Common/hooks/useTheme";
 import { TBalanceEntry } from "../types/TBalanceEntry";
@@ -28,11 +28,10 @@ const BalanceEntryForm = ({
   });
 
   const {
-    register,
     reset,
     setValue,
     watch,
-    formState: { errors, isValid },
+    formState: { isValid },
     handleSubmit,
   } = formMethods;
 
@@ -56,30 +55,22 @@ const BalanceEntryForm = ({
         <FormProvider {...formMethods}>
           <form onSubmit={handleSubmit(onFormSubmit)}>
             <Box sx={{ display: "flex", gap: 2 }}>
-              <FormField label="Name" type="text" name="name" required width="100%" />
+              <FormField label="Name" type="text" name="name" required />
 
               <FormField
                 label="Entry Type"
                 name="type"
                 required
-                width="100%"
                 selectArray={["income", "expense"]}
                 defaultValue={"expense"}
               />
 
-              <TextField
-                {...register("date")}
+              <FormField
+                className={mode === "dark" ? "dark" : ""}
                 label="Date"
                 type="date"
-                className={mode === "dark" ? "dark" : ""}
-                fullWidth
-                sx={{ mb: 2 }}
-                color={errors.date ? "error" : "primary"}
-                slotProps={{
-                  inputLabel: {
-                    shrink: true,
-                  },
-                }}
+                name="date"
+                required
                 defaultValue={watch("date")}
                 onChange={(e) => {
                   const date = DateTime.fromISO(e.target.value, {
@@ -89,20 +80,10 @@ const BalanceEntryForm = ({
                 }}
               />
 
-              <FormField label="Price" type="number" name="price" required width="100%" />
+              <FormField label="Price" type="number" name="price" required />
             </Box>
 
-            <Box sx={{ display: "flex", gap: 2 }}>
-              <TextField
-                label="notes"
-                {...register("notes")}
-                fullWidth
-                multiline
-                rows={3}
-                sx={{ mb: 2 }}
-                slotProps={{ inputLabel: { shrink: true } }}
-              />
-            </Box>
+            <FormField label="Notes" type="text" name="notes" rows={3} multiline />
 
             <Box sx={{ display: "flex", gap: 2, pt: 1 }}>
               <Button

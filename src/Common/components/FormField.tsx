@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { MenuItem, TextField } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 import { TFormErrorMessage } from "../types/TFormErrorMessage";
@@ -6,11 +6,17 @@ import { TFormErrorMessage } from "../types/TFormErrorMessage";
 type FormFieldProps = {
   label: string;
   name: string;
+  setValue?: (value) => void;
   type?: string;
   required?: boolean;
   width?: string;
-  selectArray?: string[] | null;
-  defaultValue?: string | null;
+  selectArray?: string[];
+  defaultValue?: string;
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  className?: string;
+  sx?: object;
+  rows?: number;
+  multiline?: boolean;
 };
 
 const FormField = (props: FormFieldProps) => {
@@ -20,8 +26,13 @@ const FormField = (props: FormFieldProps) => {
     type = "text",
     required = false,
     width = "100%",
-    selectArray = null,
-    defaultValue = null,
+    selectArray,
+    defaultValue,
+    onChange,
+    className,
+    sx = {},
+    rows = 1,
+    multiline = false,
   } = props;
   const {
     register,
@@ -32,13 +43,14 @@ const FormField = (props: FormFieldProps) => {
 
   return selectArray ? (
     <TextField
+      className={className}
       label={label}
       {...register(name)}
       select
       required={required}
       variant="outlined"
       fullWidth
-      sx={{ mb: 2, width }}
+      sx={{ mb: 2, width, ...sx }}
       error={!!errors?.[name.split(".")[0] as KeyOfError]?.[name.split(".")[1] || ""]}
       helperText={
         (errors?.[name.split(".")[0] as KeyOfError] as TFormErrorMessage)?.[
@@ -52,6 +64,11 @@ const FormField = (props: FormFieldProps) => {
           : "primary"
       }
       defaultValue={defaultValue}
+      onChange={(e) => {
+        if (onChange) {
+          onChange(e as ChangeEvent<HTMLInputElement>);
+        }
+      }}
     >
       {selectArray.map((option) => (
         <MenuItem key={option} value={option}>
@@ -61,13 +78,16 @@ const FormField = (props: FormFieldProps) => {
     </TextField>
   ) : (
     <TextField
+      className={className}
       label={label}
       {...register(name)}
       type={type}
       required={required}
       variant="outlined"
       fullWidth
-      sx={{ mb: 2, width }}
+      sx={{ mb: 2, width, ...sx }}
+      multiline={multiline}
+      rows={rows}
       error={!!errors?.[name.split(".")[0] as KeyOfError]?.[name.split(".")[1] || ""]}
       helperText={
         (errors?.[name.split(".")[0] as KeyOfError] as TFormErrorMessage)?.[
@@ -80,6 +100,12 @@ const FormField = (props: FormFieldProps) => {
           ? "error"
           : "primary"
       }
+      defaultValue={defaultValue}
+      onChange={(e) => {
+        if (onChange) {
+          onChange(e as ChangeEvent<HTMLInputElement>);
+        }
+      }}
     />
   );
 };
