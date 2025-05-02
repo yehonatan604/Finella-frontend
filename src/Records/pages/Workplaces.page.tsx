@@ -12,7 +12,7 @@ import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import useTheme from "../../Common/hooks/useTheme";
 import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
 import { TDataGridRow } from "../../Common/types/TDataGridRow";
-import AddFormDialog from "../../Common/components/dialogs/AddFormDialog";
+import FormDialog from "../../Common/components/dialogs/FormDialog";
 import WorkplaceForm from "../forms/WorkplaceForm";
 
 const WorkplacesPage = () => {
@@ -89,7 +89,7 @@ const WorkplacesPage = () => {
       <PageButtons fileName="workplaces" rows={rows} Doc={WorkplacesPdfDoc} />
       <PlusButton onClick={() => setIsAddDialogOpen(true)} />
 
-      <AddFormDialog
+      <FormDialog
         open={isAddDialogOpen}
         onClose={() => {
           setIsAddDialogOpen(false);
@@ -98,7 +98,7 @@ const WorkplacesPage = () => {
         formComponent={<WorkplaceForm setIsDialogOpen={setIsAddDialogOpen} />}
       />
 
-      <AddFormDialog
+      <FormDialog
         open={isUpdateDialogOpen}
         onClose={() => {
           setSelectedWorkplace(null);

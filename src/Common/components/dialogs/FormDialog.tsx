@@ -3,14 +3,14 @@ import { JSX } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import DialogXButton from "./DialogXButton";
 
-type AddFormDialogProps = {
+type FormDialogProps = {
   open: boolean;
   onClose: () => void;
   title: string;
   formComponent: JSX.Element;
 };
 
-const AddFormDialog = (props: AddFormDialogProps) => {
+const FormDialog = (props: FormDialogProps) => {
   const { open, onClose, title, formComponent } = props;
 
   return (
@@ -34,4 +34,4 @@ const AddFormDialog = (props: AddFormDialogProps) => {
   );
 };
 
-export default AddFormDialog;
+export default FormDialog;

@@ -14,7 +14,7 @@ import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import useTheme from "../../Common/hooks/useTheme";
 import { TDataGridRow } from "../../Common/types/TDataGridRow";
 import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
-import AddFormDialog from "../../Common/components/dialogs/AddFormDialog";
+import FormDialog from "../../Common/components/dialogs/FormDialog";
 import WorkplaceForm from "../forms/WorkplaceForm";
 import SalaryForm from "../forms/SalaryForm";
 
@@ -120,7 +120,7 @@ const SalariesPage = () => {
         />
       )}
 
-      <AddFormDialog
+      <FormDialog
         open={isAddDialogOpen}
         onClose={() => setIsAddDialogOpen(false)}
         title="Add a Salary"
@@ -132,7 +132,7 @@ const SalariesPage = () => {
         }
       />
 
-      <AddFormDialog
+      <FormDialog
         open={isUploadDialogOpen}
         onClose={() => setIsUploadDialogOpen(false)}
         title="Update Salary"
@@ -145,7 +145,7 @@ const SalariesPage = () => {
         }
       />
 
-      <AddFormDialog
+      <FormDialog
         open={isAddWorkplaceDialogOpen}
         onClose={() => setIsAddWorkplaceDialogOpen(false)}
         title="Add a Workplace"
