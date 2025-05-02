@@ -21,7 +21,6 @@ const BalanceEntryForm = ({
   const { mode } = useTheme();
 
   const formMethods = useForm<TBalanceEntry>({
-    mode: "onChange",
     defaultValues: bEntry
       ? { ...bEntry, date: new Date(bEntry.date).toISOString().split("T")[0] }
       : addBalanceEntryFormDefault,
@@ -30,7 +29,6 @@ const BalanceEntryForm = ({
   const {
     reset,
     setValue,
-    watch,
     formState: { isValid },
     handleSubmit,
   } = formMethods;
@@ -71,7 +69,6 @@ const BalanceEntryForm = ({
                 type="date"
                 name="date"
                 required
-                defaultValue={watch("date")}
                 onChange={(e) => {
                   const date = DateTime.fromISO(e.target.value, {
                     zone: "local",
