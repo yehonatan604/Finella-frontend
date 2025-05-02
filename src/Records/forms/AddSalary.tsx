@@ -13,8 +13,12 @@ import {
 import useSalary from "../hooks/useSalary";
 import UploadExcelDialog from "../components/dialogs/UploadExcelDialog";
 import { TSalary } from "../types/TSalary";
+import { useForm } from "react-hook-form";
+import { addSalaryFormDefault } from "./initialData/addSalaryFormDefault";
+import { joiResolver } from "@hookform/resolvers/joi";
+import { salarySchema } from "../validations/salary.schema";
 
-const AddSalary = ({
+const SalaryForm = ({
   setIsDialogOpen,
   setIsAddWorkplaceDialogOpen,
 }: {
@@ -23,12 +27,8 @@ const AddSalary = ({
 }) => {
   const {
     addNewSalaryHour,
+    removeSalaryHour,
     addSalaryFromExcel,
-    handleSubmit,
-    register,
-    setValue,
-    watch,
-    errors,
     onSubmit,
     toggleUploadDialog,
     isUploadDialogOpen,
@@ -36,7 +36,20 @@ const AddSalary = ({
     workplaces,
     addBEntry,
     setAddBEntry,
+    user,
   } = useSalary();
+
+  const {
+    handleSubmit,
+    register,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<TSalary>({
+    mode: "onChange",
+    defaultValues: addSalaryFormDefault(user?._id || ""),
+    resolver: joiResolver(salarySchema),
+  });
 
   const onFormSubmit = async (data: TSalary) => {
     await onSubmit(data);
@@ -51,7 +64,6 @@ const AddSalary = ({
           component={Paper}
           sx={{
             p: 4,
-            textAlign: "center",
           }}
         >
           <form onSubmit={handleSubmit(onFormSubmit)}>
@@ -59,7 +71,7 @@ const AddSalary = ({
               sx={{
                 display: "flex",
                 gap: 2,
-                justifyContent: "center",
+                justifyContent: "start",
                 alignItems: "center",
                 mb: 2,
               }}
@@ -79,7 +91,7 @@ const AddSalary = ({
                   }
                 }}
                 variant="outlined"
-                sx={{ width: "40%", textAlign: "left" }}
+                sx={{ width: "30%", textAlign: "left" }}
                 color={errors.workPlaceId ? "error" : "primary"}
               >
                 <MenuItem value="" disabled>
@@ -94,15 +106,48 @@ const AddSalary = ({
               </TextField>
 
               <TextField
-                label="Date"
-                {...register("date")}
+                label="Month"
+                select
                 variant="outlined"
-                sx={{ width: "40%" }}
+                sx={{ width: "24%" }}
                 color={errors.date ? "error" : "primary"}
                 slotProps={{
                   inputLabel: {
                     shrink: true,
                   },
+                }}
+                value={watch("date").split("-")[0] || ""}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value) {
+                    setValue("date", `${value}-${watch("date").split("-")[1]}`);
+                  }
+                }}
+              >
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((month) => (
+                  <MenuItem key={month} value={month}>
+                    {month}
+                  </MenuItem>
+                ))}
+              </TextField>
+
+              <TextField
+                label="Year"
+                type="number"
+                variant="outlined"
+                sx={{ width: "24%" }}
+                color={errors.date ? "error" : "primary"}
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                value={watch("date").split("-")[1] || ""}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value) {
+                    setValue("date", `${watch("date").split("-")[0]}-${value}`);
+                  }
                 }}
               />
 
@@ -116,6 +161,30 @@ const AddSalary = ({
                 label="Add Balance Entry"
               />
             </Box>
+
+            <Divider sx={{ my: 2, background: "silver" }} />
+
+            <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+              <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                onClick={addNewSalaryHour}
+              >
+                Add Salary Hour
+              </Button>
+              <Button
+                variant="contained"
+                color="success"
+                fullWidth
+                onClick={toggleUploadDialog}
+                size="small"
+                sx={{ width: "30%" }}
+              >
+                Add Hours From Excel
+              </Button>
+            </Box>
+            <Divider sx={{ my: 2, background: "silver" }} />
 
             <Box sx={{ display: "flex", gap: 2, flexDirection: "column" }}>
               {salaryHours.map((item, index) => (
@@ -135,7 +204,8 @@ const AddSalary = ({
                           shrink: true,
                         },
                       }}
-                      value={item.day || ""}
+                      {...register(`hours.${index}.day`)}
+                      defaultValue={item.day || ""}
                       onChange={(e) => {
                         setValue(`hours.${index}.day`, e.target.value);
                       }}
@@ -151,7 +221,8 @@ const AddSalary = ({
                           shrink: true,
                         },
                       }}
-                      value={item.startTime || ""}
+                      {...register(`hours.${index}.startTime`)}
+                      defaultValue={item.startTime || ""}
                       onChange={(e) => {
                         setValue(`hours.${index}.startTime`, e.target.value);
                       }}
@@ -167,67 +238,48 @@ const AddSalary = ({
                           shrink: true,
                         },
                       }}
+                      {...register(`hours.${index}.endTime`)}
                       defaultValue={item.endTime || ""}
                       onChange={(e) => {
                         setValue(`hours.${index}.endTime`, e.target.value);
                       }}
                     />
-                    <TextField
-                      label="Break Start"
-                      {...register(`hours.${index}.breakStart`)}
-                      variant="outlined"
-                      fullWidth
-                      sx={{ mb: 2 }}
-                      color={errors.hours?.[index]?.breakStart ? "error" : "primary"}
-                      slotProps={{
-                        inputLabel: {
-                          shrink: true,
-                        },
+                    <Box
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        mb: 2,
+                        gap: 2,
                       }}
-                    />
-                    <TextField
-                      label="Break End"
-                      {...register(`hours.${index}.breakEnd`)}
-                      variant="outlined"
-                      fullWidth
-                      sx={{ mb: 2 }}
-                      color={errors.hours?.[index]?.breakEnd ? "error" : "primary"}
-                      slotProps={{
-                        inputLabel: {
-                          shrink: true,
-                        },
-                      }}
-                    />
+                    >
+                      <Button
+                        variant="contained"
+                        color="error"
+                        size="small"
+                        onClick={() => removeSalaryHour(index)}
+                      >
+                        -
+                      </Button>
+                      {index === salaryHours.length - 1 && (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          onClick={addNewSalaryHour}
+                        >
+                          +
+                        </Button>
+                      )}
+                    </Box>
                   </Box>
-
-                  <Divider sx={{ my: 2, background: "silver" }} />
                 </Box>
               ))}
-              <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                  onClick={addNewSalaryHour}
-                >
-                  +
-                </Button>
-              </Box>
             </Box>
 
-            <Divider sx={{ my: 2, background: "silver" }} />
+            {salaryHours.length > 0 && <Divider sx={{ my: 2, background: "silver" }} />}
 
             <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                onClick={toggleUploadDialog}
-              >
-                Add from Excel
-              </Button>
-            </Box>
-            <Box sx={{ display: "flex", gap: 2 }}>
               <Button
                 type="submit"
                 variant="contained"
@@ -262,4 +314,4 @@ const AddSalary = ({
   );
 };
 
-export default AddSalary;
+export default SalaryForm;

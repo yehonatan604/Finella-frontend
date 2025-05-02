@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { FormProvider, useForm } from "react-hook-form";
 import { joiResolver } from "@hookform/resolvers/joi";
-import { workplaceSchema } from "../validations/addWorkplace.schema";
+import { workplaceSchema } from "../validations/workplace.schema";
 import { TWorkplace } from "../types/TWorkplace";
 import useWorkplaces from "../hooks/useWorkplace";
 import { addWorkplaceFormDefault } from "./initialData/addWorkplaceFormDefault";

@@ -17,9 +17,9 @@ import useAuth from "../../Auth/hooks/useAuth";
 const useWorkplaces = () => {
     const { user } = useAuth();
     const workplaces = useSelector((state: TRootState) => state.entitiesSlice.workplaces);
-    const loading = useSelector((state: TRootState) => state.entitiesSlice.loading);
     const dispatch = useDispatch();
 
+    const [loading, setLoading] = useState(false);
     const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
     const [selectedWorkplace, setSelectedWorkplace] = useState<TWorkplace | null>(null);
     const [search, setSearch] = useState<string>("");
@@ -31,33 +31,34 @@ const useWorkplaces = () => {
 
     const getAllWorkplaces = useCallback(async () => {
         try {
-            dispatch(entitiesActions.setLoading(true));
+            setLoading(true);
             const res = await sendApiRequest("/work-place", HTTPMethodTypes.GET);
             dispatch(entitiesActions.setEntity({ type: "workplaces", data: res.data }));
         } catch (e) {
             console.log(e);
             toastify.error("Error fetching workplaces");
+        } finally {
+            setLoading(false);
         }
     }, [dispatch]);
 
     const add = useCallback(async (workplace: TWorkplace) => {
         try {
-            dispatch(entitiesActions.setLoading(true));
+            setLoading(true);
             const res = await sendApiRequest("/work-place", HTTPMethodTypes.POST, workplace);
             dispatch(entitiesActions.addEntityItem({ type: "workplaces", item: res.data }));
             toastify.success("Workplace added successfully");
         } catch (e) {
             console.log(e);
             toastify.error("Error adding workplace");
+        } finally {
+            setLoading(false);
         }
     }, [dispatch]);
 
     const onUpdate = useCallback(async (workplace: TWorkplace) => {
         try {
-            dispatch(entitiesActions.setLoading(true));
-
-            console.log("workplace", workplace);
-
+            setLoading(true);
 
             const finalWorlpace = {
                 userId: user?._id,
@@ -93,7 +94,7 @@ const useWorkplaces = () => {
             console.log(e);
             toastify.error("Error updating workplace");
         } finally {
-            dispatch(entitiesActions.setLoading(false));
+            setLoading(false);
         }
     }, [dispatch, user?._id]);
 
@@ -142,12 +143,13 @@ const useWorkplaces = () => {
     const onUndelete = useCallback(
         async (id: string) => {
             try {
+                setLoading(true);
                 await question(
                     "Undelete WorkPlace",
                     "Are you sure you want to undelete this WorkPlace?",
                     "warning",
                     async () => {
-                        dispatch(entitiesActions.setLoading(true));
+                        setLoading(true);
                         await sendApiRequest(`/work-place/undelete/${id}`, HTTPMethodTypes.PATCH);
                         dispatch(entitiesActions.undeleteEntityItem({ type: "workplaces", id }));
                         toastify.success("WorkPlace undeleted successfully");
@@ -156,6 +158,8 @@ const useWorkplaces = () => {
             } catch (error) {
                 console.log(error);
                 toastify.error("Error undeleting WorkPlace");
+            } finally {
+                setLoading(false);
             }
         },
         [dispatch]
@@ -164,12 +168,13 @@ const useWorkplaces = () => {
     const onDelete = useCallback(
         async (id: string) => {
             try {
+                setLoading(true);
                 await question(
                     "Delete WorkPlace",
                     "Are you sure you want to delete this WorkPlace?",
                     "warning",
                     async () => {
-                        dispatch(entitiesActions.setLoading(true));
+                        setLoading(true);
                         await sendApiRequest(`/work-place/${id}`, HTTPMethodTypes.DELETE);
                         dispatch(entitiesActions.removeEntityItem({ type: "workplaces", id }));
                         toastify.success("WorkPlace deleted successfully");
@@ -178,6 +183,8 @@ const useWorkplaces = () => {
             } catch (error) {
                 console.log(error);
                 toastify.error("Error deleting WorkPlace");
+            } finally {
+                setLoading(false);
             }
         },
         [dispatch]

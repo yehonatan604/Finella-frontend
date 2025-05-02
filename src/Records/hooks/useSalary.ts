@@ -1,5 +1,4 @@
 import { useState, useCallback, useEffect, useMemo } from "react";
-import { useForm } from "react-hook-form";
 import useAuth from "../../Auth/hooks/useAuth";
 import { HTTPMethodTypes } from "../../Common/types/HTTPMethodTypes";
 import { THoursFromExcel } from "../types/THoursFromExcel";
@@ -7,7 +6,6 @@ import { TSalary } from "../types/TSalary";
 import { TSalaryHours } from "../types/TSalaryHours";
 import useWorkplaces from "./useWorkplace";
 import { sendApiRequest } from "../../Common/helpers/sendApiRequest";
-import { addSalaryFormDefault } from "../forms/initialData/addSalaryFormDefault";
 import { toastify } from "../../Common/utilities/toast";
 import { salaryCols } from "../data/salaryCols";
 import { TDataGridInputCellParams } from "../types/TDataGridInputCellParams";
@@ -54,11 +52,17 @@ const useSalary = (isPage?: boolean) => {
                     day: "",
                     startTime: "",
                     endTime: "",
-                    breakEnd: "",
-                    breakStart: "",
                     notes: "",
                 },
             ];
+        });
+    }, []);
+
+    const removeSalaryHour = useCallback((index: number) => {
+        setSalaryHours((prev) => {
+            const newSalaryHours = [...prev];
+            newSalaryHours.splice(index, 1);
+            return newSalaryHours;
         });
     }, []);
 
@@ -69,24 +73,11 @@ const useSalary = (isPage?: boolean) => {
                     day: item["תאריך"].split("/")[0],
                     startTime: item["שעת התחלה"],
                     endTime: item["שעת סיום"],
-                    breakStart: "",
-                    breakEnd: "",
                     notes: "",
                 };
             })
         );
     }, []);
-
-    const {
-        handleSubmit,
-        register,
-        setValue,
-        watch,
-        formState: { errors },
-    } = useForm<TSalary>({
-        mode: "onChange",
-        defaultValues: addSalaryFormDefault(user?._id || ""),
-    });
 
     const onSubmit = async (data: Record<string, unknown>) => {
         try {
@@ -95,19 +86,32 @@ const useSalary = (isPage?: boolean) => {
                 hours: salaryHours,
             };
 
-            await sendApiRequest("/salary", HTTPMethodTypes.POST, finalData);
-
+            const newSalary = await sendApiRequest("/salary", HTTPMethodTypes.POST, finalData);
+            dispatch(entitiesActions.addEntityItem({ type: "salaries", item: { ...finalData, _id: newSalary.data._id } }));
             if (addBEntry) {
+                const workplaceName = workplaces?.find(
+                    (workplace) => workplace._id === data.workPlaceId
+                )?.name;
+
+                const fullDate = (() => {
+                    const [month, year] = (data.date as string).split("-").map(Number);
+                    const today = new Date();
+                    return new Date(year, month - 1, today.getDate());
+                })();
+
                 const balanceEntry = {
+                    name: `Salary ${data.date} - ${workplaces?.find((workplace) => workplace._id === data.workPlaceId)?.name}`,
                     userId: user?._id,
                     price: calcTotalSum(finalData as TSalary),
-                    date: data.date,
+                    date: fullDate,
                     type: "income",
                     withVat: data.withVat || false,
                     isPayed: false,
-                    notes: `Salary for ${data.date}`,
+                    notes: `Salary ${data.date} - ${workplaceName}`,
                 };
-                await sendApiRequest("/balance-entry", HTTPMethodTypes.POST, balanceEntry);
+                const newBentry = await sendApiRequest("/balance-entry", HTTPMethodTypes.POST, balanceEntry);
+                dispatch(entitiesActions.addEntityItem({ type: "balanceEntries", item: { ...balanceEntry, _id: newBentry.data._id } }));
+                toastify.success("Balance Entry added successfully");
             }
             toastify.success("Salary added successfully");
         } catch (error) {
@@ -323,12 +327,8 @@ const useSalary = (isPage?: boolean) => {
 
     return {
         addNewSalaryHour,
+        removeSalaryHour,
         addSalaryFromExcel,
-        handleSubmit,
-        register,
-        setValue,
-        watch,
-        errors,
         onSubmit,
         toggleUploadDialog,
         isUploadDialogOpen,
@@ -356,6 +356,7 @@ const useSalary = (isPage?: boolean) => {
         paginatedRows: paginatedRows(paginationModel, filteredRows),
         setAddBEntry,
         addBEntry,
+        user
     };
 };
 
