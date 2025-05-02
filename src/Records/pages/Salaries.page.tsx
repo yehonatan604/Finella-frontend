@@ -10,14 +10,13 @@ import PlusButton from "../../Common/components/layout/PlusButton";
 import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
 import { useState } from "react";
 import SalariesChartsDialog from "../components/dialogs/chratDialogs/SalariesChartsDialog";
-import SalaryDetailsDialog from "../components/dialogs/detailsDialogs/SalaryDetailsDialog";
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import useTheme from "../../Common/hooks/useTheme";
 import { TDataGridRow } from "../../Common/types/TDataGridRow";
 import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
 import AddFormDialog from "../../Common/components/dialogs/AddFormDialog";
-import AddSalary from "../forms/AddSalary";
 import WorkplaceForm from "../forms/WorkplaceForm";
+import SalaryForm from "../forms/SalaryForm";
 
 const SalariesPage = () => {
   const {
@@ -28,10 +27,6 @@ const SalariesPage = () => {
     setToYear,
     setMonths,
     setPickedWorkplaces,
-    onUpdate,
-    isSalaryDetailsDialogOpen,
-    setIsSalaryDetailsDialogOpen,
-    setSelectedSalary,
     selectedSalary,
     setSearch,
     filteredRows,
@@ -41,6 +36,8 @@ const SalariesPage = () => {
     paginatedRows,
     paginationModel,
     setPaginationModel,
+    isUploadDialogOpen,
+    setIsUploadDialogOpen,
   } = useSalary(true);
 
   const [isChartsDialogOpen, setIsChartsDialogOpen] = useState(false);
@@ -115,19 +112,6 @@ const SalariesPage = () => {
       />
       <PlusButton onClick={() => setIsAddDialogOpen(true)} />
 
-      {isSalaryDetailsDialogOpen && selectedSalary && (
-        <SalaryDetailsDialog
-          isOpen={isSalaryDetailsDialogOpen}
-          onClose={() => setIsSalaryDetailsDialogOpen(false)}
-          salary={selectedSalary}
-          onSubmit={(data) => {
-            onUpdate(data);
-            setSelectedSalary(null);
-          }}
-          workplaces={workplaces ?? []}
-        />
-      )}
-
       {isChartsDialogOpen && (
         <SalariesChartsDialog
           open={isChartsDialogOpen}
@@ -141,9 +125,22 @@ const SalariesPage = () => {
         onClose={() => setIsAddDialogOpen(false)}
         title="Add a Salary"
         formComponent={
-          <AddSalary
+          <SalaryForm
             setIsDialogOpen={setIsAddDialogOpen}
             setIsAddWorkplaceDialogOpen={setIsAddWorkplaceDialogOpen}
+          />
+        }
+      />
+
+      <AddFormDialog
+        open={isUploadDialogOpen}
+        onClose={() => setIsUploadDialogOpen(false)}
+        title="Update Salary"
+        formComponent={
+          <SalaryForm
+            setIsDialogOpen={setIsUploadDialogOpen}
+            setIsAddWorkplaceDialogOpen={setIsAddWorkplaceDialogOpen}
+            salary={selectedSalary}
           />
         }
       />

@@ -21,15 +21,18 @@ import { salarySchema } from "../validations/salary.schema";
 const SalaryForm = ({
   setIsDialogOpen,
   setIsAddWorkplaceDialogOpen,
+  salary = null,
 }: {
   setIsDialogOpen: (isOpen: boolean) => void;
   setIsAddWorkplaceDialogOpen: (isOpen: boolean) => void;
+  salary?: TSalary | null;
 }) => {
   const {
     addNewSalaryHour,
     removeSalaryHour,
     addSalaryFromExcel,
     onSubmit,
+    onUpdate,
     toggleUploadDialog,
     isUploadDialogOpen,
     salaryHours,
@@ -48,12 +51,13 @@ const SalaryForm = ({
     formState: { errors, isValid },
   } = useForm<TSalary>({
     mode: "onChange",
-    defaultValues: addSalaryFormDefault(user?._id || ""),
+    defaultValues: salary ?? addSalaryFormDefault(user?._id || ""),
     resolver: joiResolver(salarySchema),
   });
 
   const onFormSubmit = async (data: TSalary) => {
-    await onSubmit(data);
+    const func = salary ? onUpdate : onSubmit;
+    await func(data);
     setIsDialogOpen(false);
   };
 
@@ -188,7 +192,7 @@ const SalaryForm = ({
             <Divider sx={{ my: 2, background: "silver" }} />
 
             <Box sx={{ display: "flex", gap: 2, flexDirection: "column" }}>
-              {salaryHours.map((item, index) => (
+              {(salary ? salary.hours : salaryHours).map((item, index) => (
                 <Box
                   key={index}
                   sx={{ display: "flex", gap: 2, flexDirection: "column" }}
@@ -196,6 +200,7 @@ const SalaryForm = ({
                   <Box key={index} sx={{ display: "flex", gap: 2 }}>
                     <TextField
                       label="Day"
+                      type="number"
                       variant="outlined"
                       fullWidth
                       sx={{ mb: 2 }}
@@ -245,6 +250,7 @@ const SalaryForm = ({
                         setValue(`hours.${index}.endTime`, e.target.value);
                       }}
                     />
+
                     <Box
                       sx={{
                         display: "flex",
@@ -289,7 +295,7 @@ const SalaryForm = ({
                 sx={{ fontSize: "1.2rem", py: 1 }}
                 disabled={!isValid}
               >
-                Add
+                {salary ? "Update" : "Add"}
               </Button>
 
               <Button
@@ -299,7 +305,7 @@ const SalaryForm = ({
                 fullWidth
                 sx={{ fontSize: "1.2rem", py: 1 }}
                 onClick={() => {
-                  reset(addSalaryFormDefault(user?._id || ""));
+                  reset(salary ?? addSalaryFormDefault(user?._id || ""));
                 }}
               >
                 Reset

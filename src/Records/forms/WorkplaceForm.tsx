@@ -190,7 +190,7 @@ const WorkplaceForm = ({
                 fullWidth
                 sx={{ fontSize: "1.2rem", py: 1 }}
                 onClick={() => {
-                  reset(workplace ? workplace : addWorkplaceFormDefault(user?._id));
+                  reset(workplace ?? addWorkplaceFormDefault(user?._id));
                 }}
               >
                 Reset

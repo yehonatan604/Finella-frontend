@@ -29,20 +29,19 @@ const useSalary = (isPage?: boolean) => {
     const [fromYear, setFromYear] = useState(new Date().getFullYear());
     const [toYear, setToYear] = useState(new Date().getFullYear());
     const [months, setMonths] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+    const [selectedSalary, setSelectedSalary] = useState<TSalary | null>(null);
+    const [search, setSearch] = useState<string>("");
+    const [showInactive, setShowInactive] = useState(false);
+    const [addBEntry, setAddBEntry] = useState(true);
     const [pickedWorkplaces, setPickedWorkplaces] = useState<string[]>(
         workplaces
             ?.map((workplace) => workplace._id)
             .filter((id): id is string => id !== undefined) || []
     );
-    const [selectedSalary, setSelectedSalary] = useState<TSalary | null>(null);
-    const [isSalaryDetailsDialogOpen, setIsSalaryDetailsDialogOpen] = useState(false);
-    const [search, setSearch] = useState<string>("");
-    const [showInactive, setShowInactive] = useState(false);
     const [paginationModel, setPaginationModel] = useState({
         page: 0,
         pageSize: defaultPageSize,
     });
-    const [addBEntry, setAddBEntry] = useState(true);
 
     const addNewSalaryHour = useCallback(() => {
         setSalaryHours((prev) => {
@@ -283,7 +282,7 @@ const useSalary = (isPage?: boolean) => {
                 setSelectedSalary(
                     fetchedSalaries?.find((salary) => salary._id === params.row.id) || null
                 );
-                setIsSalaryDetailsDialogOpen(true);
+                setIsUploadDialogOpen(true);
             },
             (params: TDataGridInputCellParams) => onDelete(params.row.id as string),
             (params: TDataGridInputCellParams) => onUndelete(params.row.id as string),
@@ -340,6 +339,7 @@ const useSalary = (isPage?: boolean) => {
         onSubmit,
         toggleUploadDialog,
         isUploadDialogOpen,
+        setIsUploadDialogOpen,
         salaryHours,
         workplaces,
         columns,
@@ -353,8 +353,6 @@ const useSalary = (isPage?: boolean) => {
         onUpdate,
         selectedSalary,
         setSelectedSalary,
-        isSalaryDetailsDialogOpen,
-        setIsSalaryDetailsDialogOpen,
         setSearch,
         filteredRows,
         showInactive,
