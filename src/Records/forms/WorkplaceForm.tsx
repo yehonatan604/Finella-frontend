@@ -7,7 +7,7 @@ import { TWorkplace } from "../types/TWorkplace";
 import useWorkplaces from "../hooks/useWorkplace";
 import { addWorkplaceFormDefault } from "./initialData/addWorkplaceFormDefault";
 import FormValidationMessage from "../../Common/components/FormValidationMessage";
-import Field from "../../Common/components/FormField";
+import FormField from "../../Common/components/FormField";
 
 const WorkplaceForm = ({
   setIsDialogOpen,
@@ -53,29 +53,29 @@ const WorkplaceForm = ({
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(onFormSubmit)}>
             <Box sx={{ display: "flex", gap: 2 }}>
-              <Field label="Name" name="name" type="text" required width="100%" />
-              <Field label="Email" name="email" type="email" required width="100%" />
+              <FormField label="Name" name="name" type="text" required width="100%" />
+              <FormField label="Email" name="email" type="email" required width="100%" />
             </Box>
 
             <Box sx={{ display: "flex", gap: 2 }}>
-              <Field label="Street" name="address.street" required width="100%" />
-              <Field
+              <FormField label="Street" name="address.street" required width="100%" />
+              <FormField
                 label="House Number"
                 name="address.houseNumber"
                 required
                 width="100%"
               />
-              <Field label="City" name="address.city" required width="100%" />
+              <FormField label="City" name="address.city" required width="100%" />
             </Box>
 
             <Box sx={{ display: "flex", gap: 2 }}>
-              <Field label="Country" name="address.country" required width="100%" />
-              <Field label="Zip" name="address.zip" required width="100%" />
+              <FormField label="Country" name="address.country" required width="100%" />
+              <FormField label="Zip" name="address.zip" required width="100%" />
             </Box>
 
             <Box sx={{ display: "flex", gap: 2 }}>
-              <Field label="Main Phone" name="phone.main" required width="100%" />
-              <Field label="Secondary Phone" name="phone.secondary" width="100%" />
+              <FormField label="Main Phone" name="phone.main" required width="100%" />
+              <FormField label="Secondary Phone" name="phone.secondary" width="100%" />
             </Box>
 
             <Divider sx={{ mb: 2, color: "silver" }} />
@@ -131,14 +131,14 @@ const WorkplaceForm = ({
             </Box>
 
             <Box sx={{ display: "flex", gap: 2 }}>
-              <Field
+              <FormField
                 label="Start Date"
                 name="startDate"
                 required
                 type="date"
                 width="100%"
               />
-              <Field label="End Date" name="endDate" type="date" width="100%" />
+              <FormField label="End Date" name="endDate" type="date" width="100%" />
             </Box>
 
             <FormValidationMessage isValid={isValid} />

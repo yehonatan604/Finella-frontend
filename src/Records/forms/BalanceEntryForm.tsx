@@ -1,11 +1,12 @@
 import React from "react";
-import { Box, Button, TextField, Container, MenuItem, Paper } from "@mui/material";
+import { Box, Button, TextField, Container, Paper } from "@mui/material";
 import useBalanceEntry from "../hooks/useBalanceEntry";
 import useTheme from "../../Common/hooks/useTheme";
 import { TBalanceEntry } from "../types/TBalanceEntry";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { addBalanceEntryFormDefault } from "./initialData/addBalanceEntryFormDefault";
 import { DateTime } from "luxon";
+import FormField from "../../Common/components/FormField";
 
 const BalanceEntryForm = ({
   setIsDialogOpen,
@@ -19,6 +20,13 @@ const BalanceEntryForm = ({
   const { onSubmit, onUpdate } = useBalanceEntry();
   const { mode } = useTheme();
 
+  const formMethods = useForm<TBalanceEntry>({
+    mode: "onChange",
+    defaultValues: bEntry
+      ? { ...bEntry, date: new Date(bEntry.date).toISOString().split("T")[0] }
+      : addBalanceEntryFormDefault,
+  });
+
   const {
     register,
     reset,
@@ -26,19 +34,14 @@ const BalanceEntryForm = ({
     watch,
     formState: { errors, isValid },
     handleSubmit,
-  } = useForm<TBalanceEntry>({
-    mode: "onChange",
-    defaultValues: bEntry
-      ? { ...bEntry, date: new Date(bEntry.date).toISOString().split("T")[0] }
-      : addBalanceEntryFormDefault,
-  });
+  } = formMethods;
 
   const onFormSubmit = async (data: TBalanceEntry) => {
     const func = bEntry ? onUpdate : onSubmit;
-    const closeDialog =
+    const setDialog =
       bEntry && setIsUpdateDialogOpen ? setIsUpdateDialogOpen : setIsDialogOpen;
     await func(data);
-    closeDialog(false);
+    setDialog(false);
   };
 
   return (
@@ -50,111 +53,84 @@ const BalanceEntryForm = ({
           p: 4,
         }}
       >
-        <form onSubmit={handleSubmit(onFormSubmit)}>
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <TextField
-              label="Name"
-              {...register("name")}
-              fullWidth
-              sx={{ mb: 2 }}
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
-            />
+        <FormProvider {...formMethods}>
+          <form onSubmit={handleSubmit(onFormSubmit)}>
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <FormField label="Name" type="text" name="name" required width="100%" />
 
-            <TextField
-              label="type"
-              {...register("type")}
-              fullWidth
-              sx={{ mb: 2 }}
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
-              select
-              defaultValue={"expense"}
-            >
-              <MenuItem value={"income"}>Income</MenuItem>
-              <MenuItem value={"expense"}>Expense</MenuItem>
-            </TextField>
+              <FormField
+                label="Entry Type"
+                name="type"
+                required
+                width="100%"
+                selectArray={["income", "expense"]}
+                defaultValue={"expense"}
+              />
 
-            <TextField
-              label="Date"
-              type="date"
-              className={mode === "dark" ? "dark" : ""}
-              fullWidth
-              sx={{ mb: 2 }}
-              color={errors.date ? "error" : "primary"}
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
-              {...register("date")}
-              defaultValue={watch("date")}
-              onChange={(e) => {
-                const date = DateTime.fromISO(e.target.value, { zone: "local" }).toISO();
-                setValue("date", bEntry ? date!.split("T")[0] : e.target.value);
-              }}
-            />
+              <TextField
+                {...register("date")}
+                label="Date"
+                type="date"
+                className={mode === "dark" ? "dark" : ""}
+                fullWidth
+                sx={{ mb: 2 }}
+                color={errors.date ? "error" : "primary"}
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
+                defaultValue={watch("date")}
+                onChange={(e) => {
+                  const date = DateTime.fromISO(e.target.value, {
+                    zone: "local",
+                  }).toISO();
+                  setValue("date", bEntry ? date!.split("T")[0] : e.target.value);
+                }}
+              />
 
-            <TextField
-              label="Price"
-              {...register("price")}
-              type="number"
-              fullWidth
-              sx={{ mb: 2 }}
-              color={errors.price ? "error" : "primary"}
-              slotProps={{
-                inputLabel: {
-                  shrink: true,
-                },
-              }}
-              defaultValue={0}
-            />
-          </Box>
+              <FormField label="Price" type="number" name="price" required width="100%" />
+            </Box>
 
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <TextField
-              label="notes"
-              {...register("notes")}
-              fullWidth
-              multiline
-              rows={3}
-              sx={{ mb: 2 }}
-              slotProps={{ inputLabel: { shrink: true } }}
-            />
-          </Box>
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <TextField
+                label="notes"
+                {...register("notes")}
+                fullWidth
+                multiline
+                rows={3}
+                sx={{ mb: 2 }}
+                slotProps={{ inputLabel: { shrink: true } }}
+              />
+            </Box>
 
-          <Box sx={{ display: "flex", gap: 2, pt: 1 }}>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              fullWidth
-              sx={{ fontSize: "1.2rem" }}
-              disabled={!isValid}
-            >
-              {bEntry ? "Update" : "Add"}
-            </Button>
+            <Box sx={{ display: "flex", gap: 2, pt: 1 }}>
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+                sx={{ fontSize: "1.2rem" }}
+                disabled={!isValid}
+              >
+                {bEntry ? "Update" : "Add"}
+              </Button>
 
-            <Button
-              type="reset"
-              variant="contained"
-              color="error"
-              fullWidth
-              sx={{ fontSize: "1.2rem" }}
-              onClick={() => {
-                reset(bEntry ?? addBalanceEntryFormDefault);
-              }}
-            >
-              Reset
-            </Button>
-          </Box>
-        </form>
+              <Button
+                type="reset"
+                variant="contained"
+                color="error"
+                fullWidth
+                sx={{ fontSize: "1.2rem" }}
+                onClick={() => {
+                  reset(bEntry ?? addBalanceEntryFormDefault);
+                }}
+              >
+                Reset
+              </Button>
+            </Box>
+          </form>
+        </FormProvider>
       </Container>
     </Box>
   );
