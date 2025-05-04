@@ -249,6 +249,7 @@ const useNote = (isPage: boolean = false, all: boolean = false) => {
         paginatedRows: paginatedRows(paginationModel, filteredRows),
         onDelete,
         onUndelete,
+        user,
     }
 }
 

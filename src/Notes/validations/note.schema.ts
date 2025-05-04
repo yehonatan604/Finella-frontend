@@ -9,4 +9,5 @@ export const noteSchema = Joi.object({
     content: Joi.string().min(2).required(),
     isSticky: Joi.boolean().required(),
     notes: Joi.string().optional().allow("", null),
+    noteStatus: Joi.string().optional().allow("", null).default("PENDING"),
 });

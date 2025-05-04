@@ -26,22 +26,25 @@ type NoteFormProps = {
 
 const NoteForm = (props: NoteFormProps) => {
   const { setIsDialogOpen, setIsUpdateDialogOpen, note = null } = props;
-  const { onSubmit, onUpdate } = useNote();
+  const { onSubmit, onUpdate, user } = useNote();
   const { mode } = useTheme();
 
   const formMethods = useForm<TNote>({
-    mode: "onChange",
     defaultValues: note
-      ? { ...note, date: new Date(note.date).toISOString().split("T")[0] }
-      : addNoteFormDefault,
+      ? {
+          ...note,
+          userId: user._id,
+          date: new Date(note.date).toISOString().split("T")[0],
+        }
+      : addNoteFormDefault(user._id),
     resolver: joiResolver(noteSchema),
   });
 
   const {
-    register,
     reset,
+    watch,
     setValue,
-    formState: { isValid },
+    formState: { isValid, errors },
     handleSubmit,
   } = formMethods;
 
@@ -53,9 +56,9 @@ const NoteForm = (props: NoteFormProps) => {
     setDialog!(false);
   };
 
-  if (note) {
-    console.log(note);
-  }
+  console.log("watch all", watch());
+  console.log("isValid", isValid);
+  console.log("errors", errors);
 
   return (
     <Box sx={{ p: 2, pb: 0 }}>
@@ -77,7 +80,17 @@ const NoteForm = (props: NoteFormProps) => {
                 justifyContent: "center",
               }}
             >
-              <FormField label="Name" name="name" required />
+              <FormField
+                label="Name"
+                name="name"
+                required
+                value={watch("name")}
+                onChange={(e) =>
+                  setValue("name", e.target.value, {
+                    shouldValidate: true,
+                  })
+                }
+              />
 
               <FormField
                 className={mode === "dark" ? "dark" : ""}
@@ -89,19 +102,51 @@ const NoteForm = (props: NoteFormProps) => {
                   const date = DateTime.fromISO(e.target.value, {
                     zone: "local",
                   }).toISO();
-                  setValue("date", note ? date!.split("T")[0] : e.target.value);
+                  setValue("date", note ? date!.split("T")[0] : e.target.value, {
+                    shouldValidate: true,
+                  });
                 }}
               />
 
               <FormControlLabel
-                control={<Checkbox {...register("isSticky")} />}
+                control={
+                  <Checkbox
+                    checked={watch("isSticky")}
+                    onChange={(e) =>
+                      setValue("isSticky", e.target.checked, { shouldValidate: true })
+                    }
+                  />
+                }
                 label="Sticky"
                 sx={{ mb: 2 }}
               />
             </Box>
 
-            <FormField label="Content" name="content" multiline rows={4} required />
-            <FormField label="Extra notes" name="notes" multiline rows={2} />
+            <FormField
+              label="Content"
+              name="content"
+              multiline
+              rows={4}
+              required
+              value={watch("content")}
+              onChange={(e) =>
+                setValue("content", e.target.value, {
+                  shouldValidate: true,
+                })
+              }
+            />
+            <FormField
+              label="Extra notes"
+              name="notes"
+              multiline
+              rows={2}
+              value={watch("notes")}
+              onChange={(e) =>
+                setValue("notes", e.target.value, {
+                  shouldValidate: true,
+                })
+              }
+            />
 
             <Divider sx={{ my: 2 }} />
 
