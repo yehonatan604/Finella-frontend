@@ -150,10 +150,10 @@ const ToDoForm = ({
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={watch("tasks")!.length > 0}
+                  defaultChecked={watch("tasks")!.length > 0}
                   color="primary"
                   onChange={(e) => {
-                    if (!e.target.checked) {
+                    if (e.target.checked) {
                       setValue(
                         "tasks",
                         [
@@ -181,13 +181,20 @@ const ToDoForm = ({
 
             {watch("tasks")!.length > 0 && (
               <>
-                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 2,
+                  }}
+                >
                   {watch("tasks")!.map((task, index) => (
                     <Box
                       key={index}
                       sx={{
                         display: "flex",
                         flexDirection: "row",
+                        alignItems: "center",
                         gap: 1,
                         width: "100%",
                       }}
@@ -221,8 +228,6 @@ const ToDoForm = ({
                       <FormField
                         label="Task Notes"
                         name={`tasks.${index}.notes`}
-                        multiline
-                        rows={2}
                         value={watch(`tasks.${index}.notes`)}
                         onChange={(e) => {
                           setValue(`tasks.${index}.notes`, e.target.value, {
@@ -235,6 +240,7 @@ const ToDoForm = ({
                         <Button
                           variant="contained"
                           color="error"
+                          size="small"
                           onClick={() => {
                             const updatedTasks = watch("tasks")!.filter(
                               (_, i) => i !== index
@@ -243,7 +249,7 @@ const ToDoForm = ({
                               shouldValidate: true,
                             });
                           }}
-                          sx={{ mb: 2 }}
+                          sx={{ height: "50%", mb: 2, p: 0 }}
                         >
                           -
                         </Button>
@@ -253,6 +259,7 @@ const ToDoForm = ({
                         <Button
                           variant="contained"
                           color="primary"
+                          size="small"
                           onClick={() => {
                             setValue(
                               "tasks",
@@ -265,7 +272,7 @@ const ToDoForm = ({
                               }
                             );
                           }}
-                          sx={{ mb: 2 }}
+                          sx={{ height: "50%", mb: 2, p: 0 }}
                         >
                           +
                         </Button>
