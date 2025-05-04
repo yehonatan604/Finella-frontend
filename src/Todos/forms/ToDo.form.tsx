@@ -45,7 +45,7 @@ const ToDoForm = ({
 
   const {
     register,
-    formState: { isValid, errors },
+    formState: { isValid },
     handleSubmit,
     watch,
     reset,
@@ -61,10 +61,6 @@ const ToDoForm = ({
       toDo && setIsUpdateDialogOpen ? setIsUpdateDialogOpen : setIsDialogOpen;
     setDialog!(false);
   };
-
-  console.log("Form Errors", errors);
-  console.log("Form Values", watch());
-  console.log("Form Data", watch("tasks"));
 
   return (
     <Box sx={{ p: 2, pb: 0 }}>

@@ -12,7 +12,7 @@ export const todoSchema = Joi.object({
     tasks: Joi.array().items(Joi.object({
         ...commonSchemaFields,
         name: Joi.string().required(),
-        taskStatus: Joi.string().optional().default("pending"),
+        taskStatus: Joi.string().optional().default("PENDING"),
         priority: Joi.number().required(),
         notes: Joi.string().allow(""),
     })),
