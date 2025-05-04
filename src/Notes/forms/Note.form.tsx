@@ -16,6 +16,7 @@ import { addNoteFormDefault } from "./initialData/addNoteFormDefault";
 import FormField from "../../Common/components/FormField";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { noteSchema } from "../validations/note.schema";
+import { DateTime } from "luxon";
 
 type NoteFormProps = {
   setIsDialogOpen?: (isOpen: boolean) => void;
@@ -30,13 +31,17 @@ const NoteForm = (props: NoteFormProps) => {
 
   const formMethods = useForm<TNote>({
     mode: "onChange",
-    defaultValues: note ?? addNoteFormDefault,
+    defaultValues: note
+      ? { ...note, date: new Date(note.date).toISOString().split("T")[0] }
+      : addNoteFormDefault,
     resolver: joiResolver(noteSchema),
   });
 
   const {
     register,
-    formState: { errors, isValid },
+    reset,
+    setValue,
+    formState: { isValid },
     handleSubmit,
   } = formMethods;
 
@@ -48,8 +53,9 @@ const NoteForm = (props: NoteFormProps) => {
     setDialog!(false);
   };
 
-  console.log("NoteForm errors", errors);
-  console.log("NoteForm data", formMethods.getValues());
+  if (note) {
+    console.log(note);
+  }
 
   return (
     <Box sx={{ p: 2, pb: 0 }}>
@@ -76,9 +82,15 @@ const NoteForm = (props: NoteFormProps) => {
               <FormField
                 className={mode === "dark" ? "dark" : ""}
                 label="Date"
-                name="date"
                 type="date"
+                name="date"
                 required
+                onChange={(e) => {
+                  const date = DateTime.fromISO(e.target.value, {
+                    zone: "local",
+                  }).toISO();
+                  setValue("date", note ? date!.split("T")[0] : e.target.value);
+                }}
               />
 
               <FormControlLabel
@@ -88,13 +100,8 @@ const NoteForm = (props: NoteFormProps) => {
               />
             </Box>
 
-            <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
-              <FormField label="Content" name="content" multiline rows={4} required />
-            </Box>
-
-            <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
-              <FormField label="Extra notes" name="notes" multiline rows={2} />
-            </Box>
+            <FormField label="Content" name="content" multiline rows={4} required />
+            <FormField label="Extra notes" name="notes" multiline rows={2} />
 
             <Divider sx={{ my: 2 }} />
 
@@ -116,6 +123,9 @@ const NoteForm = (props: NoteFormProps) => {
                 color="error"
                 fullWidth
                 sx={{ fontSize: "1.2rem" }}
+                onClick={() => {
+                  reset(note ?? addNoteFormDefault);
+                }}
               >
                 Reset
               </Button>
