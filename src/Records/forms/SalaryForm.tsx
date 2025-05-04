@@ -55,10 +55,8 @@ const SalaryForm = ({
     setValue,
     watch,
     reset,
-    formState: { errors, isValid },
+    formState: { isValid },
   } = formMethods;
-
-  console.log(errors);
 
   const onFormSubmit = async (data: TSalary) => {
     const func = salary ? onUpdate : onSubmit;
@@ -105,14 +103,18 @@ const SalaryForm = ({
                       </MenuItem>
                     )),
                   ]}
-                  defaultValue={salary?.workPlaceId || ""}
+                  value={watch("workPlaceId") || ""}
                   onChange={(e) => {
                     const value = e.target.value;
                     if (value === "__new__") {
-                      setValue("workPlaceId", "");
+                      setValue("workPlaceId", "", {
+                        shouldValidate: true,
+                      });
                       setIsAddWorkplaceDialogOpen(true);
                     } else {
-                      setValue("workPlaceId", value);
+                      setValue("workPlaceId", value, {
+                        shouldValidate: true,
+                      });
                     }
                   }}
                   sx={{ width: "30%", mb: 0 }}
@@ -125,11 +127,13 @@ const SalaryForm = ({
                   required
                   selectArray={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
                   sx={{ width: "24%", mb: 0 }}
-                  defaultValue={watch("date").split("-")[0] || ""}
+                  value={watch("date").split("-")[0] || ""}
                   onChange={(e) => {
                     const value = e.target.value;
                     if (value) {
-                      setValue("date", `${value}-${watch("date").split("-")[1]}`);
+                      setValue("date", `${value}-${watch("date").split("-")[1]}`, {
+                        shouldValidate: true,
+                      });
                     }
                   }}
                 />
@@ -140,11 +144,13 @@ const SalaryForm = ({
                   doRegister={false}
                   required
                   sx={{ width: "24%", mb: 0 }}
-                  defaultValue={watch("date").split("-")[1] || ""}
+                  value={watch("date").split("-")[1] || ""}
                   onChange={(e) => {
                     const value = e.target.value;
                     if (value) {
-                      setValue("date", `${watch("date").split("-")[0]}-${value}`);
+                      setValue("date", `${watch("date").split("-")[0]}-${value}`, {
+                        shouldValidate: true,
+                      });
                     }
                   }}
                 />
@@ -185,7 +191,7 @@ const SalaryForm = ({
               <Divider sx={{ my: 2, background: "silver" }} />
 
               <Box sx={{ display: "flex", gap: 2, flexDirection: "column" }}>
-                {(salary ? salary.hours : salaryHours).map((item, index) => (
+                {(salary ? watch("hours") : salaryHours).map((item, index) => (
                   <Box
                     key={index}
                     sx={{ display: "flex", gap: 2, flexDirection: "column" }}
@@ -196,6 +202,15 @@ const SalaryForm = ({
                         name={`hours.${index}.day`}
                         type="number"
                         required
+                        value={watch(`hours.${index}.day`)}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value) {
+                            setValue(`hours.${index}.day`, value, {
+                              shouldValidate: true,
+                            });
+                          }
+                        }}
                       />
 
                       <FormField
@@ -204,9 +219,14 @@ const SalaryForm = ({
                         name={`hours.${index}.startTime`}
                         type="time"
                         required
-                        defaultValue={item.startTime || ""}
+                        value={watch(`hours.${index}.startTime`)}
                         onChange={(e) => {
-                          setValue(`hours.${index}.startTime`, e.target.value);
+                          const value = e.target.value;
+                          if (value) {
+                            setValue(`hours.${index}.startTime`, value, {
+                              shouldValidate: true,
+                            });
+                          }
                         }}
                       />
 
@@ -216,9 +236,14 @@ const SalaryForm = ({
                         name={`hours.${index}.endTime`}
                         type="time"
                         required
-                        defaultValue={item.endTime || ""}
+                        value={watch(`hours.${index}.endTime`)}
                         onChange={(e) => {
-                          setValue(`hours.${index}.endTime`, e.target.value);
+                          const value = e.target.value;
+                          if (value) {
+                            setValue(`hours.${index}.endTime`, value, {
+                              shouldValidate: true,
+                            });
+                          }
                         }}
                       />
 

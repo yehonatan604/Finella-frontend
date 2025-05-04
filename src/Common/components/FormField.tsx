@@ -11,7 +11,8 @@ type FormFieldProps = {
   required?: boolean;
   width?: string;
   selectArray?: string[] | number[];
-  defaultValue?: string;
+  defaultValue?: string | number;
+  value?: string | number;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   className?: string;
   sx?: object;
@@ -30,6 +31,7 @@ const FormField = (props: FormFieldProps) => {
     width = "100%",
     selectArray,
     defaultValue,
+    value,
     onChange,
     className,
     sx = {},
@@ -68,6 +70,7 @@ const FormField = (props: FormFieldProps) => {
           : "primary"
       }
       defaultValue={defaultValue}
+      value={value}
       onChange={(e) => {
         if (onChange) {
           onChange(e as ChangeEvent<HTMLInputElement>);

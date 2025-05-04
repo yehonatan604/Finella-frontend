@@ -114,6 +114,8 @@ const useSalary = (isPage?: boolean) => {
             toastify.error("Error adding Salary");
         } finally {
             setLoading(false);
+            setSelectedSalary(null);
+            setSalaryHours([]);
         }
     };
 
@@ -173,6 +175,8 @@ const useSalary = (isPage?: boolean) => {
                 toastify.error("Error updating Balance Entry");
             } finally {
                 setLoading(false);
+                setSelectedSalary(null);
+                setSalaryHours([]);
             }
         },
         [dispatch]
@@ -247,6 +251,8 @@ const useSalary = (isPage?: boolean) => {
                 toastify.error("Error deleting Salary");
             } finally {
                 setLoading(false);
+                setSelectedSalary(null);
+                setSalaryHours([]);
             }
         }, [user?._id, dispatch]);
 
@@ -270,6 +276,8 @@ const useSalary = (isPage?: boolean) => {
                 toastify.error("Error undeleting Salary");
             } finally {
                 setLoading(false);
+                setSelectedSalary(null);
+                setSalaryHours([]);
             }
         },
         [user?._id, dispatch]
