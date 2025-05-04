@@ -5,8 +5,9 @@ import { TNote } from "../types/TNote";
 import useNote from "../hooks/useNote";
 import PushPinIcon from "@mui/icons-material/PushPin";
 import CreateIcon from "@mui/icons-material/Create";
-import NoteDetailsDialog from "./NoteDetailsDialog";
 import { blue } from "@mui/material/colors";
+import FormDialog from "../../Common/components/dialogs/FormDialog";
+import NoteForm from "../forms/Note.form";
 
 type TNoteCardProps = {
   note: TNote;
@@ -14,9 +15,16 @@ type TNoteCardProps = {
 
 export const NoteCard = (props: TNoteCardProps) => {
   const { note } = props;
-  const [isNoteDetailsDialogOpen, setIsNoteDetailsDialogOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const { onDelete, onUndelete, onUpdate, selectedNote, setSelectedNote } = useNote();
+  const {
+    onDelete,
+    onUndelete,
+    onUpdate,
+    selectedNote,
+    setSelectedNote,
+    isUpdateDialogOpen,
+    setIsUpdateDialogOpen,
+  } = useNote();
 
   const open = Boolean(anchorEl);
 
@@ -41,7 +49,7 @@ export const NoteCard = (props: TNoteCardProps) => {
   };
 
   const handleEdit = () => {
-    setIsNoteDetailsDialogOpen(true);
+    setIsUpdateDialogOpen(true);
     handleMenuClose();
   };
 
@@ -140,17 +148,14 @@ export const NoteCard = (props: TNoteCardProps) => {
         </>
       )}
 
-      {isNoteDetailsDialogOpen && selectedNote && (
-        <NoteDetailsDialog
-          isOpen={isNoteDetailsDialogOpen}
-          onClose={() => setIsNoteDetailsDialogOpen(false)}
-          note={selectedNote}
-          onSubmit={(data) => {
-            onUpdate(data);
-            setSelectedNote(null);
-          }}
-        />
-      )}
+      <FormDialog
+        open={isUpdateDialogOpen}
+        onClose={() => setIsUpdateDialogOpen(false)}
+        title="Edit a Note"
+        formComponent={
+          <NoteForm setIsUpdateDialogOpen={setIsUpdateDialogOpen} note={selectedNote} />
+        }
+      />
     </Card>
   );
 };

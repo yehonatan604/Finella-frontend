@@ -8,8 +8,6 @@ import { noteCols } from "../data/noteCols";
 import { noteRows } from "../data/noteRows";
 import useAuth from "../../Auth/hooks/useAuth";
 import { formatStringDate } from "../../Common/helpers/dateTimeHelpers";
-import { useForm } from "react-hook-form";
-import { addNoteFormDefault } from "../forms/initialData/addNoteFormDefault";
 import { useDispatch, useSelector } from "react-redux";
 import { TRootState } from "../../Core/store/store";
 import { entitiesActions } from "../../Core/store/entitiesSlice";
@@ -20,9 +18,9 @@ const useNote = (isPage: boolean = false, all: boolean = false) => {
     const { user } = useAuth();
 
     const fetchedNotes = useSelector((state: TRootState) => state.entitiesSlice.notes);
-    const loading = useSelector((state: TRootState) => state.entitiesSlice.loading);
     const dispatch = useDispatch();
 
+    const [loading, setLoading] = useState(false);
     const [lastFetchedQuery, setLastFetchedQuery] = useState<string | null>(null);
     const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
     const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -37,30 +35,23 @@ const useNote = (isPage: boolean = false, all: boolean = false) => {
         pageSize: defaultPageSize,
     });
 
-    const {
-        register,
-        formState: { errors },
-        handleSubmit,
-    } = useForm<TNote>({
-        mode: "onChange",
-        defaultValues: addNoteFormDefault,
-    });
-
     const getAllNotes = useCallback(async (query: string) => {
         try {
-            dispatch(entitiesActions.setLoading(true));
+            setLoading(true);
             const response = await sendApiRequest("/note/by" + query, HTTPMethodTypes.GET);
             dispatch(entitiesActions.setEntity({ type: "notes", data: response.data }));
         }
         catch (e) {
             console.error(e);
             toastify.error("Error updating Note");
+        } finally {
+            setLoading(false);
         }
     }, [dispatch]);
 
     const onSubmit = useCallback(async (note: TNote) => {
         try {
-            dispatch(entitiesActions.setLoading(true));
+            setLoading(true);
             const res = await sendApiRequest("/note", HTTPMethodTypes.POST, { ...note, userId: user?._id });
             dispatch(entitiesActions.addEntityItem({ type: "notes", item: res.data }));
             setSelectedNote(null);
@@ -68,12 +59,14 @@ const useNote = (isPage: boolean = false, all: boolean = false) => {
         } catch (e) {
             console.error(e);
             toastify.error("Error updating Note");
+        } finally {
+            setLoading(false);
         }
     }, [dispatch, user?._id]);
 
     const onUpdate = useCallback(async (note: TNote) => {
         try {
-            dispatch(entitiesActions.setLoading(true));
+            setLoading(true);
 
             const finalNote = {
                 _id: note._id ?? (note as TNote & { id: string })["id"],
@@ -92,6 +85,8 @@ const useNote = (isPage: boolean = false, all: boolean = false) => {
         } catch (e) {
             console.error(e);
             toastify.error("Error updating Note");
+        } finally {
+            setLoading(false);
         }
     }, [user?._id, dispatch]);
 
@@ -135,6 +130,7 @@ const useNote = (isPage: boolean = false, all: boolean = false) => {
     const onUndelete = useCallback(
         async (id: string) => {
             try {
+                setLoading(true);
                 await question(
                     "Undelete Note",
                     "Are you sure you want to undelete this Note?",
@@ -149,6 +145,8 @@ const useNote = (isPage: boolean = false, all: boolean = false) => {
             } catch (e) {
                 toastify.error("Error undeleting Note");
                 console.error(e);
+            } finally {
+                setLoading(false);
             }
         },
         [dispatch]
@@ -157,6 +155,7 @@ const useNote = (isPage: boolean = false, all: boolean = false) => {
     const onDelete = useCallback(
         async (id: string) => {
             try {
+                setLoading(true);
                 await question(
                     "Delete Note",
                     "Are you sure you want to delete this Note?",
@@ -172,6 +171,8 @@ const useNote = (isPage: boolean = false, all: boolean = false) => {
             } catch (e) {
                 toastify.error("Error deleting Note");
                 console.error(e);
+            } finally {
+                setLoading(false);
             }
         },
         [dispatch]
@@ -237,9 +238,6 @@ const useNote = (isPage: boolean = false, all: boolean = false) => {
         filteredRows,
         setShowInactive,
         showInactive,
-        handleSubmit,
-        register,
-        errors,
         setMonths,
         setFromYear,
         setToYear,

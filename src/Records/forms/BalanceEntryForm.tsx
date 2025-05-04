@@ -7,16 +7,17 @@ import { FormProvider, useForm } from "react-hook-form";
 import { addBalanceEntryFormDefault } from "./initialData/addBalanceEntryFormDefault";
 import { DateTime } from "luxon";
 import FormField from "../../Common/components/FormField";
+import { joiResolver } from "@hookform/resolvers/joi";
+import { balanceEntrySchema } from "../validations/balanceEntry.schema";
 
-const BalanceEntryForm = ({
-  setIsDialogOpen,
-  setIsUpdateDialogOpen,
-  bEntry = null,
-}: {
+type BalanceEntryFormProps = {
   setIsDialogOpen: (isOpen: boolean) => void;
   setIsUpdateDialogOpen?: (isOpen: boolean) => void | null;
   bEntry?: TBalanceEntry | null;
-}) => {
+};
+
+const BalanceEntryForm = (props: BalanceEntryFormProps) => {
+  const { setIsDialogOpen, setIsUpdateDialogOpen, bEntry = null } = props;
   const { onSubmit, onUpdate } = useBalanceEntry();
   const { mode } = useTheme();
 
@@ -24,6 +25,7 @@ const BalanceEntryForm = ({
     defaultValues: bEntry
       ? { ...bEntry, date: new Date(bEntry.date).toISOString().split("T")[0] }
       : addBalanceEntryFormDefault,
+    resolver: joiResolver(balanceEntrySchema),
   });
 
   const {

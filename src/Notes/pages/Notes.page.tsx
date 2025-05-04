@@ -6,10 +6,9 @@ import PageButtons from "../../Common/components/layout/PageButtons";
 import PageFilters from "../../Common/components/layout/PageFilters";
 import PlusButton from "../../Common/components/layout/PlusButton";
 import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
-import NoteDetailsDialog from "../components/NoteDetailsDialog";
 import useNote from "../hooks/useNote";
 import FormDialog from "../../Common/components/dialogs/FormDialog";
-import AddNoteForm from "../forms/AddNote.form";
+import NoteForm from "../forms/Note.form";
 import useTheme from "../../Common/hooks/useTheme";
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
@@ -24,8 +23,6 @@ const NotesPage = () => {
     isUpdateDialogOpen,
     setIsUpdateDialogOpen,
     selectedNote,
-    setSelectedNote,
-    onUpdate,
     setSearch,
     filteredRows,
     showInactive,
@@ -105,23 +102,20 @@ const NotesPage = () => {
       <PageButtons fileName="workplaces" rows={rows} Doc={WorkplacesPdfDoc} />
       <PlusButton onClick={() => setIsAddDialogOpen(true)} />
 
-      {selectedNote && (
-        <NoteDetailsDialog
-          isOpen={isUpdateDialogOpen}
-          onClose={() => setIsUpdateDialogOpen(false)}
-          note={selectedNote}
-          onSubmit={(data) => {
-            onUpdate(data);
-            setSelectedNote(null);
-          }}
-        />
-      )}
-
       <FormDialog
         open={isAddDialogOpen}
         onClose={() => setIsAddDialogOpen(false)}
         title="Add a Note"
-        formComponent={<AddNoteForm setIsDialogOpen={setIsAddDialogOpen} />}
+        formComponent={<NoteForm setIsDialogOpen={setIsAddDialogOpen} />}
+      />
+
+      <FormDialog
+        open={isUpdateDialogOpen}
+        onClose={() => setIsUpdateDialogOpen(false)}
+        title="Edit a Note"
+        formComponent={
+          <NoteForm setIsUpdateDialogOpen={setIsUpdateDialogOpen} note={selectedNote} />
+        }
       />
     </>
   );

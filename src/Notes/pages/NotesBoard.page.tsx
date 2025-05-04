@@ -4,7 +4,7 @@ import useNote from "../hooks/useNote";
 import Page from "../../Common/components/layout/Page";
 import useTheme from "../../Common/hooks/useTheme";
 import FormDialog from "../../Common/components/dialogs/FormDialog";
-import AddNoteForm from "../forms/AddNote.form";
+import NoteForm from "../forms/Note.form";
 import { useState } from "react";
 import PlusButton from "../../Common/components/layout/PlusButton";
 import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
@@ -69,7 +69,7 @@ const NotesBoard = () => {
         open={isAddDialogOpen}
         onClose={() => setIsAddDialogOpen(false)}
         title="Add a Note"
-        formComponent={<AddNoteForm setIsDialogOpen={setIsAddDialogOpen} />}
+        formComponent={<NoteForm setIsDialogOpen={setIsAddDialogOpen} />}
       />
     </Page>
   );

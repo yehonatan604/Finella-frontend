@@ -6,7 +6,5 @@ export const addBalanceEntryFormDefault: TBalanceEntry = {
     date: new Date().toISOString().split("T")[0],
     type: "expense",
     price: 0,
-    withVat: false,
-    isPayed: false,
     notes: "",
 };
