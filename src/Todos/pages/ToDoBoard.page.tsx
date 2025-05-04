@@ -10,7 +10,7 @@ import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
 import ToDoCard from "../components/ToDoCard";
 import PlusButton from "../../Common/components/layout/PlusButton";
 import FormDialog from "../../Common/components/dialogs/FormDialog";
-import AddToDo from "../forms/AddToDo";
+import ToDoForm from "../forms/ToDo.form";
 
 const TodosBoard = () => {
   const { fetchedToDos, onUpdate } = useToDo(true, true);
@@ -107,7 +107,7 @@ const TodosBoard = () => {
         open={isAddDialogOpen}
         onClose={() => setIsAddDialogOpen(false)}
         title="Add a ToDo"
-        formComponent={<AddToDo setIsDialogOpen={setIsAddDialogOpen} />}
+        formComponent={<ToDoForm setIsDialogOpen={setIsAddDialogOpen} />}
       />
     </Page>
   );

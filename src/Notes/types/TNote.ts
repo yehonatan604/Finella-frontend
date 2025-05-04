@@ -1,4 +1,4 @@
-import { TDbItem } from "../../Actions/types/TDbItem";
+import { TDbItem } from "../../Common/types/TDbItem";
 
 export type TNote = TDbItem & {
     userId: string;

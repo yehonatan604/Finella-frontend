@@ -6,7 +6,7 @@ import { TBalanceEntry } from "../types/TBalanceEntry";
 import { FormProvider, useForm } from "react-hook-form";
 import { addBalanceEntryFormDefault } from "./initialData/addBalanceEntryFormDefault";
 import { DateTime } from "luxon";
-import FormField from "../../Common/components/FormField";
+import FormField from "../../Common/components/form/FormField";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { balanceEntrySchema } from "../validations/balanceEntry.schema";
 

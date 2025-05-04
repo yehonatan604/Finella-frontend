@@ -1,6 +1,6 @@
 import { TNote } from "../../types/TNote";
 
-export const addNoteFormDefault: TNote = (userId: string) => {
+export const addNoteFormDefault = (userId: string): TNote => {
     return {
         userId,
         name: "",
@@ -8,5 +8,6 @@ export const addNoteFormDefault: TNote = (userId: string) => {
         content: "",
         isSticky: false,
         notes: "",
+        noteStatus: "PENDING",
     };
 };

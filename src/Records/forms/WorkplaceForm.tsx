@@ -6,8 +6,8 @@ import { workplaceSchema } from "../validations/workplace.schema";
 import { TWorkplace } from "../types/TWorkplace";
 import useWorkplaces from "../hooks/useWorkplace";
 import { addWorkplaceFormDefault } from "./initialData/addWorkplaceFormDefault";
-import FormValidationMessage from "../../Common/components/FormValidationMessage";
-import FormField from "../../Common/components/FormField";
+import FormValidationMessage from "../../Common/components/form/FormValidationMessage";
+import FormField from "../../Common/components/form/FormField";
 
 const WorkplaceForm = ({
   setIsDialogOpen,

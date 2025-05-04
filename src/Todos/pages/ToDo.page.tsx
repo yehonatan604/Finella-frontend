@@ -7,7 +7,6 @@ import PageButtons from "../../Common/components/layout/PageButtons";
 import useToDo from "../hooks/useToDo";
 import PlusButton from "../../Common/components/layout/PlusButton";
 import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
-import ToDoDetailsDialog from "../components/ToDoDetailsDialog";
 import StyledDataGrid from "../../Common/components/styled/StyledDataGrid";
 import useTheme from "../../Common/hooks/useTheme";
 import { pageSizeOptions } from "../../Common/helpers/paginationHelpers";
@@ -15,7 +14,7 @@ import { TDataGridRow } from "../../Common/types/TDataGridRow";
 import ToDosChartsDialogDialog from "../../Records/components/dialogs/ToDosChartsDialog";
 import SalariesPdfDoc from "../../Records/components/pdfDocs/SalariesPdfDoc";
 import FormDialog from "../../Common/components/dialogs/FormDialog";
-import AddToDo from "../forms/AddToDo";
+import ToDoForm from "../forms/ToDo.form";
 
 const ToDoPage = () => {
   const {
@@ -25,10 +24,6 @@ const ToDoPage = () => {
     setToYear,
     setMonths,
     setPickedStatus,
-    onUpdate,
-    isToDoDetailsDialogOpen,
-    setIsToDoDetailsDialogOpen,
-    setSelectedToDo,
     selectedToDo,
     setSearch,
     filteredRows,
@@ -38,6 +33,8 @@ const ToDoPage = () => {
     paginatedRows,
     paginationModel,
     setPaginationModel,
+    isUpdateDialogOpen,
+    setIsUpdateDialogOpen,
   } = useToDo(true);
 
   const [isChartsDialogOpen, setIsChartsDialogOpen] = useState(false);
@@ -109,18 +106,6 @@ const ToDoPage = () => {
       />
       <PlusButton onClick={() => setIsAddDialogOpen(true)} />
 
-      {isToDoDetailsDialogOpen && selectedToDo && (
-        <ToDoDetailsDialog
-          isOpen={isToDoDetailsDialogOpen}
-          onClose={() => setIsToDoDetailsDialogOpen(false)}
-          toDo={selectedToDo}
-          onSubmit={(data) => {
-            onUpdate(data);
-            setSelectedToDo(null);
-          }}
-        />
-      )}
-
       {isChartsDialogOpen && (
         <ToDosChartsDialogDialog
           open={isChartsDialogOpen}
@@ -133,7 +118,16 @@ const ToDoPage = () => {
         open={isAddDialogOpen}
         onClose={() => setIsAddDialogOpen(false)}
         title="Add a ToDo"
-        formComponent={<AddToDo setIsDialogOpen={setIsAddDialogOpen} />}
+        formComponent={<ToDoForm setIsDialogOpen={setIsAddDialogOpen} />}
+      />
+
+      <FormDialog
+        open={isUpdateDialogOpen}
+        onClose={() => setIsUpdateDialogOpen(false)}
+        title="Edit a ToDo"
+        formComponent={
+          <ToDoForm setIsUpdateDialogOpen={setIsUpdateDialogOpen} toDo={selectedToDo} />
+        }
       />
     </>
   );

@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { loginFormDefault } from "../forms/loginFormDefault";
 import AbsTopIcons from "../../Common/components/layout/AbsTopIcons";
-import FormValidationMessage from "../../Common/components/FormValidationMessage";
+import FormValidationMessage from "../../Common/components/form/FormValidationMessage";
 
 const LoginPage = () => {
   const {

@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from "react";
 import { MenuItem, TextField } from "@mui/material";
 import { useFormContext } from "react-hook-form";
-import { TFormErrorMessage } from "../types/TFormErrorMessage";
+import { TFormErrorMessage } from "../../types/TFormErrorMessage";
 
 type FormFieldProps = {
   label: string;

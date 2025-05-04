@@ -16,7 +16,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { addSalaryFormDefault } from "./initialData/addSalaryFormDefault";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { salarySchema } from "../validations/salary.schema";
-import FormField from "../../Common/components/FormField";
+import FormField from "../../Common/components/form/FormField";
 import useTheme from "../../Common/hooks/useTheme";
 
 const SalaryForm = ({

@@ -1,5 +1,6 @@
-import { TDbItem } from "../../Records/types/TDbItem";
+import { TDbItem } from "../../Common/types/TDbItem";
 import { TTask } from "../../Records/types/TTask";
+import { TTaskStastus } from "../../Records/types/TTaskStatus";
 
 export type TToDo = TDbItem & {
     userId: string;
@@ -7,7 +8,7 @@ export type TToDo = TDbItem & {
     description: string;
     startDate: string;
     endDate: string;
-    toDoStatus: "PENDING" | "COMPLETE" | "CANCELED" | "FAILED";
+    toDoStatus: TTaskStastus;
     tasks?: TTask[] | undefined;
     notes: string;
 };

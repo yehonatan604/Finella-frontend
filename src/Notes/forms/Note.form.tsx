@@ -1,7 +1,6 @@
 import React from "react";
 import {
   Box,
-  Button,
   Container,
   Checkbox,
   FormControlLabel,
@@ -13,10 +12,11 @@ import { TNote } from "../types/TNote";
 import useTheme from "../../Common/hooks/useTheme";
 import { FormProvider, useForm } from "react-hook-form";
 import { addNoteFormDefault } from "./initialData/addNoteFormDefault";
-import FormField from "../../Common/components/FormField";
+import FormField from "../../Common/components/form/FormField";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { noteSchema } from "../validations/note.schema";
 import { DateTime } from "luxon";
+import FormButtons from "../../Common/components/form/FormButtons";
 
 type NoteFormProps = {
   setIsDialogOpen?: (isOpen: boolean) => void;
@@ -44,7 +44,7 @@ const NoteForm = (props: NoteFormProps) => {
     reset,
     watch,
     setValue,
-    formState: { isValid, errors },
+    formState: { isValid },
     handleSubmit,
   } = formMethods;
 
@@ -55,10 +55,6 @@ const NoteForm = (props: NoteFormProps) => {
       note && setIsUpdateDialogOpen ? setIsUpdateDialogOpen : setIsDialogOpen;
     setDialog!(false);
   };
-
-  console.log("watch all", watch());
-  console.log("isValid", isValid);
-  console.log("errors", errors);
 
   return (
     <Box sx={{ p: 2, pb: 0 }}>
@@ -151,29 +147,12 @@ const NoteForm = (props: NoteFormProps) => {
             <Divider sx={{ my: 2 }} />
 
             <Box sx={{ display: "flex", gap: 2, pt: 1 }}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-                sx={{ fontSize: "1.2rem" }}
-                disabled={!isValid}
-              >
-                Add
-              </Button>
-
-              <Button
-                type="reset"
-                variant="contained"
-                color="error"
-                fullWidth
-                sx={{ fontSize: "1.2rem" }}
-                onClick={() => {
-                  reset(note ?? addNoteFormDefault);
+              <FormButtons
+                isValid={isValid}
+                onReset={() => {
+                  reset(note ?? addNoteFormDefault(user._id));
                 }}
-              >
-                Reset
-              </Button>
+              />
             </Box>
           </form>
         </FormProvider>

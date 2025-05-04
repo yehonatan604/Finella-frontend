@@ -1,9 +1,7 @@
-import { useForm } from "react-hook-form";
 import { HTTPMethodTypes } from "../../Common/types/HTTPMethodTypes";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import useAuth from "../../Auth/hooks/useAuth";
 import { sendApiRequest } from "../../Common/helpers/sendApiRequest";
-import { addToDoFormDefault } from "../forms/initialData/addToDoFormDefault";
 import { toastify } from "../../Common/utilities/toast";
 import { parseToUTCISO, formatDateLuxon } from "../../Common/helpers/dateTimeHelpers";
 import { todoCols } from "../data/todoCols";
@@ -28,23 +26,13 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
   const [toYear, setToYear] = useState(new Date().getFullYear());
   const [months, setMonths] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
   const [pickedStatus, setPickedStatus] = useState<string>("all");
-  const [isToDoDetailsDialogOpen, setIsToDoDetailsDialogOpen] = useState(false);
+  const [isUpdateDialogOpen, setIsUpdateDialogOpen] = useState(false);
   const [selectedToDo, setSelectedToDo] = useState<TToDo | null>(null);
   const [search, setSearch] = useState<string>("");
   const [showInactive, setShowInactive] = useState(false);
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
     pageSize: defaultPageSize,
-  });
-
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-    watch,
-  } = useForm<TToDo>({
-    mode: "onChange",
-    defaultValues: addToDoFormDefault,
   });
 
   const getToDos = useCallback(
@@ -210,7 +198,7 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
         onCellUpdate,
         (params: TDataGridInputCellParams) => {
           setSelectedToDo(fetchedToDos?.find((todo) => todo._id === params.id) ?? null);
-          setIsToDoDetailsDialogOpen(true);
+          setIsUpdateDialogOpen(true);
         },
         (params: TDataGridInputCellParams) => {
           onDelete(params.id as string);
@@ -278,12 +266,8 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
   }, [socket, todoFailed]);
 
   return {
-    register,
-    handleSubmit,
     onSubmit,
     onUpdate,
-    watch,
-    errors,
     loading,
     columns,
     rows,
@@ -297,8 +281,6 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
     setPickedStatus,
     fetchedToDos,
     processRowOnCellUpdate: onCellUpdate,
-    isToDoDetailsDialogOpen,
-    setIsToDoDetailsDialogOpen,
     selectedToDo,
     setSelectedToDo,
     setSearch,
@@ -310,6 +292,9 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
     paginatedRows: paginatedRows(paginationModel, filteredRows),
     onDelete,
     onUndelete,
+    user,
+    isUpdateDialogOpen,
+    setIsUpdateDialogOpen,
   };
 };
 
