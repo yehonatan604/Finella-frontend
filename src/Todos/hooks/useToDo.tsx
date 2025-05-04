@@ -19,9 +19,9 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
   const { user } = useAuth();
   const { socket } = useSelector((state: TRootState) => state.socketSlice);
   const fetchedToDos = useSelector((state: TRootState) => state.entitiesSlice.todos);
-  const loading = useSelector((state: TRootState) => state.entitiesSlice.loading);
   const dispatch = useDispatch();
 
+  const [loading, setLoading] = useState(false);
   const [fromYear, setFromYear] = useState(new Date().getFullYear());
   const [toYear, setToYear] = useState(new Date().getFullYear());
   const [months, setMonths] = useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
@@ -38,12 +38,14 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
   const getToDos = useCallback(
     async (query: string) => {
       try {
-        dispatch(entitiesActions.setLoading(true));
+        setLoading(true);
         const response = await sendApiRequest("/todo/by" + query, HTTPMethodTypes.GET);
         dispatch(entitiesActions.setEntity({ type: "todos", data: response.data }));
       } catch (error) {
         console.log(error);
         toastify.error("Error fetching ToDos");
+      } finally {
+        setLoading(false);
       }
     },
     [dispatch]
@@ -52,7 +54,7 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
   const onUpdate = useCallback(
     async (data: TToDo) => {
       try {
-        dispatch(entitiesActions.setLoading(true));
+        setLoading(true);
         await sendApiRequest(`/todo`, HTTPMethodTypes.PUT, {
           ...data,
           userId: user?._id,
@@ -64,6 +66,8 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
       } catch (error) {
         console.log(error);
         toastify.error("Error updating ToDo");
+      } finally {
+        setLoading(false);
       }
     },
     [user?._id, dispatch]
@@ -123,6 +127,7 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
   const onUndelete = useCallback(
     async (id: string) => {
       try {
+        setLoading(true);
         await question(
           "Undelete Todo",
           "Are you sure you want to undelete this Todo?",
@@ -139,6 +144,8 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
       } catch (error) {
         console.log(error);
         toastify.error("Error undeleting ToDo");
+      } finally {
+        setLoading(false);
       }
     },
     [user?._id, dispatch]
@@ -147,6 +154,7 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
   const onDelete = useCallback(
     async (id: string) => {
       try {
+        setLoading(true);
         await question(
           "Delete ToDo",
           "Are you sure you want to delete this ToDo?",
@@ -163,6 +171,8 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
       } catch (error) {
         console.log(error);
         toastify.error("Error deleting Salary");
+      } finally {
+        setLoading(false);
       }
     },
     [user?._id, dispatch]
@@ -171,7 +181,7 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
   const onSubmit = useCallback(
     async (data: TToDo) => {
       try {
-        dispatch(entitiesActions.setLoading(true));
+        setLoading(true);
         if (data.tasks?.[0]?.name === "") {
           delete data.tasks;
         }
@@ -187,9 +197,11 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
       } catch (error) {
         console.log(error);
         toastify.error("Error adding ToDo");
+      } finally {
+        setLoading(false);
       }
     },
-    [user?._id, dispatch]
+    [user?._id]
   );
 
   const columns = useMemo(

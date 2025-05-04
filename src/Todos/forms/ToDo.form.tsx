@@ -8,7 +8,6 @@ import {
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
-import { useState } from "react";
 import { DateTime } from "luxon";
 import useTheme from "../../Common/hooks/useTheme";
 import useToDo from "../hooks/useToDo";
@@ -52,8 +51,6 @@ const ToDoForm = ({
     reset,
     setValue,
   } = formMethods;
-
-  const [withTasks, setWithTasks] = useState(false);
 
   const onFormSubmit = async (data: TToDo) => {
     console.log("Form Data", data);
@@ -153,10 +150,9 @@ const ToDoForm = ({
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={withTasks}
+                  checked={watch("tasks")!.length > 0}
                   color="primary"
                   onChange={(e) => {
-                    setWithTasks(e.target.checked);
                     if (!e.target.checked) {
                       setValue(
                         "tasks",
@@ -172,7 +168,9 @@ const ToDoForm = ({
                         }
                       );
                     } else {
-                      setValue("tasks", watch("tasks") ?? []);
+                      setValue("tasks", watch("tasks") ?? [], {
+                        shouldValidate: true,
+                      });
                     }
                   }}
                 />
@@ -181,7 +179,7 @@ const ToDoForm = ({
               sx={{ mb: 2, textAlign: "left" }}
             />
 
-            {withTasks && watch("tasks")!.length > 0 && (
+            {watch("tasks")!.length > 0 && (
               <>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                   {watch("tasks")!.map((task, index) => (
@@ -197,7 +195,7 @@ const ToDoForm = ({
                       <FormField
                         label="Task Name"
                         name={`tasks.${index}.name`}
-                        required={withTasks}
+                        required
                         value={watch(`tasks.${index}.name`)}
                         onChange={(e) => {
                           setValue(`tasks.${index}.name`, e.target.value, {

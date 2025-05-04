@@ -8,17 +8,13 @@ export const todoSchema = Joi.object({
     startDate: Joi.date().required(),
     endDate: Joi.date().required(),
     toDoStatus: Joi.string().optional().allow("", null).default("PENDING"),
-    description: Joi.string().optional().allow("", null),
-    tasks: Joi.array()
-        .items(
-            Joi.object({
-                name: Joi.string().required(),
-                priority: Joi.number().required(),
-                taskStatus: Joi.string().optional().allow("", null).default("PENDING"),
-                notes: Joi.string().optional().allow("", null),
-            })
-        )
-        .optional()
-        .allow("", null),
+    description: Joi.string().required(),
+    tasks: Joi.array().items(Joi.object({
+        ...commonSchemaFields,
+        name: Joi.string().required(),
+        taskStatus: Joi.string().optional().default("pending"),
+        priority: Joi.number().required(),
+        notes: Joi.string().allow(""),
+    })),
     notes: Joi.string().optional().allow("", null),
 });
