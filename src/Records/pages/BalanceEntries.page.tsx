@@ -115,7 +115,7 @@ const BalanceEntriesPage = () => {
         <BalanceEntriesChartsDialog
           open={isChartsDialogOpen}
           onClose={() => setIsChartsDialogOpen(false)}
-          data={filteredRows}
+          incomingData={filteredRows}
         />
       )}
 

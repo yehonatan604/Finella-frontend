@@ -19,18 +19,18 @@ import {
   Image as PDFImage,
   StyleSheet,
 } from "@react-pdf/renderer";
+import { formatStringDate } from "../../../Common/helpers/dateTimeHelpers";
 
 type BalanceEntriesChartsDialogProps = {
   open: boolean;
   onClose: () => void;
-  data: (
+  incomingData: (
     | {
         id: string | undefined;
         name: string;
         date: string;
         type: "income" | "expense";
         price: string | number;
-        withVat: boolean;
         notes: string;
         status: string | undefined;
       }
@@ -59,11 +59,20 @@ const styles = StyleSheet.create({
 const BalanceEntriesChartsDialog = ({
   open,
   onClose,
-  data,
+  incomingData,
 }: BalanceEntriesChartsDialogProps) => {
   const chartRef = useRef<HTMLDivElement>(null);
   const [chartImage, setChartImage] = useState<string | null>(null);
   const [pdfReady, setPdfReady] = useState(false);
+
+  console.log(incomingData);
+
+  const data =
+    incomingData?.sort(
+      (a, b) =>
+        new Date(formatStringDate("" + (a as { date: string }).date))?.getTime() -
+        new Date(formatStringDate("" + (b as { date: string }).date))?.getTime()
+    ) || [];
 
   const handleExportToPdf = async () => {
     if (!chartRef.current) return;
@@ -85,7 +94,17 @@ const BalanceEntriesChartsDialog = ({
   );
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm" sx={{ left: "18vw" }}>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="lg"
+      sx={{
+        left: "50%",
+        transform: "translate(-50%)",
+        display: "flex",
+      }}
+    >
       <DialogTitle
         sx={{
           backgroundColor: "primary.main",
@@ -122,8 +141,8 @@ const BalanceEntriesChartsDialog = ({
                   ),
               },
             ]}
-            width={500}
-            height={300}
+            width={900}
+            height={450}
           />
 
           <Divider sx={{ my: 2 }} />
@@ -151,8 +170,8 @@ const BalanceEntriesChartsDialog = ({
                   ),
               },
             ]}
-            width={600}
-            height={300}
+            width={900}
+            height={450}
           />
         </div>
       </DialogContent>
