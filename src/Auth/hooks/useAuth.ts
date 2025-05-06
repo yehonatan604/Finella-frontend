@@ -8,13 +8,15 @@ import { socketActions } from "../../Core/store/socketSlice";
 import { toastify } from "../../Common/utilities/toast";
 import { alert } from "../../Common/utilities/alert";
 import { AxiosError } from "axios";
+import useSocket from "../../Common/hooks/useSocket";
 
 const useAuth = () => {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    const auth = useSelector((state: TRootState) => state.authSlice);
+    const { user, role } = useSelector((state: TRootState) => state.authSlice);
     const { POST, GET } = HTTPMethodTypes;
     const dispatch = useDispatch();
+    useSocket(user);
 
     const signup = useCallback(async (data: Record<string, unknown>) => {
         setLoading(true);
@@ -85,16 +87,16 @@ const useAuth = () => {
     }, [GET, dispatch, logout]);;
 
     useEffect(() => {
-        if (auth.user) {
+        if (user) {
             dispatch(socketActions.connectSocket());
         } else {
             dispatch(socketActions.disconnectSocket());
         }
-    }, [auth.user, dispatch]);
+    }, [user, dispatch]);
 
     return {
-        user: auth.user,
-        role: auth.role,
+        user: user,
+        role: role,
         error,
         loading,
         signup,

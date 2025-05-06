@@ -50,9 +50,11 @@ const SummaryCharts = () => {
         yAxis={[{ id: "price-axis", min: -10000, max: 10000 }]}
         series={[
           {
-            data: filteredData.map((d) =>
-              typeof d.price === "string" ? parseFloat(d.price) : d.price
-            ),
+            data: filteredData.map((d) => {
+              const price =
+                d.type.toLowerCase().trim() === "expense" ? -d.price : d.price;
+              return typeof price === "string" ? parseFloat(price) : price;
+            }),
           },
         ]}
         width={600}
