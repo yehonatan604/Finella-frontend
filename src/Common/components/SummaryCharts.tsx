@@ -13,9 +13,21 @@ function parseDDMMYYYY(dateStr: string): Date {
 const SummaryCharts = () => {
   const { fetchedBalanceEntries } = useBalanceEntry();
 
-  const filteredData = (fetchedBalanceEntries ?? []).filter(
-    (e) => e.status !== "inactive"
-  );
+  const filteredData = (fetchedBalanceEntries ?? [])
+    .filter((e) => e.status !== "inactive")
+    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+  const chartData = filteredData.map((d) => {
+    const price = d.type.toLowerCase().trim() === "expense" ? -d.price : d.price;
+    const date = d.date.split("T")[0];
+
+    return {
+      x: parseDDMMYYYY(DateTime.fromISO(d.date).toFormat("dd/MM/yyyy")),
+      y: typeof price === "string" ? parseFloat(price) : price,
+      name: d.name,
+      date,
+    };
+  });
 
   return (
     <Paper
@@ -23,15 +35,16 @@ const SummaryCharts = () => {
       sx={{
         mt: 4,
         p: 3,
-        maxWidth: 700,
+        pt: 1,
+        maxWidth: 1000,
         mx: "auto",
         borderRadius: 2,
-        height: "45vh",
+        height: "55vh",
         overflowY: "auto",
       }}
     >
       <Typography variant="h6" fontWeight={600} gutterBottom>
-        📊 Monthly Balance
+        📊 Yearly Balance
       </Typography>
 
       <Divider sx={{ mb: 2 }} />
@@ -47,7 +60,6 @@ const SummaryCharts = () => {
             scaleType: "band",
           },
         ]}
-        yAxis={[{ id: "price-axis", min: -10000, max: 10000 }]}
         series={[
           {
             data: filteredData.map((d) => {
@@ -57,8 +69,8 @@ const SummaryCharts = () => {
             }),
           },
         ]}
-        width={600}
-        height={300}
+        width={900}
+        height={450}
       />
 
       <Divider sx={{ my: 2 }} />
@@ -70,24 +82,28 @@ const SummaryCharts = () => {
         xAxis={[
           {
             id: "dates",
-            data: filteredData.map((d) =>
-              parseDDMMYYYY(DateTime.fromISO(d.date).toFormat("dd/MM/yyyy"))
-            ),
+            data: chartData.map((d) => d.x),
             scaleType: "time",
+            tickMinStep: 30 * 24 * 60 * 60 * 1000,
+            tickLabelInterval: () => true,
+            valueFormatter: (value) => {
+              return DateTime.fromJSDate(value).toFormat("dd LLL", { locale: "en" });
+            },
           },
         ]}
-        yAxis={[{ id: "price-axis", min: -10000, max: 10000 }]}
         series={[
           {
             id: "prices",
-            label: "Amount",
-            data: filteredData.map((d) =>
-              typeof d.price === "string" ? parseFloat(d.price) : d.price
-            ),
+            data: chartData.map((d) => d.y),
+            showMark: true,
+            valueFormatter: (value, ctx) => {
+              const point = chartData[ctx.dataIndex];
+              return `${value?.toLocaleString()}: ${point?.name} `;
+            },
           },
         ]}
-        width={600}
-        height={300}
+        width={900}
+        height={450}
       />
     </Paper>
   );
