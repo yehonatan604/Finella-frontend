@@ -4,15 +4,14 @@ import { sendApiRequest } from "../../Common/helpers/sendApiRequest";
 import { HTTPMethodTypes } from "../../Common/types/HTTPMethodTypes";
 import { useDispatch, useSelector } from "react-redux";
 import { TRootState } from "../../Core/store/store";
-import { alert } from "../../Common/utilities/alert";
 import { entitiesActions } from "../../Core/store/entitiesSlice";
 import { TNoteAutomation } from "../types/TNoteAutomation";
 import { toastify } from "../../Common/utilities/toast";
 import { DateTime } from "luxon";
+import { convertedNoteAutomation } from "../helpers/convertAutomationDate";
 
 const useNoteAutomation = () => {
     const { user } = useAuth();
-    const { socket } = useSelector((state: TRootState) => state.socketSlice);
     const { noteAutomations, notes } = useSelector(
         (state: TRootState) => state.entitiesSlice
     );
@@ -71,18 +70,29 @@ const useNoteAutomation = () => {
         fetchNoteAutomations();
     }, [notes, dispatch]);
 
-    const handleSaveChanges = useCallback(async (noteAutomations: TNoteAutomation[]) => {
+    const handleSaveChanges = useCallback(async (data: TNoteAutomation[]) => {
         try {
             setLoading(true);
-            noteAutomations?.forEach(async (automation: TNoteAutomation) => {
-                const converted = {
-                    ...automation,
-                    dateTime: DateTime.fromISO(automation.dateTime, {
-                        zone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-                    })
-                        .toUTC()
-                        .toISO({ suppressMilliseconds: true }) || automation.dateTime,
-                };
+
+            const changedData = data.filter((automation) => {
+                if (automation._id?.startsWith("temp-")) {
+                    return true;
+                }
+
+                const converted = convertedNoteAutomation(automation);
+                const originalAutomation = noteAutomations?.find((item) => item._id === converted._id);
+
+                return (
+                    originalAutomation?.noteId !== converted.noteId ||
+                    originalAutomation?.dateTime !== converted.dateTime ||
+                    originalAutomation?.repeat !== converted.repeat ||
+                    originalAutomation?.notes !== converted.notes ||
+                    originalAutomation?.status !== converted.status
+                );
+            });
+
+            changedData?.forEach(async (automation: TNoteAutomation) => {
+                const converted = convertedNoteAutomation(automation);
 
                 if (automation._id?.startsWith("temp-")) {
                     delete converted._id;
@@ -109,22 +119,7 @@ const useNoteAutomation = () => {
         } finally {
             setLoading(false);
         }
-    }, [dispatch, user?._id]);
-
-    const noteAutomationTriggered = useCallback((args: {
-        title: string;
-        content: string;
-    }) => {
-        alert(args.title, args.content, "info")
-    }, []);
-
-    useEffect(() => {
-        socket?.on("note-automation-triggered", noteAutomationTriggered);
-
-        return () => {
-            socket?.off("note-automation-triggered", noteAutomationTriggered);
-        };
-    }, [socket, noteAutomations, noteAutomationTriggered]);
+    }, [dispatch, noteAutomations, user?._id]);
 
     return {
         notes,

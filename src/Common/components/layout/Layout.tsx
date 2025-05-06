@@ -10,10 +10,12 @@ import useAuth from "../../../Auth/hooks/useAuth";
 import { TTheme } from "../../types/TTheme";
 import { darkTheme } from "../../styles/themes/dark.theme";
 import { lightTheme } from "../../styles/themes/light.theme";
+import useSocket from "../../hooks/useSocket";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const { user } = useAuth();
   const { mode, setTheme } = useTheme();
+  const { user } = useAuth();
+  useSocket(user);
 
   const appliedTheme = createTheme(mode === "dark" ? darkTheme : lightTheme);
 
