@@ -33,14 +33,10 @@ const useSocket = (user: TUser) => {
     useEffect(() => {
         if (user) {
             dispatch(socketActions.connectSocket());
-
             socket?.on("note-automation-triggered", noteAutomationTriggered);
-            socket?.on("unread-notes-total-changed", unreadNotesTotalChanged);
 
             return () => {
                 socket?.off("note-automation-triggered", noteAutomationTriggered);
-                socket?.off("unread-notes-total-changed", unreadNotesTotalChanged);
-
             };
         } else {
             dispatch(socketActions.disconnectSocket());
