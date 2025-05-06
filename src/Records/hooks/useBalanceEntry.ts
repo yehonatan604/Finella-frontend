@@ -271,6 +271,7 @@ const useBalanceEntry = () => {
         paginationModel,
         setPaginationModel,
         paginatedRows: paginatedRows(paginationModel, filteredRows),
+        user
     };
 }
 

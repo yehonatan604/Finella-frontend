@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Container, Paper } from "@mui/material";
+import { Box, Container, Paper } from "@mui/material";
 import useBalanceEntry from "../hooks/useBalanceEntry";
 import useTheme from "../../Common/hooks/useTheme";
 import { TBalanceEntry } from "../types/TBalanceEntry";
@@ -9,6 +9,8 @@ import { DateTime } from "luxon";
 import FormField from "../../Common/components/form/FormField";
 import { joiResolver } from "@hookform/resolvers/joi";
 import { balanceEntrySchema } from "../validations/balanceEntry.schema";
+import FormButtons from "../../Common/components/form/FormButtons";
+import FormValidationMessage from "../../Common/components/form/FormValidationMessage";
 
 type BalanceEntryFormProps = {
   setIsDialogOpen: (isOpen: boolean) => void;
@@ -18,19 +20,20 @@ type BalanceEntryFormProps = {
 
 const BalanceEntryForm = (props: BalanceEntryFormProps) => {
   const { setIsDialogOpen, setIsUpdateDialogOpen, bEntry = null } = props;
-  const { onSubmit, onUpdate } = useBalanceEntry();
+  const { onSubmit, onUpdate, user } = useBalanceEntry();
   const { mode } = useTheme();
 
   const formMethods = useForm<TBalanceEntry>({
     defaultValues: bEntry
       ? { ...bEntry, date: new Date(bEntry.date).toISOString().split("T")[0] }
-      : addBalanceEntryFormDefault,
+      : addBalanceEntryFormDefault(user._id),
     resolver: joiResolver(balanceEntrySchema),
   });
 
   const {
     reset,
     setValue,
+    watch,
     formState: { isValid },
     handleSubmit,
   } = formMethods;
@@ -62,7 +65,12 @@ const BalanceEntryForm = (props: BalanceEntryFormProps) => {
                 name="type"
                 required
                 selectArray={["income", "expense"]}
-                defaultValue={"expense"}
+                value={watch("type") || "expense"}
+                onChange={(e) => {
+                  setValue("type", e.target.value as "income" | "expense", {
+                    shouldValidate: true,
+                  });
+                }}
               />
 
               <FormField
@@ -71,43 +79,57 @@ const BalanceEntryForm = (props: BalanceEntryFormProps) => {
                 type="date"
                 name="date"
                 required
+                value={watch("date")}
                 onChange={(e) => {
                   const date = DateTime.fromISO(e.target.value, {
                     zone: "local",
                   }).toISO();
-                  setValue("date", bEntry ? date!.split("T")[0] : e.target.value);
+                  setValue("date", bEntry ? date!.split("T")[0] : e.target.value, {
+                    shouldValidate: true,
+                  });
                 }}
               />
 
-              <FormField label="Price" type="number" name="price" required />
+              <FormField
+                label="Price"
+                type="number"
+                name="price"
+                required
+                value={watch("price")}
+                onChange={(e) => {
+                  setValue("price", +e.target.value, { shouldValidate: true });
+                }}
+              />
             </Box>
 
-            <FormField label="Notes" type="text" name="notes" rows={3} multiline />
+            <FormField
+              label="Notes"
+              type="text"
+              name="notes"
+              rows={3}
+              multiline
+              value={watch("notes")}
+              onChange={(e) => {
+                setValue("notes", e.target.value, { shouldValidate: true });
+              }}
+            />
+
+            <FormValidationMessage isValid={isValid} />
 
             <Box sx={{ display: "flex", gap: 2, pt: 1 }}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-                sx={{ fontSize: "1.2rem" }}
-                disabled={!isValid}
-              >
-                {bEntry ? "Update" : "Add"}
-              </Button>
-
-              <Button
-                type="reset"
-                variant="contained"
-                color="error"
-                fullWidth
-                sx={{ fontSize: "1.2rem" }}
-                onClick={() => {
-                  reset(bEntry ?? addBalanceEntryFormDefault);
+              <FormButtons
+                isValid={isValid}
+                onReset={() => {
+                  reset(
+                    bEntry
+                      ? {
+                          ...bEntry,
+                          date: new Date(bEntry.date).toISOString().split("T")[0],
+                        }
+                      : addBalanceEntryFormDefault(user._id)
+                  );
                 }}
-              >
-                Reset
-              </Button>
+              />
             </Box>
           </form>
         </FormProvider>

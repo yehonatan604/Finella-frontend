@@ -6,7 +6,7 @@ const FormValidationMessage = ({ isValid }: { isValid: boolean }) => {
     <>
       {!isValid && (
         <Typography variant="body2" color="error" sx={{ mb: 2 }}>
-          * Please fill all the required fields to sign up
+          * Please fill all the required fields correctly.
         </Typography>
       )}
     </>

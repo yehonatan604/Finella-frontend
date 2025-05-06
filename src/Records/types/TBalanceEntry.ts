@@ -1,4 +1,4 @@
-import { TDbItem } from "./TDbItem";
+import { TDbItem } from "../../Common/types/TDbItem";
 
 export type TBalanceEntry = TDbItem & {
     userId: string;
