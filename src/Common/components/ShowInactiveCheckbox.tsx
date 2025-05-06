@@ -5,6 +5,7 @@ type ShowInactiveCheckboxProps = {
   showInactive: boolean;
   setShowInactive: (showInactive: boolean) => void;
   label: string;
+  sx?: object;
 };
 
 const ShowInactiveCheckbox = (props: ShowInactiveCheckboxProps) => {
@@ -17,6 +18,7 @@ const ShowInactiveCheckbox = (props: ShowInactiveCheckboxProps) => {
         gap: "1rem",
         m: 2,
         mt: 0,
+        ...props.sx,
       }}
     >
       <FormControlLabel
