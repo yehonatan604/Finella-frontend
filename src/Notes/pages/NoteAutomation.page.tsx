@@ -24,7 +24,7 @@ import ShowInactiveCheckbox from "../../Common/components/ShowInactiveCheckbox";
 const NoteAutomationPage = () => {
   const {
     noteAutomations,
-    allNotes,
+    notes,
     showAddNoteDialog,
     setShowAddNoteDialog,
     addNoteAutomation,
@@ -46,7 +46,7 @@ const NoteAutomationPage = () => {
         showInactive={showInactive}
         setShowInactive={setShowInactive}
         label="Show Inactive Automations"
-        sx={{ width: "63%" }}
+        sx={{ width: "53vw" }}
       />
       {noteAutomations && noteAutomations.length > 0 && (
         <Box
@@ -58,6 +58,7 @@ const NoteAutomationPage = () => {
           sx={{
             maxHeight: "80vh",
             overflowY: "auto",
+            width: "55vw",
           }}
         >
           {noteAutomations
@@ -105,7 +106,7 @@ const NoteAutomationPage = () => {
                     >
                       New Note
                     </MenuItem>
-                    {allNotes!
+                    {notes!
                       .filter((note) => note.status !== "inactive")
                       .map((note) => (
                         <MenuItem key={note._id} value={note._id}>

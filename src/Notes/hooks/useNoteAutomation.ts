@@ -2,29 +2,24 @@ import { useState, useCallback, useEffect } from "react";
 import useAuth from "../../Auth/hooks/useAuth";
 import { sendApiRequest } from "../../Common/helpers/sendApiRequest";
 import { HTTPMethodTypes } from "../../Common/types/HTTPMethodTypes";
-import { DateTime } from "luxon";
 import { useDispatch, useSelector } from "react-redux";
 import { TRootState } from "../../Core/store/store";
 import { alert } from "../../Common/utilities/alert";
 import { entitiesActions } from "../../Core/store/entitiesSlice";
 import { TNoteAutomation } from "../types/TNoteAutomation";
 import { toastify } from "../../Common/utilities/toast";
+import { DateTime } from "luxon";
 
 const useNoteAutomation = () => {
     const { user } = useAuth();
     const { socket } = useSelector((state: TRootState) => state.socketSlice);
-    const noteAutomations = useSelector(
-        (state: TRootState) => state.entitiesSlice.noteAutomations
+    const { noteAutomations, notes } = useSelector(
+        (state: TRootState) => state.entitiesSlice
     );
-    const allNotes = useSelector(
-        (state: TRootState) => state.entitiesSlice.notes
-    );
+    const dispatch = useDispatch();
 
     const [loading, setLoading] = useState(true);
     const [showAddNoteDialog, setShowAddNoteDialog] = useState(false);
-
-    const dispatch = useDispatch();
-
 
     const addNoteAutomation = useCallback(() => {
         const now = DateTime.local().startOf("minute");
@@ -54,7 +49,7 @@ const useNoteAutomation = () => {
                     HTTPMethodTypes.GET
                 );
 
-                if (!allNotes) {
+                if (!notes) {
                     const resNotes = await sendApiRequest("/note", HTTPMethodTypes.GET);
                     dispatch(entitiesActions.setEntity({
                         type: "notes",
@@ -74,7 +69,7 @@ const useNoteAutomation = () => {
         };
 
         fetchNoteAutomations();
-    }, [allNotes, dispatch]);
+    }, [notes, dispatch]);
 
     const handleSaveChanges = useCallback(async (noteAutomations: TNoteAutomation[]) => {
         try {
@@ -132,8 +127,8 @@ const useNoteAutomation = () => {
     }, [socket, noteAutomations, noteAutomationTriggered]);
 
     return {
+        notes,
         noteAutomations,
-        allNotes,
         showAddNoteDialog,
         setShowAddNoteDialog,
         addNoteAutomation,
