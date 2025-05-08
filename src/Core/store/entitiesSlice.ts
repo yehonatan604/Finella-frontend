@@ -15,7 +15,6 @@ export type TEntitiesState = {
     notes: TNote[] | null;
     noteAutomations: TNoteAutomation[] | null;
     todos: TToDo[] | null;
-    loading: boolean;
 };
 
 const initialState: TEntitiesState = {
@@ -25,7 +24,6 @@ const initialState: TEntitiesState = {
     notes: null,
     noteAutomations: null,
     todos: null,
-    loading: false,
 };
 
 const entitiesSlice = createSlice({
@@ -41,7 +39,6 @@ const entitiesSlice = createSlice({
         ) => {
             const { type, data } = action.payload;
             state[type] = data as never;
-            state.loading = false;
         },
 
         addEntityItem: (
@@ -53,7 +50,6 @@ const entitiesSlice = createSlice({
             if (list) {
                 (list as TEntity[]).push(item);
             }
-            state.loading = false;
         },
 
         updateEntityItem: (
@@ -68,7 +64,6 @@ const entitiesSlice = createSlice({
                     (list as TEntity[])[index] = item;
                 }
             }
-            state.loading = false;
         },
 
         removeEntityItem: (
@@ -83,7 +78,6 @@ const entitiesSlice = createSlice({
                     (list as TEntity[])[index].status = "inactive";
                 }
             }
-            state.loading = false;
         },
 
         undeleteEntityItem: (
@@ -98,44 +92,7 @@ const entitiesSlice = createSlice({
                     (list as TEntity[])[index].status = "active";
                 }
             }
-            state.loading = false;
         },
-
-        clearEntities: (state) => {
-            state.balanceEntries = null;
-            state.salaries = null;
-            state.workplaces = null;
-            state.notes = null;
-            state.noteAutomations = null;
-            state.todos = null;
-        },
-
-        setLoading: (state, action: PayloadAction<boolean>) => {
-            state.loading = action.payload;
-        },
-
-        markNoteAsRead: (
-            state,
-            action: PayloadAction<{ id: string }>
-        ) => {
-            const note: TNote = state.notes?.find(n => n._id === action.payload.id) as TNote;
-            if (note) {
-                note.noteStatus = "READ";
-            }
-        },
-
-        markTodAsFailed: (
-            state,
-            action: PayloadAction<{ id: string }>
-        ) => {
-            const { id } = action.payload;
-            if (!state.todos) return;
-
-            const todoIndex = state.todos.findIndex(todo => todo._id === id);
-            if (todoIndex !== -1) {
-                state.todos[todoIndex].toDoStatus = "FAILED";
-            }
-        }
     },
 });
 

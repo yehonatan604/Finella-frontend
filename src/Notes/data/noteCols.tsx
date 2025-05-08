@@ -27,7 +27,7 @@ export const noteCols = (
   {
     field: "content",
     headerName: "Content",
-    flex: 1,
+    flex: 0.8,
     headerClassName: "super-app-theme--header",
     sortable: true,
     editable: true,
@@ -44,6 +44,20 @@ export const noteCols = (
     editable: true,
     renderCell: (params: TDataGridInputCellParams) => {
       return createDataGridInputCell(params, onCellUpdate, "date", "date");
+    },
+  },
+  {
+    field: "noteStatus",
+    headerName: "Status",
+    flex: 0.4,
+    headerClassName: "super-app-theme--header",
+    sortable: true,
+    editable: true,
+    renderCell: (params: TDataGridInputCellParams) => {
+      return createDataGridInputCell(params, onCellUpdate, "noteStatus", "select", [
+        "PENDING",
+        "READ",
+      ]);
     },
   },
   {

@@ -144,6 +144,23 @@ const NoteForm = (props: NoteFormProps) => {
               }
             />
 
+            {note && (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={watch("noteStatus") === "READ"}
+                    onChange={(e) =>
+                      setValue("noteStatus", e.target.checked ? "READ" : "PENDING", {
+                        shouldValidate: true,
+                      })
+                    }
+                  />
+                }
+                label="Mark as Read"
+                sx={{ mb: 2 }}
+              />
+            )}
+
             <Divider sx={{ my: 2 }} />
 
             <Box sx={{ display: "flex", gap: 2, pt: 1 }}>

@@ -11,13 +11,11 @@ import { TRootState } from "../../Core/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { entitiesActions } from "../../Core/store/entitiesSlice";
 import { defaultPageSize, paginatedRows } from "../../Common/helpers/paginationHelpers";
-import { alert } from "../../Common/utilities/alert";
 import { TToDo } from "../types/TToDo";
 import { TDataGridInputCellParams } from "../../Records/types/TDataGridInputCellParams";
 
 const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
   const { user } = useAuth();
-  const { socket } = useSelector((state: TRootState) => state.socketSlice);
   const fetchedToDos = useSelector((state: TRootState) => state.entitiesSlice.todos);
   const dispatch = useDispatch();
 
@@ -228,19 +226,6 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
       (showInactive || (row as { status: string }).status !== "inactive")
   );
 
-  const todoFailed = useCallback(
-    async (args: { title: string; content: string; id: string }) => {
-      try {
-        await alert(args.title, args.content, "info");
-        dispatch(entitiesActions.markTodAsFailed({ id: args.id }));
-      } catch (error) {
-        console.error("Error marking todo as failed:", error);
-        toastify.error("Error updating todo status");
-      }
-    },
-    [dispatch]
-  );
-
   useEffect(() => {
     if (!isTodoPage) return;
     const fetchData = async () => {
@@ -268,14 +253,6 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
 
     fetchData();
   }, [fromYear, toYear, months, pickedStatus, isTodoPage, getToDos, all]);
-
-  useEffect(() => {
-    socket?.on("todo-failed", todoFailed);
-
-    return () => {
-      socket?.off("todo-failed", todoFailed);
-    };
-  }, [socket, todoFailed]);
 
   return {
     onSubmit,

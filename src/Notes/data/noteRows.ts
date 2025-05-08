@@ -9,6 +9,7 @@ export const noteRows = (notes: TNote[]) => {
             content: note.content,
             date: formatDate(note.date),
             isSticky: note.isSticky ?? false,
+            noteStatus: note.noteStatus ?? "PENDING",
             notes: note.notes,
             status: note.status,
         })) || []
