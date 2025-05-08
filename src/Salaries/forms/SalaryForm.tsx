@@ -18,6 +18,7 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import { salarySchema } from "../validations/salary.schema";
 import FormField from "../../Common/components/form/FormField";
 import useTheme from "../../Common/hooks/useTheme";
+import { DateTime } from "luxon";
 
 const SalaryForm = ({
   setIsDialogOpen,
@@ -63,6 +64,9 @@ const SalaryForm = ({
     await func(data);
     setIsDialogOpen(false);
   };
+
+  console.log(watch());
+  console.log(formMethods.formState.errors);
 
   return (
     <>
@@ -141,9 +145,11 @@ const SalaryForm = ({
                 <FormField
                   label="Year"
                   name="year"
-                  doRegister={false}
+                  type="number"
                   required
                   sx={{ width: "24%", mb: 0 }}
+                  doRegister={false}
+                  defaultValue={DateTime.now().year}
                   value={watch("date").split("-")[1] || ""}
                   onChange={(e) => {
                     const value = e.target.value;
@@ -153,6 +159,8 @@ const SalaryForm = ({
                       });
                     }
                   }}
+                  min={1900}
+                  max={DateTime.now().year + 1}
                 />
 
                 <FormControlLabel
@@ -202,6 +210,7 @@ const SalaryForm = ({
                         name={`hours.${index}.day`}
                         type="number"
                         required
+                        defaultValue={salaryHours[index]?.day}
                         value={watch(`hours.${index}.day`)}
                         onChange={(e) => {
                           const value = e.target.value;
@@ -219,6 +228,7 @@ const SalaryForm = ({
                         name={`hours.${index}.startTime`}
                         type="time"
                         required
+                        defaultValue={salaryHours[index]?.startTime}
                         value={watch(`hours.${index}.startTime`)}
                         onChange={(e) => {
                           const value = e.target.value;
@@ -236,6 +246,7 @@ const SalaryForm = ({
                         name={`hours.${index}.endTime`}
                         type="time"
                         required
+                        defaultValue={salaryHours[index]?.endTime}
                         value={watch(`hours.${index}.endTime`)}
                         onChange={(e) => {
                           const value = e.target.value;

@@ -8,6 +8,8 @@ type FormFieldProps = {
   name: string;
   setValue?: (value) => void;
   type?: string;
+  min?: number;
+  max?: number;
   required?: boolean;
   width?: string;
   selectArray?: string[] | number[];

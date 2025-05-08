@@ -66,6 +66,8 @@ const useSalary = (isPage?: boolean) => {
     }, []);
 
     const addSalaryFromExcel = useCallback((data: unknown) => {
+        console.log(data);
+
         setSalaryHours(
             (data as THoursFromExcel[]).map((item: THoursFromExcel) => {
                 return {
