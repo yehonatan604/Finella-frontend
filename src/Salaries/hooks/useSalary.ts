@@ -86,9 +86,9 @@ const useSalary = (isPage?: boolean) => {
             const newSalary = await sendApiRequest("/salary", HTTPMethodTypes.POST, data);
             dispatch(entitiesActions.addEntityItem({ type: "salaries", item: newSalary.data }));
             if (addBEntry) {
-                const workplaceName = workplaces?.find(
+                const workplace = workplaces?.find(
                     (workplace) => workplace._id === data.workPlaceId
-                )?.name;
+                );
 
                 const fullDate = (() => {
                     const [month, year] = (data.date as string).split("-").map(Number);
@@ -97,12 +97,12 @@ const useSalary = (isPage?: boolean) => {
                 })();
 
                 const balanceEntry = {
-                    name: `Salary ${data.date} - ${workplaces?.find((workplace) => workplace._id === data.workPlaceId)?.name}`,
+                    name: `Salary ${data.date} - ${workplace?.name}`,
                     userId: user?._id,
-                    price: calcTotalSum(data as TSalary),
+                    price: calcTotalSum(data as TSalary) || workplace?.pricePerMonth,
                     date: fullDate,
                     type: "income",
-                    notes: `Salary ${data.date} - ${workplaceName}`,
+                    notes: `Salary ${data.date} - ${workplace?.name}`,
                 };
                 const newBentry = await sendApiRequest("/balance-entry", HTTPMethodTypes.POST, balanceEntry);
                 dispatch(entitiesActions.addEntityItem({ type: "balanceEntries", item: newBentry.data }));
