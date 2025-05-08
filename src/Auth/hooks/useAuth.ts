@@ -11,7 +11,6 @@ import { AxiosError } from "axios";
 import useSocket from "../../Common/hooks/useSocket";
 
 const useAuth = () => {
-    const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const { user, role } = useSelector((state: TRootState) => state.authSlice);
     const { POST, GET } = HTTPMethodTypes;
@@ -56,7 +55,6 @@ const useAuth = () => {
             }
         } catch (err) {
             const error = err as AxiosError;
-            setError(error.message);
             console.log(error);
             await alert(
                 "Login Failed",
@@ -78,7 +76,6 @@ const useAuth = () => {
             }
         } catch (err) {
             const error = err as Error;
-            setError(error.message);
             console.log(error);
             logout();
         } finally {
@@ -97,7 +94,6 @@ const useAuth = () => {
     return {
         user: user,
         role: role,
-        error,
         loading,
         signup,
         login,

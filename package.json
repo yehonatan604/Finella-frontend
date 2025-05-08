@@ -6,7 +6,7 @@
   "main": "dist-electron/main.js",
   "scripts": {
     "dev": "concurrently \"vite\" \"npm run electron:dev\"",
-    "web": "vite",
+    "start": "vite",
     "app": "electron .",
     "app-dev": "electron:dev .",
     "build": "tsc -b && vite build",

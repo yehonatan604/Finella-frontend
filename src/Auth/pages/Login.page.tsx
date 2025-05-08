@@ -1,5 +1,13 @@
 import React from "react";
-import { Box, Button, TextField, Typography, Container, Divider } from "@mui/material";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  Container,
+  Divider,
+  CircularProgress,
+} from "@mui/material";
 import { useForm } from "react-hook-form";
 import { loginSchema } from "../validations/login.schema";
 import { joiResolver } from "@hookform/resolvers/joi";
@@ -20,7 +28,7 @@ const LoginPage = () => {
     resolver: joiResolver(loginSchema),
   });
 
-  const { login } = useAuth();
+  const { login, loading } = useAuth();
 
   const onSubmit = async (data: Record<string, unknown>) => {
     await login(data);
@@ -31,7 +39,9 @@ const LoginPage = () => {
       sx={{
         height: "100vh",
         display: "flex",
-        alignItems: "center",
+        flexDirection: "column",
+        mt: 10,
+        maxHeight: "fit-content",
         justifyContent: "center",
       }}
     >
@@ -111,6 +121,19 @@ const LoginPage = () => {
           </Button>
         </Link>
       </Container>
+      {loading && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+            mt: 2,
+          }}
+        >
+          <CircularProgress size={50} />
+        </Box>
+      )}
     </Box>
   );
 };
