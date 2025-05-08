@@ -3,6 +3,7 @@ import { createDataGridInputCell } from "../../Common/components/generators/crea
 import { createRowIcons } from "../../Common/components/generators/createRowIcons";
 import { TWorkplace } from "../types/TWorkplace";
 import { TDataGridInputCellParams } from "../../Common/types/TDataGridInputCellParams";
+import { Tooltip } from "@mui/material";
 
 export const workplaceCols = (
   onCellUpdate: (
@@ -56,7 +57,12 @@ export const workplaceCols = (
     editable: false,
     renderCell: (params: TDataGridInputCellParams) => {
       if (params.row.status === "inactive") return <s>{params.value} </s>;
-      else return params.value;
+      else
+        return (
+          <Tooltip title="This is the Full Adress, Edit the Workplace to change it">
+            <span>{params.value}</span>
+          </Tooltip>
+        );
     },
   },
   {

@@ -3,6 +3,7 @@ import { createDataGridInputCell } from "../../Common/components/generators/crea
 import { createRowIcons } from "../../Common/components/generators/createRowIcons";
 import { TDataGridInputCellParams } from "../../Common/types/TDataGridInputCellParams";
 import { TToDo } from "../types/TToDo";
+import { Tooltip } from "@mui/material";
 
 export const todoCols = (
   onCellUpdate: (
@@ -76,7 +77,12 @@ export const todoCols = (
     editable: false,
     renderCell: (params: TDataGridInputCellParams) => {
       if (params.row.status === "inactive") return <s>{params.value}</s>;
-      else return params.value;
+      else
+        return (
+          <Tooltip title="Tasks number is calculated automatically.">
+            <span>{params.value}</span>
+          </Tooltip>
+        );
     },
   },
   {

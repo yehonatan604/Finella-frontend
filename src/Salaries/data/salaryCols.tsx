@@ -4,6 +4,7 @@ import { createRowIcons } from "../../Common/components/generators/createRowIcon
 import { TDataGridInputCellParams } from "../../Common/types/TDataGridInputCellParams";
 import { TSalary } from "../types/TSalary";
 import { TWorkplace } from "../../Workplaces/types/TWorkplace";
+import { Tooltip } from "@mui/material";
 
 export const salaryCols = (
   workplaces: TWorkplace[],
@@ -88,7 +89,12 @@ export const salaryCols = (
     editable: false,
     renderCell: (params: TDataGridInputCellParams) => {
       if (params.row.status === "inactive") return <s>{params.value} </s>;
-      else return params.value;
+      else
+        return (
+          <Tooltip title="Total Hours are calculated automatically.">
+            <span>{params.value}</span>
+          </Tooltip>
+        );
     },
   },
   {
@@ -109,7 +115,12 @@ export const salaryCols = (
     editable: false,
     renderCell: (params: TDataGridInputCellParams) => {
       if (params.row.status === "inactive") return <s>{params.value}</s>;
-      else return params.value;
+      else
+        return (
+          <Tooltip title="Total Sum is calculated automatically.">
+            <span>{params.value}</span>
+          </Tooltip>
+        );
     },
   },
   {

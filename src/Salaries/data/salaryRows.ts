@@ -9,18 +9,21 @@ export const salaryRows = (
     calcTotalSum: (salary: TSalary) => number
 ) => {
     const data =
-        fetchedSalaries.map((salary) => ({
-            id: salary._id,
-            workplace:
-                workplaces?.find((workplace) => workplace._id === salary.workPlaceId)?.name ||
-                "",
-            year: salary.date.split("-")[1],
-            month: salary.date.split("-")[0],
-            "total hours": calcTotalHours(salary.hours) || "",
-            "total sum": calcTotalSum(salary) || "",
-            status: salary.status,
-            notes: salary.notes,
-        })) || [];
+        fetchedSalaries.map((salary) => {
+            const workplace = workplaces.find((workplace) => workplace._id === salary.workPlaceId);
+            return {
+                id: salary._id,
+                workplace:
+                    workplace?.name ||
+                    "",
+                year: salary.date.split("-")[1],
+                month: salary.date.split("-")[0],
+                "total hours": calcTotalHours(salary.hours) || "-",
+                "total sum": calcTotalSum(salary) || workplace?.pricePerMonth || "-",
+                status: salary.status,
+                notes: salary.notes,
+            }
+        }) || [];
 
     const totalHours = data.reduce(
         (acc, curr) => {
