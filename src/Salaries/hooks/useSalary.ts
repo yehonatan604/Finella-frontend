@@ -100,7 +100,6 @@ const useSalary = (isPage?: boolean) => {
                     price: calcTotalSum(data as TSalary),
                     date: fullDate,
                     type: "income",
-                    withVat: data.withVat || false,
                     isPayed: false,
                     notes: `Salary ${data.date} - ${workplaceName}`,
                 };

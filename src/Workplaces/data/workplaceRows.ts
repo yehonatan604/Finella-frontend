@@ -3,6 +3,7 @@ import { TWorkplace } from "../types/TWorkplace";
 export const workplaceRows = (workplaces: TWorkplace[]) => {
     return (
         workplaces?.map((workplace) => ({
+            userId: workplace.userId,
             id: workplace._id,
             name: workplace.name,
             email: workplace.email,

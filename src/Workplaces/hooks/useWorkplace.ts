@@ -82,7 +82,6 @@ const useWorkplaces = () => {
                         : (workplace as TWorkplace & { "secondary phone": string })["secondary phone"],
                 },
                 email: workplace.email,
-                withVat: workplace.withVat,
             }
 
             const res = await sendApiRequest(`/work-place`, HTTPMethodTypes.PUT, finalWorlpace);

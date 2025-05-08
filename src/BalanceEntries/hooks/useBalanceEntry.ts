@@ -72,7 +72,7 @@ const useBalanceEntry = () => {
             ) => {
                 const fetchedRow = fetchedBalanceEntries?.find((bEntry) => bEntry._id === row.id);
 
-                const fields = ["name", "date", "type", "price", "withVat", "notes"] as const;
+                const fields = ["name", "date", "type", "price", "notes"] as const;
 
                 const normalizeRow = (row: Partial<TBalanceEntry>) => {
                     return {
