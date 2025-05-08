@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useCallback, useEffect, useState } from "react";
-import { HTTPMethodTypes } from "../../Common/types/HTTPMethodTypes";
+import { HTTPMethodTypes } from "../../Common/enums/HTTPMethodTypes";
 import { authActions } from "../../Core/store/authSlice";
 import { TRootState } from "../../Core/store/store";
 import { sendApiRequest } from "../../Common/helpers/sendApiRequest";

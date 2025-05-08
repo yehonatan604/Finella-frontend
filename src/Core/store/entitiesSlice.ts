@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { TBalanceEntry } from "../../Records/types/TBalanceEntry";
-import { TSalary } from "../../Records/types/TSalary";
-import { TWorkplace } from "../../Records/types/TWorkplace";
+import { TBalanceEntry } from "../../BalaceEntries/types/TBalanceEntry";
+import { TSalary } from "../../Salaries/types/TSalary";
+import { TWorkplace } from "../../Workplaces/types/TWorkplace";
 import { TNote } from "../../Notes/types/TNote";
 import { TNoteAutomation } from "../../Notes/types/TNoteAutomation";
 import { TDbItem } from "../../Common/types/TDbItem";

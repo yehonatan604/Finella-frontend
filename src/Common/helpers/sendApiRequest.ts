@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { HTTPMethodTypes } from '../types/HTTPMethodTypes';
+import { HTTPMethodTypes } from '../enums/HTTPMethodTypes';
 const { VITE_BASE_API_URL: URL } = import.meta.env;
 
 axios.defaults.baseURL = URL;

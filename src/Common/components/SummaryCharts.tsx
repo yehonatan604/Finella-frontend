@@ -3,7 +3,7 @@ import { Typography, Divider, Paper } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { DateTime } from "luxon";
-import useBalanceEntry from "../../Records/hooks/useBalanceEntry";
+import useBalanceEntry from "../../BalanceEntries/hooks/useBalanceEntry";
 
 function parseDDMMYYYY(dateStr: string): Date {
   const [day, month, year] = dateStr.split("/");

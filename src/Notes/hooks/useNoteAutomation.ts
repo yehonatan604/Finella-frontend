@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import useAuth from "../../Auth/hooks/useAuth";
 import { sendApiRequest } from "../../Common/helpers/sendApiRequest";
-import { HTTPMethodTypes } from "../../Common/types/HTTPMethodTypes";
+import { HTTPMethodTypes } from "../../Common/enums/HTTPMethodTypes";
 import { useDispatch, useSelector } from "react-redux";
 import { TRootState } from "../../Core/store/store";
 import { entitiesActions } from "../../Core/store/entitiesSlice";

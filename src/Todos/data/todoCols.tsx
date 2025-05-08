@@ -1,7 +1,7 @@
 import React from "react";
 import { createDataGridInputCell } from "../../Common/components/generators/createDataGridInputCell";
 import { createRowIcons } from "../../Common/components/generators/createRowIcons";
-import { TDataGridInputCellParams } from "../../Records/types/TDataGridInputCellParams";
+import { TDataGridInputCellParams } from "../../Common/types/TDataGridInputCellParams";
 import { TToDo } from "../types/TToDo";
 
 export const todoCols = (

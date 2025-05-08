@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { HTTPMethodTypes } from "../../Common/types/HTTPMethodTypes";
+import { HTTPMethodTypes } from "../../Common/enums/HTTPMethodTypes";
 import { sendApiRequest } from "../../Common/helpers/sendApiRequest";
 import { toastify } from "../../Common/utilities/toast";
 import { question } from "../../Common/utilities/question";
@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { TRootState } from "../../Core/store/store";
 import { entitiesActions } from "../../Core/store/entitiesSlice";
 import { defaultPageSize, paginatedRows } from "../../Common/helpers/paginationHelpers";
-import { TDataGridInputCellParams } from "../../Records/types/TDataGridInputCellParams";
+import { TDataGridInputCellParams } from "../../Common/types/TDataGridInputCellParams";
 
 const useNote = (isPage: boolean = false, all: boolean = false) => {
     const { user } = useAuth();
@@ -136,7 +136,7 @@ const useNote = (isPage: boolean = false, all: boolean = false) => {
                     "Are you sure you want to undelete this Note?",
                     "warning",
                     async () => {
-                        dispatch(entitiesActions.setLoading(true));
+                        setLoading(true);
                         await sendApiRequest(`/note/undelete/${id}`, HTTPMethodTypes.PATCH);
                         dispatch(entitiesActions.undeleteEntityItem({ type: "notes", id }));
                         toastify.success("Note undeleted successfully");
@@ -161,7 +161,7 @@ const useNote = (isPage: boolean = false, all: boolean = false) => {
                     "Are you sure you want to delete this Note?",
                     "warning",
                     async () => {
-                        dispatch(entitiesActions.setLoading(true));
+                        setLoading(true);
                         await sendApiRequest(`/note/${id}`, HTTPMethodTypes.DELETE);
                         dispatch(entitiesActions.removeEntityItem({ type: "notes", id }));
                         setSelectedNote(null);

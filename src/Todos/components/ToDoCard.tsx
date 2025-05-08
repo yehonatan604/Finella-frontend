@@ -16,7 +16,7 @@ import useTheme from "../../Common/hooks/useTheme";
 import useToDo from "../hooks/useToDo";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RestoreIcon from "@mui/icons-material/Restore";
-import { TTask } from "../../Records/types/TTask";
+import { TTask } from "../../Common/types/TTask";
 import { DateTime } from "luxon";
 import StyledDateTimePicker from "./StyledDateTimePicker";
 import ToDoDetailsDialog from "./ToDoDetailsDialog";

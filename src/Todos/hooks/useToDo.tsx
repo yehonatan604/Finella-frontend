@@ -1,4 +1,4 @@
-import { HTTPMethodTypes } from "../../Common/types/HTTPMethodTypes";
+import { HTTPMethodTypes } from "../../Common/enums/HTTPMethodTypes";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import useAuth from "../../Auth/hooks/useAuth";
 import { sendApiRequest } from "../../Common/helpers/sendApiRequest";
@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { entitiesActions } from "../../Core/store/entitiesSlice";
 import { defaultPageSize, paginatedRows } from "../../Common/helpers/paginationHelpers";
 import { TToDo } from "../types/TToDo";
-import { TDataGridInputCellParams } from "../../Records/types/TDataGridInputCellParams";
+import { TDataGridInputCellParams } from "../../Common/types/TDataGridInputCellParams";
 
 const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
   const { user } = useAuth();
@@ -131,7 +131,7 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
           "Are you sure you want to undelete this Todo?",
           "warning",
           async () => {
-            dispatch(entitiesActions.setLoading(true));
+            setLoading(true);
             await sendApiRequest(`/todo/undelete/${id}`, HTTPMethodTypes.PATCH, {
               userId: user?._id,
             });
@@ -158,7 +158,7 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
           "Are you sure you want to delete this ToDo?",
           "warning",
           async () => {
-            dispatch(entitiesActions.setLoading(true));
+            setLoading(true);
             await sendApiRequest(`/todo/${id}`, HTTPMethodTypes.DELETE, {
               userId: user?._id,
             });
@@ -168,7 +168,7 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
         );
       } catch (error) {
         console.log(error);
-        toastify.error("Error deleting Salary");
+        toastify.error("Error deleting ToDo");
       } finally {
         setLoading(false);
       }

@@ -10,11 +10,11 @@ import ToDoPage from "../../Todos/pages/ToDo.page";
 import NoteAutomationPage from "../../Notes/pages/NoteAutomation.page";
 import NotesPage from "../../Notes/pages/Notes.page";
 import NotesBoard from "../../Notes/pages/NotesBoard.page";
-import BalanceEntriesPage from "../../Records/pages/BalanceEntries.page";
-import SalariesPage from "../../Records/pages/Salaries.page";
-import WorkplacesPage from "../../Records/pages/Workplaces.page";
+import SalariesPage from "../../Salaries/pages/Salaries.page";
+import WorkplacesPage from "../../Workplaces/pages/Workplaces.page";
 import TodosBoard from "../../Todos/pages/ToDoBoard.page";
 import AboutPage from "../../Common/pages/About.page";
+import BalanceEntriesPage from "../../BalanceEntries/pages/BalanceEntries.page";
 
 const AppRouter = () => {
   const { loginByToken } = useAuth();

@@ -4,7 +4,7 @@ import { Box } from "@mui/system";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import useTheme from "../../hooks/useTheme";
-import { TWorkplace } from "../../../Records/types/TWorkplace";
+import { TWorkplace } from "../../../Workplaces/types/TWorkplace";
 
 type PageFiltersProps = {
   setSearch: (search: string) => void;

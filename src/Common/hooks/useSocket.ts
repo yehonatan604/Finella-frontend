@@ -5,7 +5,6 @@ import { socketActions } from "../../Core/store/socketSlice";
 import { TUser } from "../../Auth/types/TUser";
 import { entitiesActions } from "../../Core/store/entitiesSlice";
 import { question } from "../utilities/question";
-import { toastify } from "../utilities/toast";
 
 const useSocket = (user: TUser) => {
     const dispatch = useDispatch();
@@ -16,32 +15,26 @@ const useSocket = (user: TUser) => {
 
     const todoFailed = useCallback(
         async (args: { title: string; content: string; id: string, noteId: string }) => {
-            try {
-                const todo = todos?.find((todo) => todo._id === args.id);
-                await question(
-                    args.title,
-                    args.content + "<br /><br />" + "Mark Note as Read?",
-                    "warning",
-                    () => {
-                        const note = notes?.find((note) => note._id === args.noteId);
-                        entitiesActions.updateEntityItem({
-                            type: "notes",
-                            id: args.noteId,
-                            item: { ...note, noteStatus: "READ" },
-                        });
-                    }
-                );
-                dispatch(entitiesActions.updateEntityItem({
-                    type: "todos",
-                    id: args.id,
-                    item: { ...todo, todoStatus: "FAILED" },
-                }));
-            } catch (error) {
-                console.error("Error marking todo as failed:", error);
-                toastify.error("Error updating todo status");
-            }
-        },
-        [dispatch, notes, todos]
+            const todo = todos?.find((todo) => todo._id === args.id);
+            await question(
+                args.title,
+                args.content + "<br /><br />" + "Mark Note as Read?",
+                "warning",
+                () => {
+                    const note = notes?.find((note) => note._id === args.noteId);
+                    entitiesActions.updateEntityItem({
+                        type: "notes",
+                        id: args.noteId,
+                        item: { ...note, noteStatus: "READ" },
+                    });
+                }
+            );
+            dispatch(entitiesActions.updateEntityItem({
+                type: "todos",
+                id: args.id,
+                item: { ...todo, todoStatus: "FAILED" },
+            }));
+        }, [dispatch, notes, todos]
     );
 
     const noteAutomationTriggered = useCallback(async (args: {

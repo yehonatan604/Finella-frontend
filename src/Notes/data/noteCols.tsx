@@ -1,6 +1,6 @@
 import { createDataGridInputCell } from "../../Common/components/generators/createDataGridInputCell";
 import { createRowIcons } from "../../Common/components/generators/createRowIcons";
-import { TDataGridInputCellParams } from "../../Records/types/TDataGridInputCellParams";
+import { TDataGridInputCellParams } from "../../Common/types/TDataGridInputCellParams";
 import { TNote } from "../types/TNote";
 
 export const noteCols = (

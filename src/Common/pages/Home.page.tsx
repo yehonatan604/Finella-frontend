@@ -7,7 +7,7 @@ import logoWhite from "../../Assets/images/logo-big-white.png";
 import logoBlue from "../../Assets/images/logo-big-navy.png";
 import FeatureBox from "../components/FeatureBox";
 import useTheme from "../hooks/useTheme";
-import UserHomeSummary from "../components/UserSummary";
+import UserSummary from "../../Auth/components/UserSummary";
 import SummaryCharts from "../components/SummaryCharts";
 import AbsTopIcons from "../components/layout/AbsTopIcons";
 
@@ -126,7 +126,7 @@ const HomePage = () => {
         Welcome back, {user.name.first} {user.name.last}
       </Typography>
 
-      <UserHomeSummary />
+      <UserSummary />
       <SummaryCharts />
     </Box>
   );

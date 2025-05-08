@@ -1,6 +1,6 @@
 import { TDbItem } from "../../Common/types/TDbItem";
-import { TTask } from "../../Records/types/TTask";
-import { TTaskStastus } from "../../Records/types/TTaskStatus";
+import { TTask } from "../../Common/types/TTask";
+import { TTaskStastus } from "../../Common/types/TTaskStatus";
 
 export type TToDo = TDbItem & {
     userId: string;
