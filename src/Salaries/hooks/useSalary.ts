@@ -102,7 +102,6 @@ const useSalary = (isPage?: boolean) => {
                     price: calcTotalSum(data as TSalary),
                     date: fullDate,
                     type: "income",
-                    isPayed: false,
                     notes: `Salary ${data.date} - ${workplaceName}`,
                 };
                 const newBentry = await sendApiRequest("/balance-entry", HTTPMethodTypes.POST, balanceEntry);
