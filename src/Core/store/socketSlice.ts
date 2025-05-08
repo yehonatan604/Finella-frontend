@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { io, Socket } from "socket.io-client";
 import { WritableDraft } from "immer";
 import { capitalizeFirstLetter } from "../../Common/helpers/stringHelpers";
+const { VITE_BASE_API_URL: API_URL } = import.meta.env;
 
 type TSocketState = {
     socket: Socket | null;
@@ -22,7 +23,7 @@ const socketSlice = createSlice({
                 const token = localStorage.getItem("token");
                 if (!token) return;
 
-                const socket = io("http://localhost:4387", {
+                const socket = io(API_URL, {
                     auth: { token },
                 });
 
