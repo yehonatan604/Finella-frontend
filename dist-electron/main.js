@@ -1,7 +1,6 @@
 import { app, BrowserWindow } from "electron";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-// ESM-safe __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const createWindow = async () => {
@@ -9,7 +8,7 @@ const createWindow = async () => {
         width: 1280,
         height: 800,
         webPreferences: {
-            preload: path.join(__dirname, "preload.js"), // This must match your build output location!
+            preload: path.join(__dirname, "preload.js"),
         },
     });
     win.setMenuBarVisibility(false);
