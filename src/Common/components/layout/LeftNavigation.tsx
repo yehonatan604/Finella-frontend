@@ -30,6 +30,7 @@ import MenuAccordion from "../MenuAccordion";
 import { MenuItemWithIcon } from "../MenuItemWithIcon";
 import ToolDragDialog from "../dialogs/ToolDragDialog";
 import MenuIcon from "@mui/icons-material/Menu";
+import useNote from "../../../Notes/hooks/useNote";
 
 const LeftNavigation = () => {
   const [toolModals, setToolModals] = useState({
@@ -41,11 +42,15 @@ const LeftNavigation = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { mode, setTheme } = useTheme();
   const { logout } = useAuth();
-  const open = Boolean(anchorEl);
+  const { fetchedNotes } = useNote();
   const isLeftNavOpen = useSelector(
     (state: TRootState) => state.themeSlice.isLeftNavOpen
   );
   const dispatch = useDispatch();
+  const unreadNotes =
+    fetchedNotes?.filter((n) => n.noteStatus !== "READ" && n.status !== "inactive")
+      .length || 0;
+  const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -205,6 +210,7 @@ const LeftNavigation = () => {
               <MenuAccordion
                 title="Notes"
                 icon={<EventNoteIcon sx={{ color: sectionColor }} />}
+                badgeValue={unreadNotes > 0 ? unreadNotes : undefined}
               >
                 <Link to={"/notes"}>
                   <MenuItemWithIcon

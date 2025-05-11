@@ -73,9 +73,12 @@ const useNote = (isPage: boolean = false, all: boolean = false) => {
                 userId: user?._id,
                 name: note.name,
                 content: note.content,
-                date: new Date(formatStringDate(note.date)),
+                date: typeof note.date !== "object" ?
+                    new Date(formatStringDate(note.date)) :
+                    formatStringDate((note.date as unknown as Date).toISOString()),
                 isSticky: note.isSticky,
                 notes: note.notes,
+                noteStatus: note.noteStatus,
             };
 
             const res = await sendApiRequest(`/note`, HTTPMethodTypes.PUT, finalNote);
@@ -101,6 +104,7 @@ const useNote = (isPage: boolean = false, all: boolean = false) => {
                 "date",
                 "isSticky",
                 "notes",
+                "noteStatus",
             ] as const;
 
             const normalizeRow = (row: Partial<TNote>) => ({
@@ -111,6 +115,7 @@ const useNote = (isPage: boolean = false, all: boolean = false) => {
                 date: row.date || "",
                 isSticky: row.isSticky || false,
                 notes: row.notes || "",
+                noteStatus: row.noteStatus || "PENDING",
             });
 
             const checkFetchedRow = normalizeRow(fetchedRow as TNote);
@@ -160,7 +165,6 @@ const useNote = (isPage: boolean = false, all: boolean = false) => {
                     "Are you sure you want to delete this Note?",
                     "warning",
                     async () => {
-                        setLoading(true);
                         await sendApiRequest(`/note/${id}`, HTTPMethodTypes.DELETE);
                         dispatch(entitiesActions.removeEntityItem({ type: "notes", id }));
                         setSelectedNote(null);

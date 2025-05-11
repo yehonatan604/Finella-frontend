@@ -1,11 +1,11 @@
-import React from "react";
+import { ReactNode } from "react";
 import { MenuItem } from "@mui/material";
 import { Box } from "@mui/system";
 
 type SizedMenuItemProps = {
   title: string;
   fontSize?: number;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
 };
 
 export const MenuItemWithIcon = (props: SizedMenuItemProps) => {

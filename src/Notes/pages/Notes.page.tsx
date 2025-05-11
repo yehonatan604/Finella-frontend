@@ -1,4 +1,3 @@
-import React from "react";
 import { GridColDef } from "@mui/x-data-grid";
 import { Box, Paper } from "@mui/material";
 import Page from "../../Common/components/layout/Page";

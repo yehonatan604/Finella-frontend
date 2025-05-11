@@ -1,4 +1,3 @@
-import React from "react";
 import { Typography, Divider, Paper } from "@mui/material";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { LineChart } from "@mui/x-charts/LineChart";

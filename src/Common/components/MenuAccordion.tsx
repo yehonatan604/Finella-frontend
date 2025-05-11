@@ -5,6 +5,7 @@ import {
   Typography,
   AccordionDetails,
   Box,
+  Badge,
 } from "@mui/material";
 import { useState } from "react";
 import { TbChevronDown } from "react-icons/tb";
@@ -15,10 +16,12 @@ const MenuAccordion = ({
   title,
   children,
   icon,
+  badgeValue,
 }: {
   title: string;
   children: React.ReactNode;
   icon?: React.ReactNode;
+  badgeValue?: number;
 }) => {
   const [hovered, setHovered] = useState(false);
   const { mode } = useTheme();
@@ -51,11 +54,14 @@ const MenuAccordion = ({
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
-            gap: 1,
+            gap: 2,
           }}
         >
           {icon && icon}
           <Typography variant="h6">{title}</Typography>
+          {badgeValue && (
+            <Badge badgeContent={badgeValue} color="primary" sx={{ ml: 1 }} />
+          )}
         </Box>
       </AccordionSummary>
       <AccordionDetails>{children}</AccordionDetails>

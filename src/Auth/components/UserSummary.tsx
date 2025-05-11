@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, Typography, Paper, Divider, Stack } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
