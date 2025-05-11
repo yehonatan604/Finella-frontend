@@ -1,10 +1,10 @@
-import React from "react";
+import { ReactNode } from "react";
 import { Box } from "@mui/system";
 import { useSelector } from "react-redux";
 import useAuth from "../../../Auth/hooks/useAuth";
 import { TRootState } from "../../../Core/store/store";
 
-const SubMain = ({ children }: { children: React.ReactNode }) => {
+const SubMain = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
   const isLeftNavOpen = useSelector(
     (state: TRootState) => state.themeSlice.isLeftNavOpen

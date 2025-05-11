@@ -1,15 +1,13 @@
-import React from "react";
 import { Navigate } from "react-router-dom";
-import useAuth from "../../Auth/hooks/useAuth";
 import PageHolder from "../../Common/components/layout/PageHolder";
 
 const RouteGuard = ({ isLoggedIn = false }: { isLoggedIn?: boolean }) => {
-  const { user } = useAuth();
+  const token = localStorage.getItem("token");
 
   if (isLoggedIn) {
-    return user ? <PageHolder /> : <Navigate to="/auth" />;
+    return token ? <PageHolder /> : <Navigate to="/auth" />;
   } else {
-    return !user ? <PageHolder /> : <Navigate to="/" />;
+    return !token ? <PageHolder /> : <Navigate to="/" />;
   }
 };
 

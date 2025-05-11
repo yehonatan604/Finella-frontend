@@ -1,4 +1,3 @@
-import React from "react";
 import { JSX } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import DialogXButton from "./DialogXButton";

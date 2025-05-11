@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, IconButton } from "@mui/material";
 import CropSquareIcon from "@mui/icons-material/CropSquare";
 

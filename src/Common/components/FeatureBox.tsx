@@ -1,4 +1,4 @@
-import React from "react";
+import { ReactNode } from "react";
 import { Box, Typography } from "@mui/material";
 
 const FeatureBox = ({
@@ -6,7 +6,7 @@ const FeatureBox = ({
   label,
   description,
 }: {
-  icon: React.ReactNode;
+  icon: ReactNode;
   label: string;
   description: string;
 }) => (

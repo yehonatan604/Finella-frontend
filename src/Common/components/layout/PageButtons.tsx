@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import { Button } from "@mui/material";
 import { Box } from "@mui/system";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
@@ -10,7 +10,7 @@ import { exportDataToPDF } from "../../helpers/exportDataToPDF";
 type PageButtonsProps = {
   fileName: string;
   rows: Record<string, unknown>[];
-  Doc: React.FC<{ rows: Record<string, unknown>[] }>;
+  Doc: FC<{ rows: Record<string, unknown>[] }>;
   openCharts?: () => void;
 };
 

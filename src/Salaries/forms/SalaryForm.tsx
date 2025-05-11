@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Box,
   Button,
@@ -159,8 +158,6 @@ const SalaryForm = ({
                       });
                     }
                   }}
-                  min={1900}
-                  max={DateTime.now().year + 1}
                 />
 
                 <FormControlLabel

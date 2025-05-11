@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import { ChangeEvent } from "react";
 import { MenuItem, TextField } from "@mui/material";
 import { useFormContext } from "react-hook-form";
 import { TFormErrorMessage } from "../../types/TFormErrorMessage";
@@ -8,8 +8,6 @@ type FormFieldProps = {
   name: string;
   setValue?: (value) => void;
   type?: string;
-  min?: number;
-  max?: number;
   required?: boolean;
   width?: string;
   selectArray?: string[] | number[];

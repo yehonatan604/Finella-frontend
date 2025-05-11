@@ -72,7 +72,7 @@ const useAuth = () => {
             const response = await sendApiRequest("/auth/" + decoded._id, GET);
             if (response) {
                 dispatch(authActions.login({ role: response.data.role.permission, user: response.data.user }));
-                await alert("Welcome", `Welcome back ${response.data.user.name.first} ${response.data.user.name.last}`, "success");
+                toastify.success(`Welcome back ${response.data.user.name.first} ${response.data.user.name.last}`);
             }
         } catch (err) {
             const error = err as Error;

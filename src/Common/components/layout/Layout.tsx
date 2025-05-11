@@ -5,7 +5,6 @@ import { ThemeProvider } from "@mui/material/styles";
 import { createTheme } from "@mui/material/styles";
 import { useEffect } from "react";
 import useTheme from "../../hooks/useTheme";
-import React from "react";
 import useAuth from "../../../Auth/hooks/useAuth";
 import { TTheme } from "../../types/TTheme";
 import { darkTheme } from "../../styles/themes/dark.theme";

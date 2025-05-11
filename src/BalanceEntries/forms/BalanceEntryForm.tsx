@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, Container, Paper } from "@mui/material";
 import useBalanceEntry from "../hooks/useBalanceEntry";
 import useTheme from "../../Common/hooks/useTheme";

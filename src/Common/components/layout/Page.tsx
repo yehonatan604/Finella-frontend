@@ -1,4 +1,4 @@
-import React from "react";
+import { ReactNode } from "react";
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 
@@ -7,7 +7,7 @@ const Page = ({
   children,
 }: {
   title: string;
-  children: React.ReactNode;
+  children: ReactNode;
   width?: string;
 }) => {
   return (

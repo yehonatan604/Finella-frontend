@@ -1,4 +1,4 @@
-import React from "react";
+import { ReactNode } from "react";
 import {
   Accordion,
   AccordionSummary,
@@ -19,8 +19,8 @@ const MenuAccordion = ({
   badgeValue,
 }: {
   title: string;
-  children: React.ReactNode;
-  icon?: React.ReactNode;
+  children: ReactNode;
+  icon?: ReactNode;
   badgeValue?: number;
 }) => {
   const [hovered, setHovered] = useState(false);

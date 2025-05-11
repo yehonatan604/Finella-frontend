@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, IconButton } from "@mui/material";
 import LightModeRoundedIcon from "@mui/icons-material/LightModeRounded";
 import DarkModeRoundedIcon from "@mui/icons-material/DarkModeRounded";

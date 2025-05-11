@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Paper, Typography, Box, IconButton } from "@mui/material";
 import { toolsList } from "../../../Tools/helpers/ToolsList";

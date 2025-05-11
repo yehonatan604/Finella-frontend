@@ -1,4 +1,4 @@
-import React from "react";
+import { ReactNode } from "react";
 import { Box, Typography } from "@mui/material";
 import useAuth from "../../Auth/hooks/useAuth";
 import AbsTopIcons from "../components/layout/AbsTopIcons";
@@ -164,7 +164,7 @@ const AboutPage = () => {
   );
 };
 
-const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
+const Section = ({ title, children }: { title: string; children: ReactNode }) => (
   <Box sx={{ mb: 4 }}>
     <Typography variant="h5" fontWeight="bold" gutterBottom>
       {title}

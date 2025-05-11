@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Page from "../../Common/components/layout/Page";
 import {
   Box,

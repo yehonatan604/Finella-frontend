@@ -1,4 +1,3 @@
-import React from "react";
 import store from "./Core/store/store";
 import AppRouter from "./Core/router/AppRouter";
 import Layout from "./Common/components/layout/Layout";
