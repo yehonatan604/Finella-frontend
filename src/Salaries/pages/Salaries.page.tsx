@@ -104,12 +104,14 @@ const SalariesPage = () => {
         </Box>
       </Page>
 
-      <PageButtons
-        fileName="Salaries"
-        rows={rows}
-        Doc={SalariesPdfDoc}
-        openCharts={() => setIsChartsDialogOpen(true)}
-      />
+      {paginatedRows.length > 0 && (
+        <PageButtons
+          fileName="Salaries"
+          rows={rows}
+          Doc={SalariesPdfDoc}
+          openCharts={() => setIsChartsDialogOpen(true)}
+        />
+      )}
       <PlusButton onClick={() => setIsAddDialogOpen(true)} />
 
       {isChartsDialogOpen && (

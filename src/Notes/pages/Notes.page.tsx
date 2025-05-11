@@ -99,7 +99,9 @@ const NotesPage = () => {
         </Box>
       </Page>
 
-      <PageButtons fileName="workplaces" rows={rows} Doc={WorkplacesPdfDoc} />
+      {paginatedRows.length > 0 && (
+        <PageButtons fileName="workplaces" rows={rows} Doc={WorkplacesPdfDoc} />
+      )}
       <PlusButton onClick={() => setIsAddDialogOpen(true)} />
 
       <FormDialog

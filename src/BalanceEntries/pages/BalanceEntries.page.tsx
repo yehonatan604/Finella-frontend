@@ -103,12 +103,14 @@ const BalanceEntriesPage = () => {
         </Box>
       </Page>
 
-      <PageButtons
-        fileName="BalanceEntries"
-        rows={rows}
-        Doc={BalanceEnetriesPdfDoc}
-        openCharts={() => setIsChartsDialogOpen(true)}
-      />
+      {paginatedRows.length > 0 && (
+        <PageButtons
+          fileName="BalanceEntries"
+          rows={rows}
+          Doc={BalanceEnetriesPdfDoc}
+          openCharts={() => setIsChartsDialogOpen(true)}
+        />
+      )}
       <PlusButton onClick={() => setIsAddDialogOpen(true)} />
 
       {isChartsDialogOpen && (

@@ -98,12 +98,14 @@ const ToDoPage = () => {
         </Box>
       </Page>
 
-      <PageButtons
-        fileName="ToDo"
-        rows={rows}
-        Doc={SalariesPdfDoc}
-        openCharts={() => setIsChartsDialogOpen(true)}
-      />
+      {paginatedRows.length > 0 && (
+        <PageButtons
+          fileName="ToDo"
+          rows={rows}
+          Doc={SalariesPdfDoc}
+          openCharts={() => setIsChartsDialogOpen(true)}
+        />
+      )}
       <PlusButton onClick={() => setIsAddDialogOpen(true)} />
 
       {isChartsDialogOpen && (

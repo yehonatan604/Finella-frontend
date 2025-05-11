@@ -10,7 +10,7 @@ export const salaryRows = (
 ) => {
     const data =
         fetchedSalaries.map((salary) => {
-            const workplace = workplaces.find((workplace) => workplace._id === salary.workPlaceId);
+            const workplace = workplaces?.find((workplace) => workplace._id === salary.workPlaceId);
             return {
                 id: salary._id,
                 workplace:
