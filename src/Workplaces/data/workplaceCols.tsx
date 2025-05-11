@@ -56,7 +56,12 @@ export const workplaceCols = (
     sortable: true,
     editable: false,
     renderCell: (params: TDataGridInputCellParams) => {
-      if (params.row.status === "inactive") return <s>{params.value} </s>;
+      if (params.row.status === "inactive")
+        return (
+          <Tooltip title="This is the Full Adress, Edit the Workplace to change it">
+            <s>{params.value} </s>
+          </Tooltip>
+        );
       else
         return (
           <Tooltip title="This is the Full Adress, Edit the Workplace to change it">

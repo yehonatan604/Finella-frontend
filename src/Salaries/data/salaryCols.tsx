@@ -88,7 +88,12 @@ export const salaryCols = (
     },
     editable: false,
     renderCell: (params: TDataGridInputCellParams) => {
-      if (params.row.status === "inactive") return <s>{params.value} </s>;
+      if (params.row.status === "inactive")
+        return (
+          <Tooltip title="Total Hours are calculated automatically.">
+            <s>{params.value} </s>
+          </Tooltip>
+        );
       else
         return (
           <Tooltip title="Total Hours are calculated automatically.">
@@ -114,7 +119,12 @@ export const salaryCols = (
     },
     editable: false,
     renderCell: (params: TDataGridInputCellParams) => {
-      if (params.row.status === "inactive") return <s>{params.value}</s>;
+      if (params.row.status === "inactive")
+        return (
+          <Tooltip title="Total Sum is calculated automatically.">
+            <s>{params.value}</s>
+          </Tooltip>
+        );
       else
         return (
           <Tooltip title="Total Sum is calculated automatically.">

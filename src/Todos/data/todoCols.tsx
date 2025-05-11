@@ -76,7 +76,12 @@ export const todoCols = (
     headerClassName: "super-app-theme--header",
     editable: false,
     renderCell: (params: TDataGridInputCellParams) => {
-      if (params.row.status === "inactive") return <s>{params.value}</s>;
+      if (params.row.status === "inactive")
+        return (
+          <Tooltip title="Tasks number is calculated automatically.">
+            <s>{params.value}</s>
+          </Tooltip>
+        );
       else
         return (
           <Tooltip title="Tasks number is calculated automatically.">
