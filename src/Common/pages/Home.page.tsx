@@ -3,8 +3,6 @@ import { Box, Button, Typography, Container, Stack, Fade } from "@mui/material";
 import { Task, Paid, NotificationsActive, Lock } from "@mui/icons-material";
 import useAuth from "../../Auth/hooks/useAuth";
 import { Link } from "react-router-dom";
-import logoWhite from "../../Assets/images/logo-big-white.png";
-import logoBlue from "../../Assets/images/logo-big-navy.png";
 import FeatureBox from "../components/FeatureBox";
 import useTheme from "../hooks/useTheme";
 import UserSummary from "../../Auth/components/UserSummary";
@@ -14,7 +12,10 @@ import AbsTopIcons from "../components/layout/AbsTopIcons";
 const HomePage = () => {
   const { user } = useAuth();
   const { mode } = useTheme();
-  const logoImg = mode === "light" ? logoBlue : logoWhite;
+  const logoImg =
+    mode === "light"
+      ? "https://self-manager-frontend.onrender.com/assets/logo-big-navy-TOK_A8W6.png"
+      : "https://self-manager-frontend.onrender.com/assets/logo-big-white-vklxlnMZ.png";
 
   return !user ? (
     <>
