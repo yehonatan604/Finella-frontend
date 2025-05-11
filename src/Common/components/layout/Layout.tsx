@@ -35,7 +35,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             },
             flexGrow: 1,
             backgroundColor: mode === "light" ? blue[50] : "#0f172a",
-            p: 3,
+            py: 0,
+            px: 3,
             height: "100vh",
             overflow: "hidden",
           }}

@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, Button, Typography, Container, Stack, Fade } from "@mui/material";
 import { Task, Paid, NotificationsActive, Lock } from "@mui/icons-material";
 import useAuth from "../../Auth/hooks/useAuth";
@@ -12,10 +11,9 @@ import AbsTopIcons from "../components/layout/AbsTopIcons";
 const HomePage = () => {
   const { user } = useAuth();
   const { mode } = useTheme();
-  const logoImg =
-    mode === "light"
-      ? "https://self-manager-frontend.onrender.com/assets/logo-big-navy-TOK_A8W6.png"
-      : "https://self-manager-frontend.onrender.com/assets/logo-big-white-vklxlnMZ.png";
+  const logoImg = `https://self-manager-frontend.onrender.com/assets/${
+    mode === "light" ? "logo-big-navy-TOK_A8W6.png" : "logo-big-white-vklxlnMZ.png"
+  }`;
 
   return !user ? (
     <>

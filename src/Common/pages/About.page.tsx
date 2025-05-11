@@ -1,21 +1,26 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
+import useAuth from "../../Auth/hooks/useAuth";
+import AbsTopIcons from "../components/layout/AbsTopIcons";
 
 const AboutPage = () => {
+  const { user } = useAuth();
   return (
     <Box
       sx={{
         mb: 10,
         color: "text.primary",
         overflow: "auto",
-        maxHeight: "95vh",
-        width: "85vw",
+        maxHeight: "100vh",
+        width: user ? "85vw" : "100vw",
         px: 20,
+        py: 3,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
       }}
     >
+      {!user && <AbsTopIcons />}
       <Box sx={{ mb: 4, textAlign: "center" }}>
         <Typography variant="h3" fontWeight="bold" gutterBottom>
           About Finella
