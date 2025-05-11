@@ -1,5 +1,4 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { TBalanceEntry } from "../../BalaceEntries/types/TBalanceEntry";
 import { TSalary } from "../../Salaries/types/TSalary";
 import { TWorkplace } from "../../Workplaces/types/TWorkplace";
 import { TNote } from "../../Notes/types/TNote";
@@ -7,6 +6,7 @@ import { TNoteAutomation } from "../../Notes/types/TNoteAutomation";
 import { TDbItem } from "../../Common/types/TDbItem";
 import { TEntityType, TEntity } from "../../Common/types/TEntity";
 import { TToDo } from "../../Todos/types/TToDo";
+import { TBalanceEntry } from "../../BalanceEntries/types/TBalanceEntry";
 
 export type TEntitiesState = {
     balanceEntries: TBalanceEntry[] | null;

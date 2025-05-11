@@ -1,10 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { HTTPMethodTypes } from "../../Common/enums/HTTPMethodTypes";
 import { authActions } from "../../Core/store/authSlice";
 import { TRootState } from "../../Core/store/store";
 import { sendApiRequest } from "../../Common/helpers/sendApiRequest";
-import { socketActions } from "../../Core/store/socketSlice";
 import { toastify } from "../../Common/utilities/toast";
 import { alert } from "../../Common/utilities/alert";
 import { AxiosError } from "axios";
@@ -83,17 +82,9 @@ const useAuth = () => {
         }
     }, [GET, dispatch, logout]);;
 
-    useEffect(() => {
-        if (user) {
-            dispatch(socketActions.connectSocket());
-        } else {
-            dispatch(socketActions.disconnectSocket());
-        }
-    }, [user, dispatch]);
-
     return {
-        user: user,
-        role: role,
+        user,
+        role,
         loading,
         signup,
         login,
