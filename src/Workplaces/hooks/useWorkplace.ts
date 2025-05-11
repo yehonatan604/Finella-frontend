@@ -148,10 +148,10 @@ const useWorkplaces = () => {
                     "Are you sure you want to undelete this WorkPlace?",
                     "warning",
                     async () => {
-                        setLoading(true);
                         await sendApiRequest(`/work-place/undelete/${id}`, HTTPMethodTypes.PATCH);
                         dispatch(entitiesActions.undeleteEntityItem({ type: "workplaces", id }));
                         toastify.success("WorkPlace undeleted successfully");
+                        setLoading(false);
                     }
                 );
             } catch (error) {
@@ -173,7 +173,6 @@ const useWorkplaces = () => {
                     "Are you sure you want to delete this WorkPlace?",
                     "warning",
                     async () => {
-                        setLoading(true);
                         await sendApiRequest(`/work-place/${id}`, HTTPMethodTypes.DELETE);
                         dispatch(entitiesActions.removeEntityItem({ type: "workplaces", id }));
                         toastify.success("WorkPlace deleted successfully");

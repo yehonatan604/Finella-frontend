@@ -128,7 +128,6 @@ const useBalanceEntry = () => {
                     "Are you sure you want to delete this Balance Entry?",
                     "warning",
                     async () => {
-                        setLoading(true);
                         await sendApiRequest(`/balance-entry/${id}`, HTTPMethodTypes.DELETE, { userId: user?._id });
                         dispatch(entitiesActions.removeEntityItem({ type: "balanceEntries", id }));
                         toastify.success("Balance Entry deleted successfully");
@@ -151,7 +150,6 @@ const useBalanceEntry = () => {
                     "Are you sure you want to undelete this Balance Entry?",
                     "warning",
                     async () => {
-                        setLoading(true);
                         await sendApiRequest(`/balance-entry/undelete/${id}`, HTTPMethodTypes.PATCH, { userId: user?._id });
                         dispatch(entitiesActions.undeleteEntityItem({ type: "balanceEntries", id }));
                         toastify.success("Balance Entry undeleted successfully");

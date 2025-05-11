@@ -131,7 +131,6 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
           "Are you sure you want to undelete this Todo?",
           "warning",
           async () => {
-            setLoading(true);
             await sendApiRequest(`/todo/undelete/${id}`, HTTPMethodTypes.PATCH, {
               userId: user?._id,
             });
@@ -158,7 +157,6 @@ const useToDo = (isTodoPage: boolean = false, all: boolean = false) => {
           "Are you sure you want to delete this ToDo?",
           "warning",
           async () => {
-            setLoading(true);
             await sendApiRequest(`/todo/${id}`, HTTPMethodTypes.DELETE, {
               userId: user?._id,
             });

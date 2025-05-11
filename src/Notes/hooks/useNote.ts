@@ -136,7 +136,6 @@ const useNote = (isPage: boolean = false, all: boolean = false) => {
                     "Are you sure you want to undelete this Note?",
                     "warning",
                     async () => {
-                        setLoading(true);
                         await sendApiRequest(`/note/undelete/${id}`, HTTPMethodTypes.PATCH);
                         dispatch(entitiesActions.undeleteEntityItem({ type: "notes", id }));
                         toastify.success("Note undeleted successfully");

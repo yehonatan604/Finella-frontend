@@ -240,7 +240,6 @@ const useSalary = (isPage?: boolean) => {
                     "Are you sure you want to delete this Salary?",
                     "warning",
                     async () => {
-                        setLoading(true);
                         await sendApiRequest(`/salary/${id}`, HTTPMethodTypes.DELETE, { userId: user?._id });
                         dispatch(entitiesActions.removeEntityItem({ type: "salaries", id }));
                         toastify.success("Salary deleted successfully");
@@ -265,10 +264,10 @@ const useSalary = (isPage?: boolean) => {
                     "Are you sure you want to undelete this Salary?",
                     "warning",
                     async () => {
-                        setLoading(true);
                         await sendApiRequest(`/salary/undelete/${id}`, HTTPMethodTypes.PATCH, { userId: user?._id });
                         dispatch(entitiesActions.undeleteEntityItem({ type: "salaries", id }));
                         toastify.success("Salary undeleted successfully");
+                        setLoading(false);
                     }
                 );
             } catch (error) {
